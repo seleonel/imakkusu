@@ -33,6 +33,17 @@
   :init
   (which-key-mode))
 
+(use-package avy
+  :ensure t
+  :bind
+  ("M-." . avy-goto-char))
+
+(use-package smex
+  :ensure t
+  :init (smex-initialize)
+  :bind
+  ("M-x" . smex))
+
 (defvar default-shell "/bin/zsh")
 (defadvice ansi-term (before force-zsh)
   (interactive (list default-shell)))
@@ -41,3 +52,12 @@
 (global-set-key (kbd "s-t") 'ansi-term)
 
 (defalias 'yes-or-no-p 'y-or-n-p)
+
+(setq ido-enable-flex-matching nil)
+(setq ido-create-new-buffer 'always)
+(setq ido-everywhere t)
+(ido-mode 1)
+
+(global-set-key (kbd "C-x b") 'ibuffer)
+
+(global-set-key (kbd "S-s") 'ido-switch-buffer)

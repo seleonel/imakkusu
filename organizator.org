@@ -73,6 +73,22 @@ Ajuda na instalação e compilação de pacotes do emacs
 
 #+END_SRC
 
+** avy
+#+BEGIN_SRC emacs-lisp
+  (use-package avy
+    :ensure t
+    :bind
+    ("M-." . avy-goto-char))
+
+#+END_SRC
+** SMEX
+#+BEGIN_SRC emacs-lisp
+  (use-package smex
+    :ensure t
+    :init (smex-initialize)
+    :bind
+    ("M-x" . smex))
+#+END_SRC
 * TERMINAL
 ** Força zsh no ansi-term
 #+BEGIN_SRC emacs-lisp
@@ -94,5 +110,23 @@ Força zsh como shell do ansi-term
 ** Yes or No por Y or N
 #+BEGIN_SRC emacs-lisp
 (defalias 'yes-or-no-p 'y-or-n-p)
+
+#+END_SRC
+** Ido mode
+#+BEGIN_SRC emacs-lisp
+  (setq ido-enable-flex-matching nil)
+  (setq ido-create-new-buffer 'always)
+  (setq ido-everywhere t)
+  (ido-mode 1)
+
+#+END_SRC
+** enabling the current screen buffer (ibuffer)
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-x b") 'ibuffer)
+
+#+END_SRC
+** switching buffers
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "S-s") 'ido-switch-buffer)
 
 #+END_SRC
