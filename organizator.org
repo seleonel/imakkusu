@@ -89,6 +89,27 @@ Ajuda na instalação e compilação de pacotes do emacs
     :bind
     ("M-x" . smex))
 #+END_SRC
+** Rainbow
+#+BEGIN_SRC emacs-lisp
+(use-package rainbow-mode
+    :ensure t
+    :init (rainbow-mode 1))
+
+#+END_SRC
+Códigos de cor *hexadecimais* ficam coloridos yay
+** smart tabs
+#+BEGIN_SRC emacs-lisp
+(use-package smart-tabs-mode
+ :ensure t
+ :init
+ :config
+ (smart-tabs-add-language-support latex latex-mode-hook
+ ((latex-indent-line . 4)
+ (latex-indent-region . 4)))
+ (smart-tabs-insinuate 'c 'c++ 'java 'python 'latex))
+
+#+END_SRC
+esse código copiei de um anão
 * TERMINAL
 ** Força zsh no ansi-term
 #+BEGIN_SRC emacs-lisp

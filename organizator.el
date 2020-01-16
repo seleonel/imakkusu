@@ -44,6 +44,19 @@
   :bind
   ("M-x" . smex))
 
+(use-package rainbow-mode
+    :ensure t
+    :init (rainbow-mode 1))
+
+(use-package smart-tabs-mode
+ :ensure t
+ :init
+ :config
+ (smart-tabs-add-language-support latex latex-mode-hook
+ ((latex-indent-line . 4)
+ (latex-indent-region . 4)))
+ (smart-tabs-insinuate 'c 'c++ 'java 'python 'latex))
+
 (defvar default-shell "/bin/zsh")
 (defadvice ansi-term (before force-zsh)
   (interactive (list default-shell)))
