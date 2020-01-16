@@ -1,0 +1,14 @@
+# ignora os autosaves
+/auto-save-list
+/cache
+*~
+
+# ignora elpa
+/elpa
+
+# ignora url
+/url
+
+
+
+
