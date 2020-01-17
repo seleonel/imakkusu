@@ -1,8 +1,10 @@
 # ignora os autosaves
+ac-comphist.dat
 /auto-save-list
+/.python-environments
 /cache
 *~
-
+\#*\#
 # ignora elpa
 /elpa
 

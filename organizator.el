@@ -24,6 +24,13 @@
   :defer t
   :ensure t)
 
+(use-package spaceline
+  :ensure t
+  :config
+  (require 'spaceline-config)
+  (setq powerline-default-separator (quote slant))
+  (spaceline-spacemacs-theme))
+
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
@@ -55,7 +62,32 @@
  (smart-tabs-add-language-support latex latex-mode-hook
  ((latex-indent-line . 4)
  (latex-indent-region . 4)))
- (smart-tabs-insinuate 'c 'c++ 'java 'python 'latex))
+ (smart-tabs-insinuate 'c 'c++ 'java 'latex))
+
+(use-package switch-window
+  :ensure t
+  :config
+  (setq switch-window-input-style 'minibuffer)
+  (setq switch-window-increase 4)
+  (setq switch-window-threshold 2)
+  :bind
+  ([remap other-window] .  switch-window))
+
+(use-package auto-complete
+  :ensure t
+  :config
+  (ac-config-default))
+
+(use-package flycheck
+  :ensure t
+  :init
+  (global-flycheck-mode t))
+
+(use-package jedi
+  :ensure t
+  :init
+  (add-hook 'python-mode-hook 'jedi:setup)
+  (add-hook 'python-mode-hook 'jedi:ac-setup))
 
 (defvar default-shell "/bin/zsh")
 (defadvice ansi-term (before force-zsh)
@@ -74,3 +106,16 @@
 (global-set-key (kbd "C-x b") 'ibuffer)
 
 (global-set-key (kbd "S-s") 'ido-switch-buffer)
+
+(setq org-src-window-setup 'current-window)
+
+(defun matarPalavra ()
+  (interactive)
+  (backward-word)
+  (kill-word 1))
+(global-set-key (kbd "C-c DEL") 'matarPalavra)
+
+(line-number-mode 1)
+(column-number-mode 1)
+
+(global-set-key (kbd "C-c y") 'avy-copy-line)

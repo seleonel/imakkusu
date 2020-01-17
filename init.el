@@ -20,6 +20,7 @@ There are two things you can do about this warning:
 (org-babel-load-file (expand-file-name "~/.emacs.d/organizator.org"))
 
 
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -27,7 +28,8 @@ There are two things you can do about this warning:
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (smart-tabs-mode rainbow-mode avy smex ample-theme which-key use-package dash latex-extra))))
+    (jedi flycheck auto-complete company-anaconda pyvenv pyenv spaceline virtualenvwrapper company-jedi company switch-window smart-tabs-mode rainbow-mode avy smex ample-theme which-key use-package dash latex-extra)))
+ '(pyvenv-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

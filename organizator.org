@@ -54,7 +54,15 @@ Menu é inútil e toma espaço
 
 #+END_SRC
 Ample flat sendo utilizado, combina com o meu tema atual do KDE
-
+** spaceline
+#+BEGIN_SRC emacs-lisp
+  (use-package spaceline
+    :ensure t
+    :config
+    (require 'spaceline-config)
+    (setq powerline-default-separator (quote slant))
+    (spaceline-spacemacs-theme))
+#+END_SRC
 * PACOTES GERAIS
 ** *Use package*
 #+BEGIN_SRC emacs-lisp
@@ -106,10 +114,45 @@ Códigos de cor *hexadecimais* ficam coloridos yay
  (smart-tabs-add-language-support latex latex-mode-hook
  ((latex-indent-line . 4)
  (latex-indent-region . 4)))
- (smart-tabs-insinuate 'c 'c++ 'java 'python 'latex))
+ (smart-tabs-insinuate 'c 'c++ 'java 'latex))
 
 #+END_SRC
 esse código copiei de um anão
+** Switch window
+#+BEGIN_SRC emacs-lisp
+  (use-package switch-window
+    :ensure t
+    :config
+    (setq switch-window-input-style 'minibuffer)
+    (setq switch-window-increase 4)
+    (setq switch-window-threshold 2)
+    :bind
+    ([remap other-window] .  switch-window))
+#+END_SRC
+** autocompletion
+#+BEGIN_SRC emacs-lisp
+  (use-package auto-complete
+    :ensure t
+    :config
+    (ac-config-default))
+#+END_SRC
+** flycheck
+#+BEGIN_SRC emacs-lisp
+  (use-package flycheck
+    :ensure t
+    :init
+    (global-flycheck-mode t))
+
+#+END_SRC
+** jedi
+#+BEGIN_SRC emacs-lisp
+  (use-package jedi
+    :ensure t
+    :init
+    (add-hook 'python-mode-hook 'jedi:setup)
+    (add-hook 'python-mode-hook 'jedi:ac-setup))
+
+#+END_SRC
 * TERMINAL
 ** Força zsh no ansi-term
 #+BEGIN_SRC emacs-lisp
@@ -151,3 +194,33 @@ Força zsh como shell do ansi-term
 (global-set-key (kbd "S-s") 'ido-switch-buffer)
 
 #+END_SRC
+** janela org
+#+BEGIN_SRC emacs-lisp
+  (setq org-src-window-setup 'current-window)
+
+#+END_SRC
+abre editor do org mode na janela atual
+** assassino de palavras
+#+BEGIN_SRC emacs-lisp
+  (defun matarPalavra ()
+    (interactive)
+    (backward-word)
+    (kill-word 1))
+  (global-set-key (kbd "C-c DEL") 'matarPalavra)
+
+#+END_SRC
+** mostrar linhazitas
+#+BEGIN_SRC emacs-lisp
+  (line-number-mode 1)
+  (column-number-mode 1)
+
+#+END_SRC
+** copiar linhazitas
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-c y") 'avy-copy-line)
+#+END_SRC
+
+
+
+
+
