@@ -17,5 +17,12 @@ smex-items
 /tutorial
 ido*
 
+
+.mc-lists.el
+
+
 # ignora dmenu
 dmenu-items
+
+# ignora o tutorial
+tutorial/
