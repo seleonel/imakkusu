@@ -31,6 +31,8 @@
   (setq powerline-default-separator (quote slant))
   (spaceline-spacemacs-theme))
 
+(global-display-line-numbers-mode)
+
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
@@ -51,9 +53,10 @@
   :bind
   ("M-x" . smex))
 
-(use-package rainbow-mode
+(use-package rainbow-delimiters
     :ensure t
-    :init (rainbow-mode 1))
+    :hook 
+    (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
 
 (use-package smart-tabs-mode
  :ensure t
@@ -65,13 +68,13 @@
  (smart-tabs-insinuate 'c 'c++ 'java 'latex))
 
 (use-package switch-window
-  :ensure t
-  :config
-  (setq switch-window-input-style 'minibuffer)
-  (setq switch-window-increase 4)
-  (setq switch-window-threshold 2)
-  :bind
-  ([remap other-window] .  switch-window))
+    :ensure t
+    :config
+    (setq switch-window-input-style 'minibuffer)
+    (setq switch-window-increase 4)
+n    (setq switch-window-threshold 2)
+    :bind
+    ([remap other-window] .  switch-window))
 
 (use-package auto-complete
   :ensure t
@@ -88,6 +91,39 @@
   :init
   (add-hook 'python-mode-hook 'jedi:setup)
   (add-hook 'python-mode-hook 'jedi:ac-setup))
+
+(use-package dmenu
+  :ensure t
+  :bind
+  ("s-d" . 'dmenu))
+
+(use-package browse-kill-ring
+  :ensure t
+  :bind
+  ("M-y" . 'browse-kill-ring))
+
+(use-package ivy
+  :ensure t)
+(use-package swiper
+  :ensure t
+  :bind
+  ("C-s" . swiper))
+
+(use-package multiple-cursors
+  :ensure t
+  :bind
+  ("C-c q" . 'mc/mark-next-like-this)
+  ("C-c a" . 'mc/mark-all-like-this))
+
+(use-package expand-region
+  :ensure t
+  :bind
+  ("C-c e" . er/expand-region))
+
+(use-package web-mode
+  :ensure t
+  :config
+  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode)))
 
 (defvar default-shell "/bin/zsh")
 (defadvice ansi-term (before force-zsh)
