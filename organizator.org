@@ -130,7 +130,7 @@ esse código copiei de um anão
     :config
     (setq switch-window-input-style 'minibuffer)
     (setq switch-window-increase 4)
-n    (setq switch-window-threshold 2)
+    (setq switch-window-threshold 2)
     :bind
     ([remap other-window] .  switch-window))
 #+END_SRC
