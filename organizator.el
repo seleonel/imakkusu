@@ -31,7 +31,10 @@
   (setq powerline-default-separator (quote slant))
   (spaceline-spacemacs-theme))
 
-(global-display-line-numbers-mode)
+(defun mostrarLinhazitas ()
+    (interactive)
+    (display-line-numbers-mode))
+(add-hook 'prog-mode-hook 'mostrarLinhazitas)
 
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
@@ -68,13 +71,13 @@
  (smart-tabs-insinuate 'c 'c++ 'java 'latex))
 
 (use-package switch-window
-    :ensure t
-    :config
-    (setq switch-window-input-style 'minibuffer)
-    (setq switch-window-increase 4)
-n    (setq switch-window-threshold 2)
-    :bind
-    ([remap other-window] .  switch-window))
+  :ensure t
+  :config
+  (setq switch-window-input-style 'minibuffer)
+  (setq switch-window-increase 4)
+  (setq switch-window-threshold 2)
+  :bind
+  ([remap other-window] .  switch-window))
 
 (use-package auto-complete
   :ensure t

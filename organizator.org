@@ -65,7 +65,11 @@ Ample flat sendo utilizado, combina com o meu tema atual do KDE
 #+END_SRC
 ** line numbers
 #+BEGIN_SRC emacs-lisp
-  (global-display-line-numbers-mode)
+  (defun mostrarLinhazitas ()
+      (interactive)
+      (display-line-numbers-mode))
+  (add-hook 'prog-mode-hook 'mostrarLinhazitas)
+
 #+END_SRC
 * PACOTES GERAIS
 ** *Use package*
