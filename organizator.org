@@ -44,16 +44,13 @@ Menu é inútil e toma espaço
 
 ** TEMA ATUAL
 #+BEGIN_SRC emacs-lisp
-(use-package ample-theme
-  :init (progn (load-theme 'ample t t)
-               (load-theme 'ample-flat t t)
-               (load-theme 'ample-light t t)
-               (enable-theme 'ample-flat))
-  :defer t
-  :ensure t)
+  (use-package noctilux-theme
+     :ensure t
+     :init
+     (load-theme 'noctilux t))
 
 #+END_SRC
-Ample flat sendo utilizado, combina com o meu tema atual do KDE
+Combina mais com o tema atual do meu desktop environment
 ** spaceline
 #+BEGIN_SRC emacs-lisp
   (use-package spaceline

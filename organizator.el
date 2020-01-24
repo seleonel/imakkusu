@@ -16,13 +16,10 @@
 
 (when window-system (global-hl-line-mode t))
 
-(use-package ample-theme
-  :init (progn (load-theme 'ample t t)
-               (load-theme 'ample-flat t t)
-               (load-theme 'ample-light t t)
-               (enable-theme 'ample-flat))
-  :defer t
-  :ensure t)
+(use-package noctilux-theme
+   :ensure t
+   :init
+   (load-theme 'noctilux t))
 
 (use-package spaceline
   :ensure t
