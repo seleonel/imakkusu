@@ -33,6 +33,8 @@
     (display-line-numbers-mode))
 (add-hook 'prog-mode-hook 'mostrarLinhazitas)
 
+(scroll-bar-mode -1)
+
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))

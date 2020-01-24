@@ -68,6 +68,10 @@ Combina mais com o tema atual do meu desktop environment
   (add-hook 'prog-mode-hook 'mostrarLinhazitas)
 
 #+END_SRC
+** Barra de scroll(?)
+#+BEGIN_SRC emacs-lisp
+  (scroll-bar-mode -1)
+#+END_SRC
 * PACOTES GERAIS
 ** *Use package*
 #+BEGIN_SRC emacs-lisp
