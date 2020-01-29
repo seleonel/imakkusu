@@ -148,7 +148,7 @@
 
 (global-set-key (kbd "C-x b") 'ibuffer)
 
-(global-set-key (kbd "S-s") 'ido-switch-buffer)
+(global-set-key (kbd "s-s") 'ido-switch-buffer)
 
 (setq org-src-window-setup 'current-window)
 
@@ -162,3 +162,5 @@
 (column-number-mode 1)
 
 (global-set-key (kbd "C-c y") 'avy-copy-line)
+
+(global-set-key (kbd "s-'") 'other-frame)

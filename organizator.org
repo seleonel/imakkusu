@@ -266,7 +266,7 @@ Força zsh como shell do ansi-term
 #+END_SRC
 ** switching buffers
 #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "S-s") 'ido-switch-buffer)
+(global-set-key (kbd "s-s") 'ido-switch-buffer)
 
 #+END_SRC
 ** janela org
@@ -299,3 +299,10 @@ abre editor do org mode na janela atual
 
 
 
+** multimonitor
+
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "s-'") 'other-frame)
+
+#+END_SRC
+Permite-me trocar facilmente por entre janelas
