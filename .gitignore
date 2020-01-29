@@ -27,3 +27,5 @@ dmenu-items
 # ignora o tutorial
 tutorial/
 snippets/
+.org-id-locations
+bookmarks

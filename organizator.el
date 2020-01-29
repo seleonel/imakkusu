@@ -127,6 +127,11 @@
   :config
   (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode)))
 
+(use-package sudo-edit
+  :ensure t
+  :bind
+      ("C-c C-s" . sudo-edit))
+
 (defvar default-shell "/bin/zsh")
 (defadvice ansi-term (before force-zsh)
   (interactive (list default-shell)))

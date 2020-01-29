@@ -29,9 +29,10 @@ There are two things you can do about this warning:
  '(custom-safe-themes
    (quote
     ("8885761700542f5d0ea63436874bf3f9e279211707d4b1ca9ed6f53522f21934" default)))
+ '(org-agenda-files (quote ("~/Estudo/diario.org")))
  '(package-selected-packages
    (quote
-    (noctilux-theme cyberpunk-theme web-mode yasnippet-snippets yasnippet rainbow-delimiters rainbow-delimiters-mode expand-region multiple-cursors ivy swiper browse-kill-ring dmenu jedi flycheck auto-complete company-anaconda pyvenv pyenv spaceline virtualenvwrapper company-jedi company switch-window smart-tabs-mode rainbow-mode avy smex ample-theme which-key use-package dash latex-extra)))
+    (sudo-edit noctilux-theme cyberpunk-theme web-mode yasnippet-snippets yasnippet rainbow-delimiters rainbow-delimiters-mode expand-region multiple-cursors ivy swiper browse-kill-ring dmenu jedi flycheck auto-complete company-anaconda pyvenv pyenv spaceline virtualenvwrapper company-jedi company switch-window smart-tabs-mode rainbow-mode avy smex ample-theme which-key use-package dash latex-extra)))
  '(pyvenv-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
