@@ -298,7 +298,6 @@ abre editor do org mode na janela atual
 
 
 
-
 ** multimonitor
 
 #+BEGIN_SRC emacs-lisp

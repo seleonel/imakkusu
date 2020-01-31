@@ -1,0 +1,39 @@
+#+TITLE: Configs e pacotes em geral de meu emacs
+
+Descobri boa parte destes pacotes através dos vídeos do *Uncle Dave*, então créditos a ele: [[https://www.youtube.com/channel/UCDEtZ7AKmwS0_GNJog01D2g/feed][Link para o canal]] 
+
+
+** Instalação
+
+*** Requeridos?
+    - GNU Emacs
+    - Python virtualenv
+    - ttf-hack
+    - zsh ( para modificar o shell, modifique a linha 234 no arquivo *organizator.org*)
+    - Devo ter esquecido de algo
+
+**** use-package e melpa
+Necessário adicionar ambos em seu init.el durante o primeiro run.
+
+- [[https://melpa.org/#/getting-started][MELPA - getting started ]]
+- [[https://github.com/jwiegley/use-package/tree/42db6b3d90ee57d0f5947d3b0bf4b0010bdf7b40][use-package - repositório no github]]
+
+** Alguns keybindigs
+
+Estes vão provavelmente conflitar com algum outro keybind nativo de algum modo aleatório, mas como existem keybindings como existem estrelas no céu,
+refaça-os como quiser.
+
+  - ansi-term:        *s-t* (t de terminal :^))
+  - ibuffer:          *C-x b*
+  - matarPalavra:     *C-c DEL*
+  - avy-copy-line:    *C-c y*
+  - other-frame:      *s-'*
+  - avy-goto-char:    *M-.*
+  - smex:             *M-x*
+  - dmenu:            *s-d*
+  - browse-kill-r:    *M-y*
+  - swiper:           *C-s*
+  - multiple cursors: *C-c q* - next-like-this | *C-c a* all-like-this
+  - expand-region:    *C-c e*
+  - sudo-edit:        *C-c C-s*
+  
