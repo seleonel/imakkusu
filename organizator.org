@@ -1,18 +1,53 @@
 * MARAVILHOSA TELA INICIAL
 #+BEGIN_SRC emacs-lisp
+  ;; ANTIGO BUFFER
+  ;;(defun my-buffeiro ()
+  ;;  (let ((buffer (generate-new-buffer "intro")))
+  ;;    (switch-to-buffer buffer)
+  ;;    (center-line)
+  ;;    (insert "BEM VINDO AO MARAVILHOSO IMAKKUSU\n")
+  ;;    (insert-image (create-image "~/.emacs.d/img/kicchiri.png"))
+  ;;    (insert "\n\n\n\n\n")
+  ;;    buffer))
+  ;;(setq initial-buffer-choice 'my-buffeiro)
 
-(defun my-buffeiro ()
-  (let ((buffer (generate-new-buffer "intro")))
-    (switch-to-buffer buffer)
-    (center-line)
-    (insert "BEM VINDO AO MARAVILHOSO IMAKKUSU\n")
-    (insert-image (create-image "~/.emacs.d/img/kicchiri.png"))
-    (insert "\n\n\n\n\n")
-    buffer))
-(setq initial-buffer-choice 'my-buffeiro)
+  (use-package dashboard
+    :ensure t
+    :config
+    (dashboard-setup-startup-hook)
+     (setq dashboard-banner-logo-title "BEM VINDO AO MARAVILHOSO IMAKKUSU")
+     (setq dashboard-startup-banner "~/.emacs.d/img/kicchiri.png")
+     (setq dashboard-center-content t)
+     (setq dashboard-show-shortcuts nil)
+     (setq dashboard-items '((recents . 20)
+			     (bookmarks . 5)
+			     (projects . 10)))
+     (setq dashboard-set-heading-icons t)
+     (setq dashboard-set-file-icons t)
+     (dashboard-modify-heading-icons '((recents . "ruby")
+				       (bookmarks . "bookmark" )
+				       (projects . "package" )))
+     (setq dashboard-footer "emags :DDDDDDDD"))
 #+END_SRC
-*Garanta que a imagem existe pls*
 
+
+*Garanta que a imagem existe pls*
+** DEPENDENZAS DO DASHBOARD
+*** page-break-lines
+#+BEGIN_SRC emacs-lisp
+  (use-package page-break-lines
+    :ensure t)
+#+END_SRC
+*** projectile
+#+BEGIN_SRC emacs-lisp
+  (use-package projectile
+    :ensure t
+    :config
+    (projectile-mode +1)
+    :bind
+    ("S-p" . projectile-command-mode))
+
+#+END_SRC
 * Configurações visuais
 ** Fonte
 #+BEGIN_SRC emacs-lisp
@@ -71,6 +106,12 @@ Combina mais com o tema atual do meu desktop environment
 ** Barra de scroll(?)
 #+BEGIN_SRC emacs-lisp
   (scroll-bar-mode -1)
+#+END_SRC
+** all-the-icons
+#+BEGIN_SRC emacs-lisp
+  (use-package all-the-icons
+    :ensure t)
+
 #+END_SRC
 * PACOTES GERAIS
 ** *Use package*
@@ -220,7 +261,7 @@ Pacote pra múltiplos cursores, muito daora
     (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode)))
 
 #+END_SRC
-** sudo-edit
+** sudo-editn
 #+BEGIN_SRC emacs-lisp
   (use-package sudo-edit
     :ensure t

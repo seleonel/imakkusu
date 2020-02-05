@@ -29,3 +29,5 @@ tutorial/
 snippets/
 .org-id-locations
 bookmarks
+session*
+tramp

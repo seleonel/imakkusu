@@ -9,7 +9,7 @@ Descobri boa parte destes pacotes através dos vídeos do *Uncle Dave*, então c
     - GNU Emacs
     - Python virtualenv
     - ttf-hack
-    - zsh ( para modificar o shell, modifique a linha 234 no arquivo *organizator.org*)
+    - zsh ( para mudar o shell, modifique a linha 234 no arquivo *organizator.org*)
     - Devo ter esquecido de algo
 
 **** use-package e melpa
@@ -36,4 +36,4 @@ refaça-os como quiser.
   - multiple cursors: *C-c q* - next-like-this | *C-c a* all-like-this
   - expand-region:    *C-c e*
   - sudo-edit:        *C-c C-s*
-  
+  - projectile        *s-p* - projectile command map

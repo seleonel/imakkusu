@@ -1,12 +1,41 @@
-(defun my-buffeiro ()
-  (let ((buffer (generate-new-buffer "intro")))
-    (switch-to-buffer buffer)
-    (center-line)
-    (insert "BEM VINDO AO MARAVILHOSO IMAKKUSU\n")
-    (insert-image (create-image "~/.emacs.d/img/kicchiri.png"))
-    (insert "\n\n\n\n\n")
-    buffer))
-(setq initial-buffer-choice 'my-buffeiro)
+;; ANTIGO BUFFER
+;;(defun my-buffeiro ()
+;;  (let ((buffer (generate-new-buffer "intro")))
+;;    (switch-to-buffer buffer)
+;;    (center-line)
+;;    (insert "BEM VINDO AO MARAVILHOSO IMAKKUSU\n")
+;;    (insert-image (create-image "~/.emacs.d/img/kicchiri.png"))
+;;    (insert "\n\n\n\n\n")
+;;    buffer))
+;;(setq initial-buffer-choice 'my-buffeiro)
+
+(use-package dashboard
+  :ensure t
+  :config
+  (dashboard-setup-startup-hook)
+   (setq dashboard-banner-logo-title "BEM VINDO AO MARAVILHOSO IMAKKUSU")
+   (setq dashboard-startup-banner "~/.emacs.d/img/kicchiri.png")
+   (setq dashboard-center-content t)
+   (setq dashboard-show-shortcuts nil)
+   (setq dashboard-items '((recents . 20)
+			   (bookmarks . 5)
+			   (projects . 10)))
+   (setq dashboard-set-heading-icons t)
+   (setq dashboard-set-file-icons t)
+   (dashboard-modify-heading-icons '((recents . "ruby")
+				     (bookmarks . "bookmark" )
+				     (projects . "package" )))
+   (setq dashboard-footer "emags :DDDDDDDD"))
+
+(use-package page-break-lines
+  :ensure t)
+
+(use-package projectile
+  :ensure t
+  :config
+  (projectile-mode +1)
+  :bind
+  ("S-p" . projectile-command-mode))
 
 (set-default-font "Hack 12")
 
@@ -34,6 +63,9 @@
 (add-hook 'prog-mode-hook 'mostrarLinhazitas)
 
 (scroll-bar-mode -1)
+
+(use-package all-the-icons
+  :ensure t)
 
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
