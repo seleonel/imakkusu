@@ -13,6 +13,7 @@
 
   (use-package dashboard
     :ensure t
+    :requires page-break-lines
     :config
     (dashboard-setup-startup-hook)
      (setq dashboard-banner-logo-title "BEM VINDO AO MARAVILHOSO IMAKKUSU")
