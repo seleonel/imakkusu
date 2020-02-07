@@ -339,7 +339,6 @@ abre editor do org mode na janela atual
 #+END_SRC
 
 
-
 ** autosave e backups
 Configs roubadas de um anão 2.0
 #+BEGIN_SRC emacs-lisp
