@@ -1,3 +1,13 @@
+(use-package page-break-lines
+  :ensure t)
+
+(use-package projectile
+  :ensure t
+  :config
+  (projectile-mode +1)
+  :bind
+  ("S-p" . projectile-command-mode))
+
 ;; ANTIGO BUFFER
 ;;(defun my-buffeiro ()
 ;;  (let ((buffer (generate-new-buffer "intro")))
@@ -26,16 +36,6 @@
 				     (bookmarks . "bookmark" )
 				     (projects . "package" )))
    (setq dashboard-footer "emags :DDDDDDDD"))
-
-(use-package page-break-lines
-  :ensure t)
-
-(use-package projectile
-  :ensure t
-  :config
-  (projectile-mode +1)
-  :bind
-  ("S-p" . projectile-command-mode))
 
 (set-default-font "Hack 12")
 
@@ -194,5 +194,10 @@
 (column-number-mode 1)
 
 (global-set-key (kbd "C-c y") 'avy-copy-line)
+
+(setq-default backup-directory-alist
+ '(("." . "~/.cache/emacs/backups/")))
+(add-to-list 'auto-save-file-name-transforms
+ `(".*" "~/.cache/emacs/autosave/\\1" t) 'append)
 
 (global-set-key (kbd "s-'") 'other-frame)

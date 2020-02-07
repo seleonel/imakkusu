@@ -1,4 +1,21 @@
 * MARAVILHOSA TELA INICIAL
+** DEPENDENZAS DO DASHBOARD
+*** page-break-lines
+#+BEGIN_SRC emacs-lisp
+  (use-package page-break-lines
+    :ensure t)
+#+END_SRC
+*** projectile
+#+BEGIN_SRC emacs-lisp
+  (use-package projectile
+    :ensure t
+    :config
+    (projectile-mode +1)
+    :bind
+    ("S-p" . projectile-command-mode))
+
+#+END_SRC
+** pagina inicial em si
 #+BEGIN_SRC emacs-lisp
   ;; ANTIGO BUFFER
   ;;(defun my-buffeiro ()
@@ -13,7 +30,6 @@
 
   (use-package dashboard
     :ensure t
-    :requires page-break-lines
     :config
     (dashboard-setup-startup-hook)
      (setq dashboard-banner-logo-title "BEM VINDO AO MARAVILHOSO IMAKKUSU")
@@ -33,22 +49,7 @@
 
 
 *Garanta que a imagem existe pls*
-** DEPENDENZAS DO DASHBOARD
-*** page-break-lines
-#+BEGIN_SRC emacs-lisp
-  (use-package page-break-lines
-    :ensure t)
-#+END_SRC
-*** projectile
-#+BEGIN_SRC emacs-lisp
-  (use-package projectile
-    :ensure t
-    :config
-    (projectile-mode +1)
-    :bind
-    ("S-p" . projectile-command-mode))
 
-#+END_SRC
 * Configurações visuais
 ** Fonte
 #+BEGIN_SRC emacs-lisp
@@ -339,7 +340,15 @@ abre editor do org mode na janela atual
 
 
 
+** autosave e backups
+Configs roubadas de um anão 2.0
+#+BEGIN_SRC emacs-lisp
+  (setq-default backup-directory-alist
+   '(("." . "~/.cache/emacs/backups/")))
+  (add-to-list 'auto-save-file-name-transforms
+   `(".*" "~/.cache/emacs/autosave/\\1" t) 'append)
 
+#+END_SRC
 ** multimonitor
 
 #+BEGIN_SRC emacs-lisp
