@@ -89,7 +89,7 @@
 
 (use-package rainbow-delimiters
     :ensure t
-    :hook 
+    :config
     (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
 
 (use-package smart-tabs-mode
@@ -163,6 +163,9 @@
   :ensure t
   :bind
       ("C-c C-s" . sudo-edit))
+
+(use-package transpose-frame
+  :ensure t)
 
 (defvar default-shell "/bin/zsh")
 (defadvice ansi-term (before force-zsh)

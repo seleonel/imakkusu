@@ -153,7 +153,7 @@ Ajuda na instalação e compilação de pacotes do emacs
 #+BEGIN_SRC emacs-lisp
 (use-package rainbow-delimiters
     :ensure t
-    :hook 
+    :config
     (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
 
 #+END_SRC
@@ -263,7 +263,7 @@ Pacote pra múltiplos cursores, muito daora
     (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode)))
 
 #+END_SRC
-** sudo-editn
+** sudo-edit
 #+BEGIN_SRC emacs-lisp
   (use-package sudo-edit
     :ensure t
@@ -271,6 +271,14 @@ Pacote pra múltiplos cursores, muito daora
 	("C-c C-s" . sudo-edit))
 
 #+END_SRC
+** transpose-window
+#+BEGIN_SRC emacs-lisp
+  (use-package transpose-frame
+    :ensure t)
+#+END_SRC
+
+Pacote para /management/ de janelas
+
 * TERMINAL
 ** Força zsh no ansi-term
 #+BEGIN_SRC emacs-lisp
