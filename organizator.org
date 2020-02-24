@@ -88,14 +88,11 @@ Menu é inútil e toma espaço
 
 #+END_SRC
 Combina mais com o tema atual do meu desktop environment
-** spaceline
+** modeline
 #+BEGIN_SRC emacs-lisp
-  (use-package spaceline
-    :ensure t
-    :config
-    (require 'spaceline-config)
-    (setq powerline-default-separator (quote slant))
-    (spaceline-spacemacs-theme))
+(use-package doom-modeline
+  :ensure t
+  :init (doom-modeline-mode 1))
 #+END_SRC
 ** line numbers
 #+BEGIN_SRC emacs-lisp

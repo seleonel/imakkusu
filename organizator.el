@@ -50,12 +50,9 @@
    :init
    (load-theme 'noctilux t))
 
-(use-package spaceline
+(use-package doom-modeline
   :ensure t
-  :config
-  (require 'spaceline-config)
-  (setq powerline-default-separator (quote slant))
-  (spaceline-spacemacs-theme))
+  :init (doom-modeline-mode 1))
 
 (defun mostrarLinhazitas ()
     (interactive)
