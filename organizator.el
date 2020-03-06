@@ -110,7 +110,8 @@
 (use-package auto-complete
   :ensure t
   :config
-  (ac-config-default))
+  (ac-config-default)
+  (ac-complete-yasnippet))
 
 (use-package flycheck
   :ensure t
@@ -201,3 +202,14 @@
  `(".*" "~/.cache/emacs/autosave/\\1" t) 'append)
 
 (global-set-key (kbd "s-'") 'other-frame)
+
+(global-subword-mode 1)
+
+(use-package yasnippet
+  :ensure t
+  :config
+  (yas-reload-all)
+  (add-hook 'prog-mode-hook 'yas-minor-mode))
+
+(use-package yasnippet-snippets
+  :ensure t)
