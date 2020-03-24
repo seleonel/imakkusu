@@ -36,3 +36,9 @@ recentf
 projectile*
 
 *backup*
+
+#ignorar emms - musica
+emms/
+
+calc.el
+

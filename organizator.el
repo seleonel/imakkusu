@@ -44,11 +44,12 @@
 (menu-bar-mode -1)
 
 (when window-system (global-hl-line-mode t))
+(set-face-background hl-line-face "HotPink4")
 
-(use-package noctilux-theme
+(use-package sublime-themes
    :ensure t
    :init
-   (load-theme 'noctilux t))
+   (load-theme 'brin t))
 
 (use-package doom-modeline
   :ensure t
@@ -64,9 +65,11 @@
 (use-package all-the-icons
   :ensure t)
 
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
+(use-package column-enforce-mode
+  :ensure t
+  :config
+  (add-hook 'prog-mode-hook 'column-enforce-mode)
+  (add-hook 'text-mode-hook 'column-enforce-mode))
 
 (use-package which-key
   :ensure t
@@ -165,6 +168,23 @@
 (use-package transpose-frame
   :ensure t)
 
+(use-package tex
+  :defer t
+  :ensure auctex
+  :config
+  (setq TeX-auto-save t)
+  (setq TeX-parse-self t)
+  (setq-default TeX-master nil)
+  (add-hook 'LaTeX-mode-hook 'visual-line-mode)
+  (add-hook 'LaTeX-mode-hook 'flyspell-mode)
+  (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
+  (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+  (setq reftex-plug-into-AUCTeX t)
+  (setq TeX-PDF-mode t))
+
+(use-package gnuplot-mode
+  :ensure t)
+
 (defvar default-shell "/bin/zsh")
 (defadvice ansi-term (before force-zsh)
   (interactive (list default-shell)))
@@ -196,6 +216,45 @@
 
 (global-set-key (kbd "C-c y") 'avy-copy-line)
 
+;; configs do uncle dave
+(use-package emms
+  :ensure t
+  :config
+    (require 'emms-setup)
+    (require 'emms-player-mpd)
+    (emms-all) ; don't change this to values you see on stackoverflow questions if you expect emms to work
+    (setq emms-seek-seconds 1)
+    (setq emms-player-list '(emms-player-mpd))
+    (setq emms-info-functions '(emms-info-mpd))
+    (setq emms-player-mpd-server-name "localhost")
+    (setq emms-player-mpd-server-port "6600")
+  :bind
+    ("s-m p" . emms)
+    ("s-m b" . emms-smart-browse)
+    ("s-m r" . emms-player-mpd-update-all-reset-cache)
+    ("<C-XF86AudioPrev>" . emms-previous)
+    ("<C-XF86AudioNext>" . emms-next)
+    ("<C-XF86AudioPlay>" . emms-pause))
+
+(setq mpc-host "localhost:6000")
+
+(defun mpd/update-database ()
+  "Updates the MPD database synchronously."
+  (interactive)
+  (call-process "mpc" nil nil nil "update")
+  (message "Database atualizado"))
+(global-set-key (kbd "s-m u") 'mpd/update-database)
+
+(defun mpd/start-music-daemon ()
+  "Start MPD, connects to it and syncs the metadata cache."
+  (interactive)
+  (shell-command "mpd")
+  (mpd/update-database)
+  (emms-player-mpd-connect)
+  (emms-cache-set-from-mpd-all)
+  (message "MPD atualizederson"))
+(global-set-key (kbd "s-m c") 'mpd/start-music-daemon)
+
 (setq-default backup-directory-alist
  '(("." . "~/.cache/emacs/backups/")))
 (add-to-list 'auto-save-file-name-transforms
@@ -213,3 +272,33 @@
 
 (use-package yasnippet-snippets
   :ensure t)
+
+(setenv
+ "DICPATH"
+ "/usr/share/hunspell")
+
+(setq ispell-program-name "hunspell")
+
+(dolist (hook '(text-mode-hook))
+      (add-hook hook (lambda () (flyspell-mode 1))))
+    (dolist (hook '(change-log-mode-hook log-edit-mode-hook))
+      (add-hook hook (lambda () (flyspell-mode -1))))
+(setq flyspell-issue-message-flag nil)
+
+(use-package auto-dictionary
+    :ensure t
+    :config
+    (add-hook 'flyspell-mode-hook (lambda () (auto-dictionary-mode 1))))
+
+(use-package gnuplot
+  :ensure t)
+(use-package gnuplot-mode
+  :ensure t)
+
+(local-set-key "M-C-g" 'org-plot/gnuplot)
+
+(prefer-coding-system 'utf-8)
+(set-default-coding-systems 'utf-8)
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(set-language-environment 'utf-8)
