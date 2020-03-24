@@ -53,7 +53,8 @@
 
 (use-package doom-modeline
   :ensure t
-  :init (doom-modeline-mode 1))
+  :init (doom-modeline-mode 1)
+  :config (setq doom-modeline-bar-width 1))
 
 (defun mostrarLinhazitas ()
     (interactive)
