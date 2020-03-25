@@ -51,10 +51,13 @@ There are two things you can do about this warning:
  '(comint-highlight-prompt ((t (:inherit minibuffer-prompt :foreground "HotPink1"))))
  '(custom-link ((t (:inherit link :foreground "maroon1"))))
  '(doom-modeline-bar ((t (:background "gray20"))))
+ '(font-latex-sectioning-5-face ((t (:inherit variable-pitch :foreground "VioletRed1" :weight bold))))
+ '(hl-line ((t (:inherit highlight :background "HotPink4"))))
  '(ido-first-match ((t (:foreground "pink" :weight bold))))
  '(ido-subdir ((t (:foreground "deep pink"))))
  '(link ((t (:foreground "CadetBlue3" :underline t))))
- '(minibuffer-prompt ((t (:foreground "magenta")))))
+ '(minibuffer-prompt ((t (:foreground "magenta"))))
+ '(swiper-line-face ((t (:background "DeepPink4" :foreground "PeachPuff1")))))
 
 
 

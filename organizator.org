@@ -44,7 +44,8 @@
      (dashboard-modify-heading-icons '((recents . "ruby")
 				       (bookmarks . "bookmark" )
 				       (projects . "package" )))
-     (setq dashboard-footer "emags :DDDDDDDD"))
+     (setq dashboard-footer "emags :DDDDDDDD")
+     (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*"))))
 #+END_SRC
 
 
@@ -75,7 +76,7 @@ Menu é inútil e toma espaço
 ** Highlight de linha
 #+BEGIN_SRC emacs-lisp
 (when window-system (global-hl-line-mode t))
-(set-face-background hl-line-face "HotPink4")
+
 
 #+END_SRC
 *LINHAS CHAMAM MAIS ATENÇÃO AGR*
@@ -94,7 +95,9 @@ Combina mais com o tema atual do meu desktop environment
 (use-package doom-modeline
   :ensure t
   :init (doom-modeline-mode 1)
-  :config (setq doom-modeline-bar-width 1))
+  :config 
+  (setq doom-modeline-bar-width 1)
+  (setq doom-modeline-icon 1))
 #+END_SRC
 ** line numbers
 #+BEGIN_SRC emacs-lisp
@@ -500,3 +503,15 @@ Permite-me trocar facilmente por entre janelas
 (set-keyboard-coding-system 'utf-8)
 (set-language-environment 'utf-8)
 #+END_SRC
+** emacs daemon
+#+BEGIN_SRC emacs-lisp
+;; define function to shutdown emacs server instance
+(defun server-shutdown ()
+  "Save buffers, Quit, and Shutdown (kill) server"
+  (interactive)
+  (save-some-buffers)
+  (kill-emacs)
+  )
+
+#+END_SRC
+Roubado da wiki, esta funcao mata o daemon e pede para salvar os buffers

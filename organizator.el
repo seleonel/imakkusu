@@ -35,7 +35,8 @@
    (dashboard-modify-heading-icons '((recents . "ruby")
 				     (bookmarks . "bookmark" )
 				     (projects . "package" )))
-   (setq dashboard-footer "emags :DDDDDDDD"))
+   (setq dashboard-footer "emags :DDDDDDDD")
+   (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*"))))
 
 (set-default-font "Hack 12")
 
@@ -44,7 +45,6 @@
 (menu-bar-mode -1)
 
 (when window-system (global-hl-line-mode t))
-(set-face-background hl-line-face "HotPink4")
 
 (use-package sublime-themes
    :ensure t
@@ -54,7 +54,9 @@
 (use-package doom-modeline
   :ensure t
   :init (doom-modeline-mode 1)
-  :config (setq doom-modeline-bar-width 1))
+  :config 
+  (setq doom-modeline-bar-width 1)
+  (setq doom-modeline-icon 1))
 
 (defun mostrarLinhazitas ()
     (interactive)
@@ -303,3 +305,11 @@
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 (set-language-environment 'utf-8)
+
+;; define function to shutdown emacs server instance
+(defun server-shutdown ()
+  "Save buffers, Quit, and Shutdown (kill) server"
+  (interactive)
+  (save-some-buffers)
+  (kill-emacs)
+  )
