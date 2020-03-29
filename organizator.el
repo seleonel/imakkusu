@@ -38,13 +38,13 @@
    (setq dashboard-footer "emags :DDDDDDDD")
    (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*"))))
 
-(set-default-font "Hack 12")
+(setq default-frame-alist '((font . "Hack 12")))
 
 (tool-bar-mode -1)
 
 (menu-bar-mode -1)
 
-(when window-system (global-hl-line-mode t))
+(global-hl-line-mode t)
 
 (use-package sublime-themes
    :ensure t
@@ -67,6 +67,12 @@
 
 (use-package all-the-icons
   :ensure t)
+
+(use-package neotree
+  :ensure t
+  :config
+  (global-set-key (kbd "s-n") 'neotree-toggle)
+  (setq neo-theme (if (display-graphic-p) 'icons 'arrow)))
 
 (use-package column-enforce-mode
   :ensure t
@@ -188,6 +194,23 @@
 (use-package gnuplot-mode
   :ensure t)
 
+(use-package js2-mode
+  :ensure t
+  :config
+  (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+  (add-to-list 'auto-mode-alist '("\\.jsx?\\'" . js2-jsx-mode))
+  (add-to-list 'interpreter-mode-alist '("node" . js2-jsx-mode)))
+
+(use-package simple-httpd
+  :ensure t)
+
+(use-package skewer-mode
+  :ensure t
+  :config
+  (add-hook 'js2-mode-hook 'skewer-mode)
+  (add-hook 'css-mode-hook 'skewer-css-mode)
+  (add-hook 'html-mode-hook 'skewer-html-mode))
+
 (defvar default-shell "/bin/zsh")
 (defadvice ansi-term (before force-zsh)
   (interactive (list default-shell)))
@@ -307,7 +330,7 @@
 (set-language-environment 'utf-8)
 
 ;; define function to shutdown emacs server instance
-(defun server-shutdown ()
+(defun matar-server ()
   "Save buffers, Quit, and Shutdown (kill) server"
   (interactive)
   (save-some-buffers)
