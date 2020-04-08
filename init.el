@@ -16,7 +16,7 @@ There are two things you can do about this warning:
     ;; For important compatibility libraries like cl-lib
     (add-to-list 'package-archives (cons "gnu" (concat proto "://elpa.gnu.org/packages/")))))
 (package-initialize)
-
+(require 'dbus)
 ;; *Use package*
 
 (unless (package-installed-p 'use-package)

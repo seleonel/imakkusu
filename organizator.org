@@ -572,10 +572,10 @@ Roubado da wiki, esta funcao mata o daemon e pede para salvar os buffers
       mu4e-maildir       "~/.local/share/Mail"   ;; top-level Maildir
       mu4e-sent-folder   "/Sent"       ;; folder for sent messages
       mu4e-refile-folder "/Inbox")   ;; saved messages
-
-    (setq mu4e-get-email-command "offlineimap")
-    (setq	mu4e-update-interval 100)
-
+    (setq mu4e-index-update-in-background t)
+    (setq mu4e-get-mail-command "offlineimap")
+    (setq mu4e-update-interval 200)
+    (setq mu4e-enable-notifications t)
     ;; enable inline images
     (setq mu4e-view-show-images t)
     ;; use imagemagick, if available
@@ -616,7 +616,13 @@ cliente de email bem simples
     :after mu4e
     :hook
     (after-init . mu4e-alert-enable-notifications)
-    (after-init . mu4e-alert-enable-mode-line-display))
+    (after-init . mu4e-alert-enable-mode-line-display)
+    :init
+    (mu4e-alert-set-default-style 'libnotify)
+       (setq mu4e-alert-interesting-mail-query
+	     (concat
+	      "flag:unread"
+	      " AND NOT flag:trashed")))
 
 #+END_SRC
 
