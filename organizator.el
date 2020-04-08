@@ -55,6 +55,7 @@
   :ensure t
   :init (doom-modeline-mode 1)
   :config 
+  (setq doom-modeline-mu4e t)
   (setq doom-modeline-bar-width 1)
   (setq doom-modeline-icon 1))
 
@@ -218,6 +219,9 @@
 
 (global-set-key (kbd "s-t") 'ansi-term)
 
+(use-package use-package-ensure-system-package
+  :ensure t)
+
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 (setq ido-enable-flex-matching nil)
@@ -336,3 +340,50 @@
   (save-some-buffers)
   (kill-emacs)
   )
+
+(use-package mu4e
+  :ensure-system-package mu
+  :load-path "/usr/share/emacs/site-lisp"
+  :init
+  ;; pastinhas
+  (setq
+    mu4e-maildir       "~/.local/share/Mail"   ;; top-level Maildir
+    mu4e-sent-folder   "/Sent"       ;; folder for sent messages
+    mu4e-refile-folder "/Inbox")   ;; saved messages
+
+  (setq mu4e-get-email-command "offlineimap")
+  (setq	mu4e-update-interval 100)
+
+  ;; enable inline images
+  (setq mu4e-view-show-images t)
+  ;; use imagemagick, if available
+  (when (fboundp 'imagemagick-register-types)
+    (imagemagick-register-types))
+  (setq mu4e-use-fancy-chars t)
+  (setq mu4e-attachment-dir "~/Downloads")
+  (setq message-kill-buffer-on-exit t)
+  (setq mu4e-confirm-quit nil)
+  ;; assinatura yay
+  (setq user-mail-address "leon_bellini@outlook.com"
+	user-full-name "Leon Ferreira Bellini"
+	mu4e-compose-signature
+	(concat "Leon F. Bellini\n"
+		"Estudante de Ciência da Computação no Centro Universitário FEI\n"
+
+		"\nGitHub: https://github.com/user/seleonel\n")))
+
+(use-package smtpmail
+  :after mu4e
+  :init
+  (setq message-send-mail-function 'smtpmail-send-it
+    smtpmail-stream-type 'starttls
+    smtpmail-default-smtp-server "smtp.office365.com"
+    smtpmail-smtp-server "smtp.office365.com"
+    smtpmail-smtp-service 587))
+
+(use-package mu4e-alert
+  :ensure t
+  :after mu4e
+  :hook
+  (after-init . mu4e-alert-enable-notifications)
+  (after-init . mu4e-alert-enable-mode-line-display))
