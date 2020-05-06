@@ -118,6 +118,13 @@ Combina mais com o tema atual do meu desktop environment
 
 #+END_SRC
 * PACOTES GERAIS
+** magit
+#+BEGIN_SRC emacs-lisp
+  (use-package magit
+    :ensure t
+    :bind
+    ("C-x g" . magit-status))
+#+END_SRC
 ** neotree
 #+BEGIN_SRC emacs-lisp
   (use-package neotree
@@ -365,6 +372,13 @@ Força zsh como shell do ansi-term
 #+END_SRC
 
 * *GERAIS*
+** mail encrypt
+#+BEGIN_SRC emacs-lisp
+(setq mm-sign-option 'guided)
+(add-hook 'message-send-hook 'mml-secure-message-sign)
+
+
+#+END_SRC
 ** ensure-system-package
 #+BEGIN_SRC emacs-lisp
 (use-package use-package-ensure-system-package
@@ -574,7 +588,7 @@ Roubado da wiki, esta funcao mata o daemon e pede para salvar os buffers
       mu4e-refile-folder "/Inbox")   ;; saved messages
     (setq mu4e-index-update-in-background t)
     (setq mu4e-get-mail-command "offlineimap")
-    (setq mu4e-update-interval 200)
+    (setq mu4e-update-interval 300)
     (setq mu4e-enable-notifications t)
     ;; enable inline images
     (setq mu4e-view-show-images t)

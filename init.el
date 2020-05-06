@@ -41,7 +41,7 @@ There are two things you can do about this warning:
  '(org-agenda-files (quote ("~/Estudo/diario.org")))
  '(package-selected-packages
    (quote
-    (use-package-ensure-system-package mu4e mu skewer-mode simple-httpd js2-mode emacs-neotree neotree column-enforce-mode gnuplot sublime-themes gnuplot-mode emms auto-dictionary doom-modeline with-editor git-commit transpose-frame rainbow-delimiters projectile all-the-icons dashboard sudo-edit noctilux-theme cyberpunk-theme web-mode yasnippet-snippets yasnippet rainbow-delimiters-mode expand-region multiple-cursors ivy swiper browse-kill-ring dmenu jedi flycheck auto-complete company-anaconda pyvenv pyenv spaceline virtualenvwrapper company-jedi company switch-window smart-tabs-mode rainbow-mode avy smex ample-theme which-key use-package dash latex-extra)))
+    (magit mu4e-alert use-package-ensure-system-package mu4e mu skewer-mode simple-httpd js2-mode emacs-neotree neotree column-enforce-mode gnuplot sublime-themes gnuplot-mode emms auto-dictionary doom-modeline with-editor git-commit transpose-frame rainbow-delimiters projectile all-the-icons dashboard sudo-edit noctilux-theme cyberpunk-theme web-mode yasnippet-snippets yasnippet rainbow-delimiters-mode expand-region multiple-cursors ivy swiper browse-kill-ring dmenu jedi flycheck auto-complete company-anaconda pyvenv pyenv spaceline virtualenvwrapper company-jedi company switch-window smart-tabs-mode rainbow-mode avy smex ample-theme which-key use-package dash latex-extra)))
  '(pyvenv-mode t)
  '(send-mail-function (quote mailclient-send-it)))
 (custom-set-faces
@@ -54,11 +54,14 @@ There are two things you can do about this warning:
  '(custom-link ((t (:inherit link :foreground "maroon1"))))
  '(doom-modeline-bar ((t (:background "gray20"))))
  '(font-latex-sectioning-5-face ((t (:inherit variable-pitch :foreground "VioletRed1" :weight bold))))
+ '(highlight ((t (:background "dark orchid"))))
  '(hl-line ((t (:inherit highlight :background "HotPink4"))))
  '(ido-first-match ((t (:foreground "pink" :weight bold))))
  '(ido-subdir ((t (:foreground "deep pink"))))
+ '(line-number ((t (:inherit (shadow default) :foreground "HotPink3"))))
  '(link ((t (:foreground "CadetBlue3" :underline t))))
  '(minibuffer-prompt ((t (:foreground "magenta"))))
+ '(mu4e-header-key-face ((t (:inherit message-header-name :foreground "DeepPink1" :weight bold))))
  '(swiper-line-face ((t (:background "DeepPink4" :foreground "PeachPuff1")))))
 
 
