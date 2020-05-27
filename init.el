@@ -41,9 +41,10 @@ There are two things you can do about this warning:
  '(org-agenda-files (quote ("~/Estudo/diario.org")))
  '(package-selected-packages
    (quote
-    (magit mu4e-alert use-package-ensure-system-package mu4e mu skewer-mode simple-httpd js2-mode emacs-neotree neotree column-enforce-mode gnuplot sublime-themes gnuplot-mode emms auto-dictionary doom-modeline with-editor git-commit transpose-frame rainbow-delimiters projectile all-the-icons dashboard sudo-edit noctilux-theme cyberpunk-theme web-mode yasnippet-snippets yasnippet rainbow-delimiters-mode expand-region multiple-cursors ivy swiper browse-kill-ring dmenu jedi flycheck auto-complete company-anaconda pyvenv pyenv spaceline virtualenvwrapper company-jedi company switch-window smart-tabs-mode rainbow-mode avy smex ample-theme which-key use-package dash latex-extra)))
+    (latex-preview-pane ac-js2 plantuml-mode pyenv-mode magit mu4e-alert use-package-ensure-system-package mu4e mu skewer-mode simple-httpd js2-mode emacs-neotree neotree column-enforce-mode gnuplot sublime-themes gnuplot-mode emms auto-dictionary doom-modeline with-editor git-commit transpose-frame rainbow-delimiters projectile all-the-icons dashboard sudo-edit noctilux-theme cyberpunk-theme web-mode yasnippet-snippets yasnippet rainbow-delimiters-mode expand-region multiple-cursors ivy swiper browse-kill-ring dmenu jedi flycheck auto-complete company-anaconda pyvenv pyenv spaceline virtualenvwrapper company-jedi company switch-window smart-tabs-mode rainbow-mode avy smex ample-theme which-key use-package dash latex-extra)))
  '(pyvenv-mode t)
- '(send-mail-function (quote mailclient-send-it)))
+ '(send-mail-function (quote mailclient-send-it))
+ '(shell-escape-mode "-shell-escape"))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

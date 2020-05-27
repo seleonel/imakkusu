@@ -118,6 +118,15 @@ Combina mais com o tema atual do meu desktop environment
 
 #+END_SRC
 * PACOTES GERAIS
+** pyenv
+#+BEGIN_SRC emacs-lisp
+  (use-package pyenv-mode
+    :ensure t
+    :ensure-system-package pyenv
+    :hook
+    (pyenv-mode . python-mode))
+#+END_SRC
+Permite-me trabalhar com ambientes virtuais
 ** magit
 #+BEGIN_SRC emacs-lisp
   (use-package magit
@@ -158,8 +167,8 @@ só mostra um limite
   (use-package avy
     :ensure t
     :bind
-    ("M-." . avy-goto-char))
-
+    ("M-." . avy-goto-char)
+    ("M-g f" . avy-goto-line))
 #+END_SRC
 ** SMEX
 #+BEGIN_SRC emacs-lisp
@@ -170,6 +179,7 @@ só mostra um limite
     ("M-x" . smex))
 #+END_SRC
 ** Rainbow
+*** Rainbow-delimiters
 #+BEGIN_SRC emacs-lisp
 (use-package rainbow-delimiters
     :ensure t
@@ -177,17 +187,24 @@ só mostra um limite
     (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
 
 #+END_SRC
+*** Rainbow mode
+#+BEGIN_SRC emacs-lisp
+  (use-package rainbow-mode
+    :ensure t
+    :hook
+    (prog-mode . rainbow-mode))
+#+END_SRC
 Códigos de cor *hexadecimais* ficam coloridos yay
 ** smart tabs
 #+BEGIN_SRC emacs-lisp
 (use-package smart-tabs-mode
  :ensure t
- :init
  :config
  (smart-tabs-add-language-support latex latex-mode-hook
  ((latex-indent-line . 4)
  (latex-indent-region . 4)))
- (smart-tabs-insinuate 'c 'c++ 'java 'latex))
+ (smart-tabs-insinuate 'c 'c++ 'java 'latex)
+ (smart-tabs-advice js2-indent-line js2-basic-offset))
 
 #+END_SRC
 esse código copiei de um anão
@@ -209,6 +226,14 @@ esse código copiei de um anão
     :config
     (ac-config-default)
     (ac-complete-yasnippet))
+#+END_SRC
+*** ac-js2
+#+BEGIN_SRC emacs-lisp
+  (use-package ac-js2
+    :ensure t
+    :after auto-complete
+    :hook
+    (js2-mode . ac-js2-mode))
 #+END_SRC
 ** flycheck
 #+BEGIN_SRC emacs-lisp
@@ -300,24 +325,38 @@ Pacote pra múltiplos cursores, muito daora
 
 Pacote para /management/ de janelas
 
-** auctex
+** latex
+*** auctex
 #+BEGIN_SRC emacs-lisp
-      (use-package tex
-	:defer t
-	:ensure auctex
-	:config
-	(setq TeX-auto-save t)
-	(setq TeX-parse-self t)
-	(setq-default TeX-master nil)
-	(add-hook 'LaTeX-mode-hook 'visual-line-mode)
-	(add-hook 'LaTeX-mode-hook 'flyspell-mode)
-	(add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
-	(add-hook 'LaTeX-mode-hook 'turn-on-reftex)
-	(setq reftex-plug-into-AUCTeX t)
-	(setq TeX-PDF-mode t))
+  (use-package tex
+    :defer t
+    :ensure auctex
+    :hook
+    (LaTeX-mode . visual-line-mode)
+    (LaTeX-mode . flyspell-mode)
+    (LaTeX-mode . LaTeX-math-mode)
+    (LaTeX-mode . turn-on-reftex)
+    :config
+    (setq TeX-auto-save t)
+    (setq TeX-parse-self t)
+    (setq-default TeX-master nil)
+    (setq reftex-plug-into-AUCTeX t)
+    (setq TeX-PDF-mode t)
+    (add-hook 'TeX-mode-hook
+	      (lambda ()
+		(setq TeX-command-extra-options "-shell-escape")
+		)
+	      ))
+
 #+END_SRC 
 Para edição aprimorada de documentos TEX
-  
+*** latex preview pane
+#+BEGIN_SRC emacs-lisp
+  (use-package latex-preview-pane
+    :ensure t
+    :hook
+    (LaTeX-mode . latex-preview-pane-mode))
+#+END_SRC
 ** gnuplot-mode
 #+BEGIN_SRC emacs-lisp
 (use-package gnuplot-mode
@@ -353,7 +392,6 @@ servidor web "minimalista"
 
 #+END_SRC
 Interpretador de forms de html/css/js, também tem um repl
-
 * TERMINAL
 ** Força zsh no ansi-term
 #+BEGIN_SRC emacs-lisp
@@ -409,12 +447,7 @@ Pacotinho legal para garantir que pacotes externos existem (bom para o mu4e)
 (global-set-key (kbd "s-s") 'ido-switch-buffer)
 
 #+END_SRC
-** janela org
-#+BEGIN_SRC emacs-lisp
-  (setq org-src-window-setup 'current-window)
 
-#+END_SRC
-abre editor do org mode na janela atual
 ** assassino de palavras
 #+BEGIN_SRC emacs-lisp
   (defun matarPalavra ()
@@ -462,7 +495,7 @@ abre editor do org mode na janela atual
 (setq mpc-host "localhost:6000")
 
 #+END_SRC
-** funcao para atualizar o database
+*** funcao para atualizar o database
 #+BEGIN_SRC emacs-lisp
 (defun mpd/update-database ()
   "Updates the MPD database synchronously."
@@ -472,7 +505,7 @@ abre editor do org mode na janela atual
 (global-set-key (kbd "s-m u") 'mpd/update-database)
 
 #+END_SRC
-*** funcao para iniciar mpd
+**** funcao para iniciar mpd
 #+BEGIN_SRC emacs-lisp
 (defun mpd/start-music-daemon ()
   "Start MPD, connects to it and syncs the metadata cache."
@@ -504,7 +537,7 @@ Permite-me trocar facilmente por entre janelas
 #+BEGIN_SRC emacs-lisp
   (global-subword-mode 1)
 #+END_SRC
-** Yasnippetx
+** Yasnippet
 #+BEGIN_SRC emacs-lisp
   (use-package yasnippet
     :ensure t
@@ -544,17 +577,6 @@ Permite-me trocar facilmente por entre janelas
       (add-hook 'flyspell-mode-hook (lambda () (auto-dictionary-mode 1))))
 
 #+END_SRC
-** gnuplot
-#+BEGIN_SRC emacs-lisp
-(use-package gnuplot
-  :ensure t)
-(use-package gnuplot-mode
-  :ensure t)
-#+END_SRC
-*** gnuplot binding
-#+BEGIN_SRC emacs-lisp
-(local-set-key "M-C-g" 'org-plot/gnuplot) 
-#+END_SRC
 ** Forçar UTF-8
 #+BEGIN_SRC emacs-lisp
 (prefer-coding-system 'utf-8)
@@ -586,17 +608,19 @@ Roubado da wiki, esta funcao mata o daemon e pede para salvar os buffers
       mu4e-maildir       "~/.local/share/Mail"   ;; top-level Maildir
       mu4e-sent-folder   "/Sent"       ;; folder for sent messages
       mu4e-refile-folder "/Inbox")   ;; saved messages
-    (setq mu4e-index-update-in-background t)
-    (setq mu4e-get-mail-command "offlineimap")
-    (setq mu4e-update-interval 300)
+    (setq mu4e-index-update-error-warning t)
+    (setq mu4e-headers-auto-update t)
+    (setq mu4e-get-mail-command "offlineimap -o")
+    (setq mu4e-update-interval 350)
     (setq mu4e-enable-notifications t)
+
     ;; enable inline images
     (setq mu4e-view-show-images t)
     ;; use imagemagick, if available
     (when (fboundp 'imagemagick-register-types)
       (imagemagick-register-types))
     (setq mu4e-use-fancy-chars t)
-    (setq mu4e-attachment-dir "~/Downloads")
+    (setq mu4e-attachment-dir "~/Downloads/Mail")
     (setq message-kill-buffer-on-exit t)
     (setq mu4e-confirm-quit nil)
     ;; assinatura yay
@@ -640,4 +664,51 @@ cliente de email bem simples
 
 #+END_SRC
 
+** org-mode
+*** Inline images
+#+BEGIN_SRC emacs-lisp
+(setq org-display-inline-images t)
+(setq org-redisplay-inline-images t) 
+(setq org-startup-with-inline-images "inlineimages")
+#+END_SRC
+Mostra por padrão as imagens no próprio buffer do org
+*** gnuplot
+#+BEGIN_SRC emacs-lisp
+(use-package gnuplot
+  :ensure t)
+(use-package gnuplot-mode
+  :ensure t)
+#+END_SRC
+*** gnuplot binding
+#+BEGIN_SRC emacs-lisp
+(local-set-key "M-C-g" 'org-plot/gnuplot) 
+#+END_SRC
+Gnuplot para plotagem de gráficos a partir de tabelas
+*** plantuml
+#+BEGIN_SRC emacs-lisp
+  (setq org-plantuml-jar-path (expand-file-name (concat (getenv "XDG_DATA_HOME") "/plantuml/plantuml.jar")))
+  (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
+  (org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t)))
+#+END_SRC
+Programito bom para desenvolver diagramas de classes e fluxogramas.
+**** plantuml-mode
+#+BEGIN_SRC emacs-lisp
+  (use-package plantuml-mode
+    :ensure t
+    :config
+    (setq plantuml-jar-path (expand-file-name (concat (getenv "XDG_DATA_HOME") "/plantuml/plantuml.jar")))
+    (setq plantuml-default-exec-mode 'jar))
+#+END_SRC
+*** janela org
+#+BEGIN_SRC emacs-lisp
+  (setq org-src-window-setup 'current-window)
+#+END_SRC
+Abre editor do org mode na janela atual
+*** babel
+#+BEGIN_SRC emacs-lisp
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((dot . t))) ; this line activates dot
 
+#+END_SRC
+Algumas opções de linguagens do babel
