@@ -237,6 +237,7 @@ esse código copiei de um anão
 #+BEGIN_SRC emacs-lisp
   (use-package company-irony
     :ensure t
+    :after company 
     :init
     (add-to-list 'company-backends 'company-irony))
 #+END_SRC
@@ -244,6 +245,7 @@ esse código copiei de um anão
 #+BEGIN_SRC emacs-lisp
   (use-package ac-js2
     :ensure t
+    :after company
     :init
     (add-to-list 'company-backends 'ac-js2-company))
 #+END_SRC
@@ -252,6 +254,7 @@ Para javascripto/jsx
 #+BEGIN_SRC emacs-lisp
   (use-package company-anaconda
     :ensure t
+    :after company
     :init
     (add-to-list 'company-backends 'company-anaconda)
     :hook
@@ -262,6 +265,7 @@ Autocomplete para python
 #+BEGIN_SRC emacs-lisp
   (use-package company-auctex
     :ensure t
+    :after company 
     :init
     (add-to-list 'company-backends 'company-auctex)
     (company-auctex-init))
@@ -415,6 +419,33 @@ servidor web "minimalista"
 
 #+END_SRC
 Interpretador de forms de html/css/js, também tem um repl
+*** company-c-headers
+#+BEGIN_SRC emacs-lisp
+    (use-package company-c-headers
+      :ensure t
+      :after company 
+      :init
+      (add-to-list 'company-backends 'company-c-headers))
+
+#+END_SRC
+*** quickhelp
+#+BEGIN_SRC emacs-lisp
+  (use-package company-quickhelp
+    :ensure t
+    :init
+    :hook
+    (prog-mode . company-quickhelp-mode))
+#+END_SRC
+Mostra documentação automaticamente
+*** company-math 
+#+BEGIN_SRC emacs-lisp
+    (use-package company-math
+      :ensure t
+      :after company 
+      :init
+      (add-to-list 'company-backends 'company-math-symbols-unicode))
+
+#+END_SRC
 * TERMINAL
 ** Força zsh no ansi-term
 #+BEGIN_SRC emacs-lisp
@@ -735,3 +766,10 @@ Abre editor do org mode na janela atual
 
 #+END_SRC
 Algumas opções de linguagens do babel
+** c-headers 
+#+BEGIN_SRC emacs-lisp
+  (defun c-open-header-in-place ()
+      "Long names for long bois."
+       (local-set-key (kbd "C-c h") 'ff-find-other-file))
+  (add-hook 'c-initialization-hook 'c-open-header-in-place)
+#+END_SRC
