@@ -221,35 +221,58 @@ esse código copiei de um anão
 #+END_SRC
 ** autocompletion
 #+BEGIN_SRC emacs-lisp
-  (use-package auto-complete
+  (use-package company
     :ensure t
     :config
-    (ac-config-default)
-    (ac-complete-yasnippet))
+    (setq company-idle-delay 0)
+    (setq company-minimum-prefix-length 2)
+    (setq company-selection-wrap-around t)
+    (company-tng-configure-default)
+    :hook
+    (after-init . global-company-mode)
+    :bind
+    ("s-c" . company-complete))
+#+END_SRC
+*** company-irony
+#+BEGIN_SRC emacs-lisp
+  (use-package company-irony
+    :ensure t
+    :init
+    (add-to-list 'company-backends 'company-irony))
 #+END_SRC
 *** ac-js2
 #+BEGIN_SRC emacs-lisp
   (use-package ac-js2
     :ensure t
-    :after auto-complete
-    :hook
-    (js2-mode . ac-js2-mode))
+    :init
+    (add-to-list 'company-backends 'ac-js2-company))
 #+END_SRC
+Para javascripto/jsx
+*** company-anaconda
+#+BEGIN_SRC emacs-lisp
+  (use-package company-anaconda
+    :ensure t
+    :init
+    (add-to-list 'company-backends 'company-anaconda)
+    :hook
+    (python-mode . anaconda-mode))
+#+END_SRC
+Autocomplete para python 
+*** company-auctex
+#+BEGIN_SRC emacs-lisp
+  (use-package company-auctex
+    :ensure t
+    :init
+    (add-to-list 'company-backends 'company-auctex)
+    (company-auctex-init))
+#+END_SRC
+Autocomplete para latex
 ** flycheck
 #+BEGIN_SRC emacs-lisp
   (use-package flycheck
     :ensure t
     :init
     (global-flycheck-mode t))
-
-#+END_SRC
-** jedi
-#+BEGIN_SRC emacs-lisp
-  (use-package jedi
-    :ensure t
-    :init
-    (add-hook 'python-mode-hook 'jedi:setup)
-    (add-hook 'python-mode-hook 'jedi:ac-setup))
 
 #+END_SRC
 ** dmenu
