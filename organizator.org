@@ -433,6 +433,7 @@ Interpretador de forms de html/css/js, também tem um repl
   (use-package company-quickhelp
     :ensure t
     :init
+    (setq company-quickhelp-delay 0)
     :hook
     (prog-mode . company-quickhelp-mode))
 #+END_SRC
@@ -605,22 +606,31 @@ Permite-me trocar facilmente por entre janelas
     :ensure t)
 
 #+END_SRC
-** hunspell
+** aspell 
 #+BEGIN_SRC emacs-lisp
-  (setenv
-   "DICPATH"
-   "/usr/share/hunspell")
-
-  (setq ispell-program-name "hunspell")
-
+(setq ispell-program-name "aspell")
 #+END_SRC
+Aspell me parece mais efetivo.
 *** flyspell
 #+BEGIN_SRC emacs-lisp
-    (dolist (hook '(text-mode-hook))
-      (add-hook hook (lambda () (flyspell-mode 1))))
-    (dolist (hook '(change-log-mode-hook log-edit-mode-hook))
-      (add-hook hook (lambda () (flyspell-mode -1))))
-(setq flyspell-issue-message-flag nil)
+      (dolist (hook '(text-mode-hook))
+	(add-hook hook (lambda () (flyspell-mode 1))))
+      (dolist (hook '(change-log-mode-hook log-edit-mode-hook))
+	(add-hook hook (lambda () (flyspell-mode -1))))
+  (setq flyspell-issue-message-flag nil)
+  (setq ispell-list-command "--list")
+  ;; tudo copiado da wiki
+  (global-set-key (kbd "<f8>") 'ispell-word)
+  (global-set-key (kbd "C-S-<f8>") 'flyspell-mode)
+  (global-set-key (kbd "C-M-<f8>") 'flyspell-buffer)
+  (global-set-key (kbd "C-<f8>") 'flyspell-check-previous-highlighted-word)
+  (defun flyspell-check-next-highlighted-word ()
+    "Custom function to spell check next highlighted word"
+    (interactive)
+    (flyspell-goto-next-error)
+    (ispell-word)
+    )
+  (global-set-key (kbd "M-<f8>") 'flyspell-check-next-highlighted-word)
 
 #+END_SRC
 *** auto dictionary
@@ -654,29 +664,35 @@ Roubado da wiki, esta funcao mata o daemon e pede para salvar os buffers
 ** mu4e
 #+BEGIN_SRC emacs-lisp
   (use-package mu4e
+    :ensure nil
     :ensure-system-package mu
     :load-path "/usr/share/emacs/site-lisp"
-    :init
+    :config
     ;; pastinhas
     (setq
-      mu4e-maildir       "~/.local/share/Mail"   ;; top-level Maildir
-      mu4e-sent-folder   "/Sent"       ;; folder for sent messages
-      mu4e-refile-folder "/Inbox")   ;; saved messages
-    (setq mu4e-index-update-error-warning t)
-    (setq mu4e-headers-auto-update t)
-    (setq mu4e-get-mail-command "offlineimap -o")
-    (setq mu4e-update-interval 350)
-    (setq mu4e-enable-notifications t)
+     mu4e-maildir       "~/.local/share/Mail"   ;; top-level Maildir
+     mu4e-sent-folder   "/Outlook/Enviadas"       ;; folder for sent m essages
+     mu4e-trash-folder  "/Outlook/Deletadas"
+     mu4e-refile-folder "/Outlook/INBOX"   ;; saved messages
+     mu4e-attachment-dir "~/Downloads/Mail")
 
-    ;; enable inline images
-    (setq mu4e-view-show-images t)
+
+    (setq mu4e-get-mail-command "mbsync -c ~/.config/isync/mbsyncrc Outlookerson")
+
+    ;; por enquanto este comando não está funcionando no momento
+    ;; utilizando systemd no lugar
+    ;; (mu4e-update-interval 240)
+    (setq mu4e-enable-notifications t
+	  ;; enable inline images
+	  mu4e-view-show-images t
+	  mu4e-index-update-error-warning t
+	  mu4e-headers-auto-update t)
+
+    (setq mu4e-change-filenames-when-moving t)
     ;; use imagemagick, if available
     (when (fboundp 'imagemagick-register-types)
       (imagemagick-register-types))
     (setq mu4e-use-fancy-chars t)
-    (setq mu4e-attachment-dir "~/Downloads/Mail")
-    (setq message-kill-buffer-on-exit t)
-    (setq mu4e-confirm-quit nil)
     ;; assinatura yay
     (setq user-mail-address "leon_bellini@outlook.com"
 	  user-full-name "Leon Ferreira Bellini"
@@ -721,9 +737,15 @@ cliente de email bem simples
 ** org-mode
 *** Inline images
 #+BEGIN_SRC emacs-lisp
-(setq org-display-inline-images t)
-(setq org-redisplay-inline-images t) 
-(setq org-startup-with-inline-images "inlineimages")
+  (setq org-display-inline-images t)
+  (setq org-redisplay-inline-images t) 
+  (setq org-startup-with-inline-images t)
+
+  (with-eval-after-load 'org
+    (add-hook 'org-babel-after-execute-hook
+	      '(lambda ()
+		 (when org-inline-image-overlays
+		   (org-redisplay-inline-images)))))
 #+END_SRC
 Mostra por padrão as imagens no próprio buffer do org
 *** gnuplot
@@ -742,7 +764,6 @@ Gnuplot para plotagem de gráficos a partir de tabelas
 #+BEGIN_SRC emacs-lisp
   (setq org-plantuml-jar-path (expand-file-name (concat (getenv "XDG_DATA_HOME") "/plantuml/plantuml.jar")))
   (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
-  (org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t)))
 #+END_SRC
 Programito bom para desenvolver diagramas de classes e fluxogramas.
 **** plantuml-mode
@@ -758,12 +779,13 @@ Programito bom para desenvolver diagramas de classes e fluxogramas.
   (setq org-src-window-setup 'current-window)
 #+END_SRC
 Abre editor do org mode na janela atual
+*** belos simbolos
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'org-mode-hook 'org-toggle-pretty-entities)
+#+END_SRC
 *** babel
 #+BEGIN_SRC emacs-lisp
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((dot . t))) ; this line activates dot
-
+  (org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t) (python . t) (dot . t)))
 #+END_SRC
 Algumas opções de linguagens do babel
 ** c-headers 
@@ -773,3 +795,8 @@ Algumas opções de linguagens do babel
        (local-set-key (kbd "C-c h") 'ff-find-other-file))
   (add-hook 'c-initialization-hook 'c-open-header-in-place)
 #+END_SRC
+** salvar clipboard antes de kill
+#+BEGIN_SRC emacs-lisp
+(setq save-interprogram-paste-before-kill t)
+#+END_SRC
+Isso deveria ser *default*.
