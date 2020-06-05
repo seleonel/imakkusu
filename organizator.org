@@ -301,10 +301,21 @@ pode me ajudar na *multitarefagem*
     :ensure t)
   (use-package swiper
     :ensure t
+    :after ivy
     :bind
     ("C-s" . swiper))
 #+END_SRC
 Boa função para procurar, mostra as ocorrências num minibuffer 
+*** Counsel
+#+begin_src emacs-lisp 
+  (use-package counsel
+    :ensure t
+    :after ivy
+    :bind
+    ("M-x" . counsel-M-x)
+    ("C-x C-f" . counsel-find-file)
+    ("C-c m" . counsel-imenu))
+#+end_src
 #+BEGIN_CENTER
 Entretanto, pode bugar em buffers maiores
 #+END_CENTER
@@ -774,20 +785,52 @@ Programito bom para desenvolver diagramas de classes e fluxogramas.
     (setq plantuml-jar-path (expand-file-name (concat (getenv "XDG_DATA_HOME") "/plantuml/plantuml.jar")))
     (setq plantuml-default-exec-mode 'jar))
 #+END_SRC
-*** janela org
-#+BEGIN_SRC emacs-lisp
-  (setq org-src-window-setup 'current-window)
-#+END_SRC
-Abre editor do org mode na janela atual
 *** belos simbolos
 #+BEGIN_SRC emacs-lisp
   (add-hook 'org-mode-hook 'org-toggle-pretty-entities)
 #+END_SRC
 *** babel
 #+BEGIN_SRC emacs-lisp
-  (org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t) (python . t) (dot . t)))
+    (org-babel-do-load-languages 
+     'org-babel-load-languages 
+     '((plantuml . t) (python . t) (dot . t)))
 #+END_SRC
 Algumas opções de linguagens do babel
+*** org-superstar
+#+BEGIN_SRC emacs-lisp
+  (use-package org-superstar
+    :ensure t
+    :hook
+    (org-mode . (lambda () (org-superstar-mode 1)))
+    :init
+    (setq org-hide-leading-stars nil)
+    (setq org-superstar-leading-bullet ?\s)
+    (setq org-superstar-prettify-item-bullets t)
+    (setq org-superstar-item-bullet-alist
+	  '((?* . ?►)
+	    (?+ . ?◐)
+	    (?- . ?◆))))
+
+#+END_SRC
+Tae um bom nome.
+*** org-roam
+#+BEGIN_SRC emacs-lisp
+  (use-package org-roam
+    :ensure t
+    :hook
+    (after-init . org-roam-mode)
+    :custom
+    (org-roam-directory (concat (getenv "HOME") "/Estudo/arquivos-org/"))
+    :bind (:map org-roam-mode-map
+		(("C-c n l" . org-roam)
+		 ("C-c n f" . org-roam-find-file)
+		 ("C-c n g" . org-roam-graph-show))
+		:map org-mode-map
+		(("C-c n i" . org-roam-insert)))
+    :config
+    (setq org-roam-index-file "./index.org"))
+#+END_SRC
+Bom pra brainstorming
 ** c-headers 
 #+BEGIN_SRC emacs-lisp
   (defun c-open-header-in-place ()
@@ -800,3 +843,4 @@ Algumas opções de linguagens do babel
 (setq save-interprogram-paste-before-kill t)
 #+END_SRC
 Isso deveria ser *default*.
+
