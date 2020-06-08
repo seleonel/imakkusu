@@ -161,7 +161,6 @@ só mostra um limite
   (which-key-mode))
 
 #+END_SRC
-
 ** avy
 #+BEGIN_SRC emacs-lisp
   (use-package avy
@@ -169,14 +168,6 @@ só mostra um limite
     :bind
     ("M-." . avy-goto-char)
     ("M-g f" . avy-goto-line))
-#+END_SRC
-** SMEX
-#+BEGIN_SRC emacs-lisp
-  (use-package smex
-    :ensure t
-    :init (smex-initialize)
-    :bind
-    ("M-x" . smex))
 #+END_SRC
 ** Rainbow
 *** Rainbow-delimiters
@@ -261,7 +252,8 @@ Para javascripto/jsx
     (python-mode . anaconda-mode))
 #+END_SRC
 Autocomplete para python 
-*** company-auctex
+*** company-latex
+**** auctex
 #+BEGIN_SRC emacs-lisp
   (use-package company-auctex
     :ensure t
@@ -270,7 +262,35 @@ Autocomplete para python
     (add-to-list 'company-backends 'company-auctex)
     (company-auctex-init))
 #+END_SRC
-Autocomplete para latex
+Autocomplete para latex tags
+**** math-symbols
+#+BEGIN_SRC emacs-lisp
+    (use-package company-math
+      :ensure t
+      :after company 
+      :init
+      (add-to-list 'company-backends 'company-math-symbols-unicode))
+#+END_SRC
+*** quickhelp
+#+BEGIN_SRC emacs-lisp
+  (use-package company-quickhelp
+    :ensure t
+    :init
+    (setq company-quickhelp-delay 0)
+    :hook
+    (prog-mode . company-quickhelp-mode))
+#+END_SRC
+Mostra documentação automaticamente
+
+*** company-c-headers
+#+BEGIN_SRC emacs-lisp
+    (use-package company-c-headers
+      :ensure t
+      :after company 
+      :init
+      (add-to-list 'company-backends 'company-c-headers))
+
+#+END_SRC
 ** flycheck
 #+BEGIN_SRC emacs-lisp
   (use-package flycheck
@@ -297,15 +317,22 @@ pode me ajudar na *multitarefagem*
 #+END_SRC
 ** Swiper
 #+BEGIN_SRC emacs-lisp
-  (use-package ivy
-    :ensure t)
+    (use-package ivy
+      :ensure t
+      :config
+      (ivy-mode 1)
+      (setq ivy-use-virtual-buffers t)
+      (setq enable-recursive-minibuffers t))
+#+END_SRC
+Boa função para procurar, mostra as ocorrências num minibuffer 
+*** swiper
+#+begin_src emacs-lisp
   (use-package swiper
     :ensure t
     :after ivy
     :bind
     ("C-s" . swiper))
-#+END_SRC
-Boa função para procurar, mostra as ocorrências num minibuffer 
+#+end_src
 *** Counsel
 #+begin_src emacs-lisp 
   (use-package counsel
@@ -430,34 +457,6 @@ servidor web "minimalista"
 
 #+END_SRC
 Interpretador de forms de html/css/js, também tem um repl
-*** company-c-headers
-#+BEGIN_SRC emacs-lisp
-    (use-package company-c-headers
-      :ensure t
-      :after company 
-      :init
-      (add-to-list 'company-backends 'company-c-headers))
-
-#+END_SRC
-*** quickhelp
-#+BEGIN_SRC emacs-lisp
-  (use-package company-quickhelp
-    :ensure t
-    :init
-    (setq company-quickhelp-delay 0)
-    :hook
-    (prog-mode . company-quickhelp-mode))
-#+END_SRC
-Mostra documentação automaticamente
-*** company-math 
-#+BEGIN_SRC emacs-lisp
-    (use-package company-math
-      :ensure t
-      :after company 
-      :init
-      (add-to-list 'company-backends 'company-math-symbols-unicode))
-
-#+END_SRC
 * TERMINAL
 ** Força zsh no ansi-term
 #+BEGIN_SRC emacs-lisp
@@ -472,7 +471,6 @@ Força zsh como shell do ansi-term
 ** Keybind
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "s-t") 'ansi-term)
-
 #+END_SRC
 
 * *GERAIS*
@@ -831,16 +829,47 @@ Tae um bom nome.
     (setq org-roam-index-file "./index.org"))
 #+END_SRC
 Bom pra brainstorming
-** c-headers 
+** C e C++
+*** c-headers 
 #+BEGIN_SRC emacs-lisp
   (defun c-open-header-in-place ()
       "Long names for long bois."
        (local-set-key (kbd "C-c h") 'ff-find-other-file))
   (add-hook 'c-initialization-hook 'c-open-header-in-place)
 #+END_SRC
+*** irony mode
+#+begin_src emacs-lisp 
+  (use-package irony
+    :ensure t
+    :hook
+    (c++-mode . irony-mode)
+    (c-mode . irony-mode)
+    (irony-mode . irony-cdb-autosetup-compile-options))
+#+end_src
+** resize melhor
+#+begin_src emacs-lisp
+  (global-set-key (kbd "s-C-<left>") 'shrink-window-horizontally)
+  (global-set-key (kbd "s-C-<right>") 'enlarge-window-horizontally)
+  (global-set-key (kbd "s-C-<down>") 'shrink-window)
+  (global-set-key (kbd "s-C-<up>") 'enlarge-window)
+#+end_src
+Roubado do witchmacs. Praise Marisa
 ** salvar clipboard antes de kill
 #+BEGIN_SRC emacs-lisp
 (setq save-interprogram-paste-before-kill t)
 #+END_SRC
 Isso deveria ser *default*.
+
+*** gdb
+#+begin_src emacs-lisp
+  (setq gdb-many-windows t
+	gdb-show-main t)
+  ;; copiado de https://tuhdo.github.io/c-ide.html
+  (global-set-key (kbd "<f5>") (lambda ()
+				 (interactive)
+				 (call-interactively 'compile)))
+
+
+#+end_src
+
 

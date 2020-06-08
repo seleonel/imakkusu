@@ -9,7 +9,13 @@ Descobri boa parte destes pacotes através dos vídeos do *Uncle Dave*, então c
     - GNU Emacs
     - Python virtualenv
     - ttf-hack
-    - zsh ( para mudar o shell, modifique a linha 234 no arquivo *organizator.org*)
+    - zsh
+    - eslint
+    - git para o magit
+    - gnuplot
+    - mu4e (mail)
+    - aspell (spelling correction)
+    - MPD (music player daemon)
     - Devo ter esquecido de algo
 
 **** use-package e melpa
@@ -21,19 +27,38 @@ Necessário adicionar ambos em seu init.el durante o primeiro run.
 ** Alguns keybindigs
 
 Estes vão provavelmente conflitar com algum outro keybind nativo de algum modo aleatório, mas como existem keybindings como existem estrelas no céu,
-refaça-os como quiser.
+refaça-os como quiser. Os atalhos de diminuir e aumentar janela foram
+roubados do /witchmacs/
 
-  - ansi-term:        *s-t* (t de terminal :^))
-  - ibuffer:          *C-x b*
-  - matarPalavra:     *C-c DEL*
-  - avy-copy-line:    *C-c y*
-  - other-frame:      *s-'*
-  - avy-goto-char:    *M-.*
-  - smex:             *M-x*
-  - dmenu:            *s-d*
-  - browse-kill-r:    *M-y*
-  - swiper:           *C-s*
-  - multiple cursors: *C-c q* - next-like-this | *C-c a* all-like-this
-  - expand-region:    *C-c e*
-  - sudo-edit:        *C-c C-s*
-  - projectile        *s-p* - projectile command map
+|-------------------+----------------------------------------------------------------------------|
+| ansi-term:        | *s-t* (t de terminal :^))                                                  |
+| ibuffer:          | *C-x b*                                                                    |
+| matarPalavra:     | *C-c DEL*                                                                  |
+| avy-copy-line:    | *C-c y*                                                                    |
+| other-frame:      | *s-'*                                                                      |
+| avy:              | *M-.* - char *M-g f* - line                                                |
+| smex:             | *M-x*                                                                      |
+| dmenu:            | *s-d*                                                                      |
+| browse-kill-r:    | *M-y*                                                                      |
+| swiper:           | *C-s*                                                                      |
+| expand-region:    | *C-c e*                                                                    |
+| sudo-edit:        | *C-c C-s*                                                                  |
+| projectile        | *s-p* - projectile command map                                             |
+| multiple cursors: | *C-c q* - next-like-this  *C-c a* all-like-this                            |
+| emms              | *s-m p* - emms *s-m b* emms-smart-browse *s-m r* emms-player-mpd-update... |
+|                   | *C-XF86audionext* emms-next *C-Xf86audioprev* emms-prev                    |
+|                   | *s-m u*  mpd-update-database *s-m c* start mpd                             |
+| shrink window     | *s-c-<left>* *s-c-<right>* *s-c-<down>* *s-c<up>*                          |
+| compile           | *<f5>*                                                                     |
+| org-roam          | *C-c n l* - org-roam *C-c n f* - file *C-c n g* - graph *C-c n i* - insert |
+| magit             | *C-x g*                                                                    |
+| company           | *s-c*                                                                      |
+| counsel           | *M-x* *C-x C-f* & *C-c m* (imenu)                                          |
+| org-plot          | *M-C g*                                                                    |
+| neotree           | *s-n*                                                                      |
+| frames            | *s-'* other-frame                                                          |
+| ispell            | *<f8>* ispell-word *C-s-<f8>* flyspell-mode *C-M-<f8>* flyspell-buffer     |
+|                   | *C-<f8>* check-previous-highlight                                          |
+|-------------------+----------------------------------------------------------------------------|
+
+
