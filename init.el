@@ -32,16 +32,16 @@ There are two things you can do about this warning:
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(browse-url-browser-function (quote browse-url-chromium))
+ '(browse-url-browser-function 'browse-url-chromium)
  '(custom-safe-themes
-   (quote
-    ("8885761700542f5d0ea63436874bf3f9e279211707d4b1ca9ed6f53522f21934" default)))
- '(org-agenda-files (quote ("~/Estudo/diario.org")))
+   '("8885761700542f5d0ea63436874bf3f9e279211707d4b1ca9ed6f53522f21934" default))
+ '(elfeed-feeds
+   '("https://mangadex.org/rss/RcQaxzfdV2GgFHCs9kSYr54TEqP78MvK/manga_id/10749" "https://mangadex.org/rss/RcQaxzfdV2GgFHCs9kSYr54TEqP78MvK/manga_id/13871" "https://mangadex.org/rss/RcQaxzfdV2GgFHCs9kSYr54TEqP78MvK/manga_id/9570" "https://mangadex.org/rss/RcQaxzfdV2GgFHCs9kSYr54TEqP78MvK/manga_id/34165" "https://mangadex.org/rss/RcQaxzfdV2GgFHCs9kSYr54TEqP78MvK/manga_id/10873" "https://mangadex.org/rss/RcQaxzfdV2GgFHCs9kSYr54TEqP78MvK/manga_id/22369" "https://mangadex.org/rss/RcQaxzfdV2GgFHCs9kSYr54TEqP78MvK/manga_id/1073" "https://www.youtube.com/channel/UClcE-kVhqyiHCcjYwcpfj9w" "https://www.archlinux.org/feeds/news/" "https://www.archlinux.org/feeds/packages/" "https://mangadex.org/rss/RcQaxzfdV2GgFHCs9kSYr54TEqP78MvK/manga_id/20723" "https://stallman.org/rss"))
+ '(org-agenda-files '("~/.emacs.d/org_files/datas.org"))
  '(package-selected-packages
-   (quote
-    (counsel org-ref org-roam org-superstar company-math company-quickhelp company-c-headers company-auctex latex-preview-pane ac-js2 plantuml-mode pyenv-mode magit mu4e-alert use-package-ensure-system-package mu4e mu skewer-mode simple-httpd js2-mode emacs-neotree neotree column-enforce-mode gnuplot sublime-themes gnuplot-mode emms auto-dictionary doom-modeline with-editor git-commit transpose-frame rainbow-delimiters projectile all-the-icons dashboard sudo-edit noctilux-theme cyberpunk-theme web-mode yasnippet-snippets yasnippet rainbow-delimiters-mode expand-region multiple-cursors ivy swiper browse-kill-ring dmenu jedi flycheck auto-complete company-anaconda pyvenv pyenv spaceline virtualenvwrapper company-jedi company switch-window smart-tabs-mode rainbow-mode avy smex ample-theme which-key use-package dash latex-extra)))
+   '(org-roam-protocol undo-tree elfeed-goodies elfeed counsel org-ref org-roam org-superstar company-math company-quickhelp company-c-headers company-auctex latex-preview-pane ac-js2 plantuml-mode pyenv-mode magit mu4e-alert use-package-ensure-system-package mu4e mu skewer-mode simple-httpd js2-mode emacs-neotree neotree column-enforce-mode gnuplot sublime-themes gnuplot-mode emms auto-dictionary doom-modeline with-editor git-commit transpose-frame rainbow-delimiters projectile all-the-icons dashboard sudo-edit noctilux-theme cyberpunk-theme web-mode yasnippet-snippets yasnippet rainbow-delimiters-mode expand-region multiple-cursors ivy swiper browse-kill-ring dmenu jedi flycheck auto-complete company-anaconda pyvenv pyenv spaceline virtualenvwrapper company-jedi company switch-window smart-tabs-mode rainbow-mode avy smex ample-theme which-key use-package dash latex-extra))
  '(pyvenv-mode t)
- '(send-mail-function (quote mailclient-send-it))
+ '(send-mail-function 'mailclient-send-it)
  '(shell-escape-mode "-shell-escape"))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

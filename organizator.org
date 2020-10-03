@@ -115,6 +115,10 @@ Combina mais com o tema atual do meu desktop environment
 #+BEGIN_SRC emacs-lisp
   (scroll-bar-mode -1)
 #+END_SRC
+** Pretty symbols
+#+begin_src emacs-lisp
+(global-prettify-symbols-mode t)
+#+end_src
 ** all-the-icons
 #+BEGIN_SRC emacs-lisp
   (use-package all-the-icons
@@ -122,6 +126,13 @@ Combina mais com o tema atual do meu desktop environment
 
 #+END_SRC
 * PACOTES GERAIS
+** undo-tree
+#+begin_src emacs-lisp
+(use-package undo-tree
+  :ensure t
+  :config
+  (global-undo-tree-mode))
+#+end_src
 ** pyenv
 #+BEGIN_SRC emacs-lisp
   (use-package pyenv-mode
@@ -349,7 +360,7 @@ Boa função para procurar, mostra as ocorrências num minibuffer
     :after ivy
     :config
     (define-key ivy-minibuffer-map (kbd "TAB") 'ivy-partial)
-    (define-key counsel-find-file-map (kbd "C-c j") 'preservar-output)
+    (define-key counsel-find-file-map (kbd "s-j") 'preservar-output)
     :bind
     ("M-x" . counsel-M-x)
     ("C-x C-f" . counsel-find-file)
@@ -504,8 +515,6 @@ Força zsh como shell do ansi-term
 #+BEGIN_SRC emacs-lisp
 (setq mm-sign-option 'guided)
 (add-hook 'message-send-hook 'mml-secure-message-sign)
-
-
 #+END_SRC
 ** ensure-system-package
 #+BEGIN_SRC emacs-lisp
@@ -768,7 +777,7 @@ cliente de email bem simples
   (setq org-display-inline-images t)
   (setq org-redisplay-inline-images t) 
   (setq org-startup-with-inline-images t)
-
+  (setq org-image-actual-width 900)
   (with-eval-after-load 'org
     (add-hook 'org-babel-after-execute-hook
 	      '(lambda ()
@@ -832,20 +841,21 @@ Algumas opções de linguagens do babel
 Tae um bom nome.
 *** org-roam
 #+BEGIN_SRC emacs-lisp
-  (use-package org-roam
-    :ensure t
-    :hook
-    (after-init . org-roam-mode)
-    :custom
-    (org-roam-directory (concat (getenv "HOME") "/Estudo/arquivos-org/"))
-    :bind (:map org-roam-mode-map
-		(("C-c n l" . org-roam)
-		 ("C-c n f" . org-roam-find-file)
-		 ("C-c n g" . org-roam-graph-show))
-		:map org-mode-map
-		(("C-c n i" . org-roam-insert)))
-    :config
-    (setq org-roam-index-file "./index.org"))
+    (use-package org-roam
+      :ensure t
+      :hook
+      (after-init . org-roam-mode)
+      :custom
+      (org-roam-directory (concat (getenv "HOME") "/Estudo/arquivos-org/"))
+      :bind (:map org-roam-mode-map
+		  (("C-c n l" . org-roam)
+		   ("C-c n f" . org-roam-find-file)
+		   ("C-c n g" . org-roam-graph-show))
+		  :map org-mode-map
+		  (("C-c n i" . org-roam-insert)))
+      :config
+      (setq org-roam-index-file "./index.org")
+      (require 'org-roam-protocol))
 #+END_SRC
 Bom pra brainstorming
 ** C e C++
@@ -891,4 +901,13 @@ Isso deveria ser *default*.
 
 #+end_src
 
+
+** Processos assíncronos
+   #+begin_src emacs-lisp
+    (use-package async
+	:ensure t
+	:init
+	(dired-async-mode 1))
+   #+end_src
+   Roubado do witchmacs (novamente)
 
