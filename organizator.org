@@ -126,6 +126,17 @@ Combina mais com o tema atual do meu desktop environment
 
 #+END_SRC
 * PACOTES GERAIS
+** define-word
+   #+begin_src emacs-lisp
+     (use-package define-word
+       :ensure t
+       :bind
+       ("C-c d" . define-word)
+       ("C-c u" . define-word-at-point))
+
+   #+end_src
+   Bom para procurar significado de palavras.
+
 ** undo-tree
 #+begin_src emacs-lisp
 (use-package undo-tree
@@ -901,7 +912,6 @@ Isso deveria ser *default*.
 
 #+end_src
 
-
 ** Processos assíncronos
    #+begin_src emacs-lisp
     (use-package async
@@ -911,3 +921,8 @@ Isso deveria ser *default*.
    #+end_src
    Roubado do witchmacs (novamente)
 
+
+** Dired
+   #+begin_src emacs-lisp
+     (setq image-dired-thumb-margin 5)
+   #+end_src
