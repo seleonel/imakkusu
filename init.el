@@ -25,7 +25,7 @@ There are two things you can do about this warning:
 
 ;; Ajuda na instalação e compilação de pacotes do emacs. (Faz mais sentido estar aqui no início).
 
-(org-babel-load-file (expand-file-name "~/.emacs.d/organizator.org"))
+(org-babel-load-file (expand-file-name (concat (getenv "XDG_CONFIG_HOME") "/emacs/organizator.org")))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -37,9 +37,9 @@ There are two things you can do about this warning:
    '("8885761700542f5d0ea63436874bf3f9e279211707d4b1ca9ed6f53522f21934" default))
  '(elfeed-feeds
    '("https://mangadex.org/rss/RcQaxzfdV2GgFHCs9kSYr54TEqP78MvK/manga_id/10749" "https://mangadex.org/rss/RcQaxzfdV2GgFHCs9kSYr54TEqP78MvK/manga_id/13871" "https://mangadex.org/rss/RcQaxzfdV2GgFHCs9kSYr54TEqP78MvK/manga_id/9570" "https://mangadex.org/rss/RcQaxzfdV2GgFHCs9kSYr54TEqP78MvK/manga_id/34165" "https://mangadex.org/rss/RcQaxzfdV2GgFHCs9kSYr54TEqP78MvK/manga_id/10873" "https://mangadex.org/rss/RcQaxzfdV2GgFHCs9kSYr54TEqP78MvK/manga_id/22369" "https://mangadex.org/rss/RcQaxzfdV2GgFHCs9kSYr54TEqP78MvK/manga_id/1073" "https://www.youtube.com/channel/UClcE-kVhqyiHCcjYwcpfj9w" "https://www.archlinux.org/feeds/news/" "https://www.archlinux.org/feeds/packages/" "https://mangadex.org/rss/RcQaxzfdV2GgFHCs9kSYr54TEqP78MvK/manga_id/20723" "https://stallman.org/rss"))
- '(org-agenda-files '("~/.emacs.d/org_files/datas.org"))
+ '(org-agenda-files '(".config/emacs/org_files/datas.org"))
  '(package-selected-packages
-   '(org-roam-protocol undo-tree elfeed-goodies elfeed counsel org-ref org-roam org-superstar company-math company-quickhelp company-c-headers company-auctex latex-preview-pane ac-js2 plantuml-mode pyenv-mode magit mu4e-alert use-package-ensure-system-package mu4e mu skewer-mode simple-httpd js2-mode emacs-neotree neotree column-enforce-mode gnuplot sublime-themes gnuplot-mode emms auto-dictionary doom-modeline with-editor git-commit transpose-frame rainbow-delimiters projectile all-the-icons dashboard sudo-edit noctilux-theme cyberpunk-theme web-mode yasnippet-snippets yasnippet rainbow-delimiters-mode expand-region multiple-cursors ivy swiper browse-kill-ring dmenu jedi flycheck auto-complete company-anaconda pyvenv pyenv spaceline virtualenvwrapper company-jedi company switch-window smart-tabs-mode rainbow-mode avy smex ample-theme which-key use-package dash latex-extra))
+   '(define-word dired-x org-roam-protocol undo-tree elfeed-goodies elfeed counsel org-ref org-roam org-superstar company-math company-quickhelp company-c-headers company-auctex latex-preview-pane ac-js2 plantuml-mode pyenv-mode magit mu4e-alert use-package-ensure-system-package mu4e mu skewer-mode simple-httpd js2-mode emacs-neotree neotree column-enforce-mode gnuplot sublime-themes gnuplot-mode emms auto-dictionary doom-modeline with-editor git-commit transpose-frame rainbow-delimiters projectile all-the-icons dashboard sudo-edit noctilux-theme cyberpunk-theme web-mode yasnippet-snippets yasnippet rainbow-delimiters-mode expand-region multiple-cursors ivy swiper browse-kill-ring dmenu jedi flycheck auto-complete company-anaconda pyvenv pyenv spaceline virtualenvwrapper company-jedi company switch-window smart-tabs-mode rainbow-mode avy smex ample-theme which-key use-package dash latex-extra))
  '(pyvenv-mode t)
  '(send-mail-function 'mailclient-send-it)
  '(shell-escape-mode "-shell-escape"))
