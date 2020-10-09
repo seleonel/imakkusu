@@ -325,14 +325,6 @@ Mostra documentação automaticamente
     (global-flycheck-mode t))
 
 #+END_SRC
-** dmenu
-#+BEGIN_SRC emacs-lisp
-  (use-package dmenu
-    :ensure t
-    :bind
-    ("s-d" . 'dmenu))
-#+END_SRC
-pode me ajudar na *multitarefagem*
 ** browse kill ring
 #+BEGIN_SRC emacs-lisp
   (use-package browse-kill-ring
@@ -418,12 +410,11 @@ Pacote pra múltiplos cursores, muito daora
 	("C-c C-s" . sudo-edit))
 
 #+END_SRC
-** transpose-window
+** transpose-frame
 #+BEGIN_SRC emacs-lisp
   (use-package transpose-frame
     :ensure t)
 #+END_SRC
-
 Pacote para /management/ de janelas
 
 ** latex
@@ -464,18 +455,6 @@ Para edição aprimorada de documentos TEX
   :ensure t)
 #+END_SRC
 Para me auxiliar na plotagem de gráficos para a iniciação
-** elfeed
-#+begin_src emacs-lisp 
-  (use-package elfeed
-    :ensure t
-    :init
-    (setf url-queue-timeout 30)
-    :bind
-    ("C-x w" . elfeed))
-  (use-package elfeed-goodies
-    :ensure t
-    :after elfeed)
-#+end_src
 ** Pacotinhos pra mobile/web
 *** JS2 mode
 #+BEGIN_SRC emacs-lisp
@@ -512,7 +491,6 @@ Interpretador de forms de html/css/js, também tem um repl
   (defadvice ansi-term (before force-zsh)
     (interactive (list default-shell)))
   (ad-activate 'ansi-term)
-
 #+END_SRC
 Força zsh como shell do ansi-term
 
@@ -577,7 +555,6 @@ Pacotinho legal para garantir que pacotes externos existem (bom para o mu4e)
 #+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "C-c y") 'avy-copy-line)
 #+END_SRC
-
 ** EMMS
 #+BEGIN_SRC emacs-lisp
   ;; configs do uncle dave
@@ -783,7 +760,7 @@ cliente de email bem simples
 #+END_SRC
 
 ** org-mode
-*** Inline images
+*** Inline Images
 #+BEGIN_SRC emacs-lisp
   (setq org-display-inline-images t)
   (setq org-redisplay-inline-images t) 
@@ -850,6 +827,7 @@ Algumas opções de linguagens do babel
 
 #+END_SRC
 Tae um bom nome.
+
 *** org-roam
 #+BEGIN_SRC emacs-lisp
     (use-package org-roam
@@ -869,6 +847,20 @@ Tae um bom nome.
       (require 'org-roam-protocol))
 #+END_SRC
 Bom pra brainstorming
+*** org-download
+    #+begin_src emacs-lisp
+	    (use-package org-download
+	      :ensure t
+	      :custom
+	      (org-download-method 'directory)
+	      (org-download-image-dir "~/Pictures/org/")
+	      (org-download-heading-lvl nil)
+	      (org-download-screenshot-method "xclip")
+	      :config
+	      (require 'org-download)
+	      (add-hook 'dired-mode-hook 'org-download-enable))
+
+    #+end_src
 ** C e C++
 *** c-headers 
 #+BEGIN_SRC emacs-lisp
@@ -921,8 +913,19 @@ Isso deveria ser *default*.
    #+end_src
    Roubado do witchmacs (novamente)
 
-
 ** Dired
    #+begin_src emacs-lisp
+     (add-hook 'dired-load-hook
+	       (lambda ()
+		 (load "dired-x")
+		 ;; Set dired-x global variables here.  For example:
+		 ;; (setq dired-guess-shell-gnutar "gtar")
+		    (setq dired-x-hands-off-my-keys nil)
+		 ))
+     (add-hook 'dired-mode-hook
+	       (lambda ()
+		 ;; Set dired-x buffer-local variables here.  For example:
+		 ;; (dired-omit-mode 1)
+		 ))
      (setq image-dired-thumb-margin 5)
    #+end_src
