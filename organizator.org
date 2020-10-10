@@ -552,13 +552,13 @@ Combina mais com o tema atual do meu desktop environment
 ** visual-regexp
    #+begin_src emacs-lisp
      (use-package visual-regexp
-       :ensure t)
-     (use-package visual-regexp-steroids
-       :after visual-regexp
        :ensure t
        :bind
        ("C-c r" . vr/replace)
-       ("C-c k" . vr/query-replace))
+       ("C-c k" . vr/query-replace)
+       :config
+       (use-package visual-regexp-steroids
+	 :ensure t))
    #+end_src
 ** define-word
    #+begin_src emacs-lisp
