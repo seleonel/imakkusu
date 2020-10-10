@@ -1,505 +1,14 @@
-* MARAVILHOSA TELA INICIAL
-** DEPENDENZAS DO DASHBOARD
-*** page-break-lines
-#+BEGIN_SRC emacs-lisp
-  (use-package page-break-lines
-    :ensure t)
-#+END_SRC
-*** projectile
-#+BEGIN_SRC emacs-lisp
-  (use-package projectile
-    :ensure t
-    :config
-    (projectile-mode +1)
-    :bind
-    ("S-p" . projectile-command-mode))
-
-#+END_SRC
-** pagina inicial em si
-#+BEGIN_SRC emacs-lisp
-  ;; ANTIGO BUFFER
-  ;;(defun my-buffeiro ()
-  ;;  (let ((buffer (generate-new-buffer "intro")))
-  ;;    (switch-to-buffer buffer)
-  ;;    (center-line)
-  ;;    (insert "BEM VINDO AO MARAVILHOSO IMAKKUSU\n")
-  ;;    (insert-image (create-image "~/.emacs.d/img/kicchiri.png"))
-  ;;    (insert "\n\n\n\n\n")
-  ;;    buffer))
-  ;;(setq initial-buffer-choice 'my-buffeiro)
-
-  (use-package dashboard
-    :ensure t
-    :config
-    (dashboard-setup-startup-hook)
-     (setq dashboard-banner-logo-title "BEM VINDO AO MARAVILHOSO IMAKKUSU")
-     (setq dashboard-startup-banner (concat (getenv "XDG_CONFIG_HOME") "/emacs/img/kicchiri.png"))
-     (setq dashboard-center-content t)
-     (setq dashboard-show-shortcuts nil)
-     (setq dashboard-items '((recents . 20)
-			     (bookmarks . 5)
-			     (agenda . 10)
-			     (projects . 5)))
-     (setq dashboard-set-heading-icons t)
-     (setq dashboard-set-file-icons t)
-     (dashboard-modify-heading-icons '((recents . "ruby")
-				       (bookmarks . "bookmark" )
-				       (projects . "package" )))
-     ;; adds agenda 
-     (setq show-week-agenda-p t)
-
-     (setq dashboard-footer-messages '("emags :DDDDDDDD"))
-     (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*"))))
-#+END_SRC
-
-
-*Garanta que a imagem existe pls*
-
-* Configurações visuais
-** Fonte
-#+BEGIN_SRC emacs-lisp
-(setq default-frame-alist '((font . "Hack 12")))
-
-#+END_SRC
-Força por padrão a fonte Hack, tamanho 12
-
-** Barra de tarefas
-#+BEGIN_SRC emacs-lisp
-(tool-bar-mode -1)
-
-#+END_SRC
-Remove *toda* a barra de tarefas
-
-** Barra de menu
-#+BEGIN_SRC emacs-lisp
-(menu-bar-mode -1)
-
-#+END_SRC
-Menu é inútil e toma espaço
-
-** Highlight de linha
-#+BEGIN_SRC emacs-lisp
-(global-hl-line-mode t)
-#+END_SRC
-
-*LINHAS CHAMAM MAIS ATENÇÃO AGR*
-
-** TEMA ATUAL
-#+BEGIN_SRC emacs-lisp
-  (use-package sublime-themes
-     :ensure t
-     :init
-     (load-theme 'brin t))
-
-#+END_SRC
-Combina mais com o tema atual do meu desktop environment
-** modeline
-#+BEGIN_SRC emacs-lisp
-(use-package doom-modeline
-  :ensure t
-  :init (doom-modeline-mode 1)
-  :config 
-  (setq doom-modeline-mu4e t)
-  (setq doom-modeline-bar-width 1)
-  (setq doom-modeline-icon 1))
-#+END_SRC
-** line numbers
-#+BEGIN_SRC emacs-lisp
-  (defun mostrarLinhazitas ()
-      (interactive)
-      (display-line-numbers-mode))
-  (add-hook 'prog-mode-hook 'mostrarLinhazitas)
-
-#+END_SRC
-** Barra de scroll(?)
-#+BEGIN_SRC emacs-lisp
-  (scroll-bar-mode -1)
-#+END_SRC
-** Pretty symbols
-#+begin_src emacs-lisp
-(global-prettify-symbols-mode t)
-#+end_src
-** all-the-icons
-#+BEGIN_SRC emacs-lisp
-  (use-package all-the-icons
-    :ensure t)
-
-#+END_SRC
-* PACOTES GERAIS
-** define-word
-   #+begin_src emacs-lisp
-     (use-package define-word
-       :ensure t
-       :bind
-       ("C-c d" . define-word)
-       ("C-c u" . define-word-at-point))
-
-   #+end_src
-   Bom para procurar significado de palavras.
-
-** undo-tree
-#+begin_src emacs-lisp
-(use-package undo-tree
-  :ensure t
-  :config
-  (global-undo-tree-mode))
-#+end_src
-** pyenv
-#+BEGIN_SRC emacs-lisp
-  (use-package pyenv-mode
-    :ensure t
-    :ensure-system-package pyenv
-    :hook
-    (pyenv-mode . python-mode))
-#+END_SRC
-Permite-me trabalhar com ambientes virtuais
-** magit
-#+BEGIN_SRC emacs-lisp
-  (use-package magit
-    :ensure t
-    :bind
-    ("C-x g" . magit-status))
-#+END_SRC
-** neotree
-#+BEGIN_SRC emacs-lisp
-  (use-package neotree
-    :ensure t
-    :config
-    (global-set-key (kbd "s-n") 'neotree-toggle)
-    (setq neo-theme (if (display-graphic-p) 'icons 'arrow)))
-
-#+END_SRC
-** column enforce mode
-#+BEGIN_SRC emacs-lisp
-  (use-package column-enforce-mode
-    :ensure t
-    :config
-    (add-hook 'prog-mode-hook 'column-enforce-mode)
-    (add-hook 'text-mode-hook 'column-enforce-mode))
-#+END_SRC
-Enforça a regra dos 80(?) caracteres em uma linha, ou pelo menos
-só mostra um limite
-** *Which key*
-#+BEGIN_SRC emacs-lisp
-(use-package which-key
-  :ensure t
-  :init
-  (which-key-mode))
-
-#+END_SRC
-** avy
-#+BEGIN_SRC emacs-lisp
-  (use-package avy
-    :ensure t
-    :bind
-    ("M-." . avy-goto-char)
-    ("M-g f" . avy-goto-line))
-#+END_SRC
-** Rainbow
-*** Rainbow-delimiters
-#+BEGIN_SRC emacs-lisp
-(use-package rainbow-delimiters
-    :ensure t
-    :config
-    (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
-
-#+END_SRC
-*** Rainbow mode
-#+BEGIN_SRC emacs-lisp
-  (use-package rainbow-mode
-    :ensure t
-    :hook
-    (prog-mode . rainbow-mode))
-#+END_SRC
-Códigos de cor *hexadecimais* ficam coloridos yay
-** smart tabs
-#+BEGIN_SRC emacs-lisp
-(use-package smart-tabs-mode
- :ensure t
- :config
- (smart-tabs-add-language-support latex latex-mode-hook
- ((latex-indent-line . 4)
- (latex-indent-region . 4)))
- (smart-tabs-insinuate 'c 'c++ 'java 'latex)
- (smart-tabs-advice js2-indent-line js2-basic-offset))
-
-#+END_SRC
-esse código copiei de um anão
-** Switch window
-#+BEGIN_SRC emacs-lisp
-  (use-package switch-window
-    :ensure t
-    :config
-    (setq switch-window-input-style 'minibuffer)
-    (setq switch-window-increase 4)
-    (setq switch-window-threshold 2)
-    :bind
-    ([remap other-window] .  switch-window))
-#+END_SRC
-** autocompletion
-#+BEGIN_SRC emacs-lisp
-  (use-package company
-    :ensure t
-    :config
-    (setq company-idle-delay 0)
-    (setq company-minimum-prefix-length 2)
-    (setq company-selection-wrap-around t)
-    (company-tng-configure-default)
-    :hook
-    (after-init . global-company-mode)
-    :bind
-    ("s-c" . company-complete))
-#+END_SRC
-*** company-irony
-#+BEGIN_SRC emacs-lisp
-  (use-package company-irony
-    :ensure t
-    :after company 
-    :init
-    (add-to-list 'company-backends 'company-irony))
-#+END_SRC
-*** ac-js2
-#+BEGIN_SRC emacs-lisp
-  (use-package ac-js2
-    :ensure t
-    :after company
-    :init
-    (add-to-list 'company-backends 'ac-js2-company))
-#+END_SRC
-Para javascripto/jsx
-*** company-anaconda
-#+BEGIN_SRC emacs-lisp
-  (use-package company-anaconda
-    :ensure t
-    :after company
-    :init
-    (add-to-list 'company-backends 'company-anaconda)
-    :hook
-    (python-mode . anaconda-mode))
-#+END_SRC
-Autocomplete para python 
-*** company-latex
-**** auctex
-#+BEGIN_SRC emacs-lisp
-  (use-package company-auctex
-    :ensure t
-    :after company 
-    :init
-    (add-to-list 'company-backends 'company-auctex)
-    (company-auctex-init))
-#+END_SRC
-Autocomplete para latex tags
-**** math-symbols
-#+BEGIN_SRC emacs-lisp
-    (use-package company-math
-      :ensure t
-      :after company 
-      :init
-      (add-to-list 'company-backends 'company-math-symbols-unicode))
-#+END_SRC
-*** quickhelp
-#+BEGIN_SRC emacs-lisp
-  (use-package company-quickhelp
-    :ensure t
-    :init
-    (setq company-quickhelp-delay 0)
-    :hook
-    (prog-mode . company-quickhelp-mode))
-#+END_SRC
-Mostra documentação automaticamente
-
-*** company-c-headers
-#+BEGIN_SRC emacs-lisp
-    (use-package company-c-headers
-      :ensure t
-      :after company 
-      :init
-      (add-to-list 'company-backends 'company-c-headers))
-
-#+END_SRC
-** flycheck
-#+BEGIN_SRC emacs-lisp
-  (use-package flycheck
-    :ensure t
-    :init
-    (global-flycheck-mode t))
-
-#+END_SRC
-** browse kill ring
-#+BEGIN_SRC emacs-lisp
-  (use-package browse-kill-ring
-    :ensure t
-    :bind
-    ("M-y" . 'browse-kill-ring))
-
-#+END_SRC
-** Swiper
-#+BEGIN_SRC emacs-lisp
-    (use-package ivy
-      :ensure t
-      :config
-      (ivy-mode 1)
-      (setq ivy-use-virtual-buffers t)
-      (setq enable-recursive-minibuffers t))
-#+END_SRC
-Boa função para procurar, mostra as ocorrências num minibuffer 
-*** swiper
-#+begin_src emacs-lisp
-  (use-package swiper
-    :ensure t
-    :after ivy
-    :bind
-    ("C-s" . swiper))
-#+end_src
-*** Counsel
-#+begin_src emacs-lisp 
-  (defun preservar-output ()
-    (interactive)
-    (let ((input (ivy--input)))
-      (ivy-quit-and-run (counsel-file-jump))))
-
-  (use-package counsel
-    :ensure t
-    :after ivy
-    :config
-    (define-key ivy-minibuffer-map (kbd "TAB") 'ivy-partial)
-    (define-key counsel-find-file-map (kbd "s-j") 'preservar-output)
-    :bind
-    ("M-x" . counsel-M-x)
-    ("C-x C-f" . counsel-find-file)
-    ("C-c m" . counsel-imenu))
-
-#+end_src
-
-#+BEGIN_CENTER
-Entretanto, pode bugar em buffers maiores
-#+END_CENTER
-** multiple cursors
-#+BEGIN_SRC emacs-lisp
-  (use-package multiple-cursors
-    :ensure t
-    :bind
-    ("C-c q" . 'mc/mark-next-like-this)
-    ("C-c a" . 'mc/mark-all-like-this))
-
-#+END_SRC
-Pacote pra múltiplos cursores, muito daora
-** expand region
-#+BEGIN_SRC emacs-lisp
-  (use-package expand-region
-    :ensure t
-    :bind
-    ("C-c e" . er/expand-region))
-#+END_SRC
-#+BEGIN_CENTER
-*EXPANDS EVERYTHING*
-#+END_CENTER
-** web-mode
-#+BEGIN_SRC emacs-lisp
-  (use-package web-mode
-    :ensure t
-    :config
-    (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode)))
-
-#+END_SRC
-** sudo-edit
-#+BEGIN_SRC emacs-lisp
-  (use-package sudo-edit
-    :ensure t
-    :bind
-	("C-c C-s" . sudo-edit))
-
-#+END_SRC
-** transpose-frame
-#+BEGIN_SRC emacs-lisp
-  (use-package transpose-frame
-    :ensure t)
-#+END_SRC
-Pacote para /management/ de janelas
-
-** latex
-*** auctex
-#+BEGIN_SRC emacs-lisp
-  (use-package tex
-    :defer t
-    :ensure auctex
-    :hook
-    (LaTeX-mode . visual-line-mode)
-    (LaTeX-mode . flyspell-mode)
-    (LaTeX-mode . LaTeX-math-mode)
-    (LaTeX-mode . turn-on-reftex)
-    :config
-    (setq TeX-auto-save t)
-    (setq TeX-parse-self t)
-    (setq-default TeX-master nil)
-    (setq reftex-plug-into-AUCTeX t)
-    (setq TeX-PDF-mode t)
-    (add-hook 'TeX-mode-hook
-	      (lambda ()
-		(setq TeX-command-extra-options "-shell-escape")
-		)
-	      ))
-
-#+END_SRC 
-Para edição aprimorada de documentos TEX
-*** latex preview pane
-#+BEGIN_SRC emacs-lisp
-  (use-package latex-preview-pane
-    :ensure t
-    :hook
-    (LaTeX-mode . latex-preview-pane-mode))
-#+END_SRC
-** gnuplot-mode
-#+BEGIN_SRC emacs-lisp
-(use-package gnuplot-mode
-  :ensure t)
-#+END_SRC
-Para me auxiliar na plotagem de gráficos para a iniciação
-** Pacotinhos pra mobile/web
-*** JS2 mode
-#+BEGIN_SRC emacs-lisp
-  (use-package js2-mode
-    :ensure t
-    :config
-    (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
-    (add-to-list 'auto-mode-alist '("\\.jsx?\\'" . js2-jsx-mode))
-    (add-to-list 'interpreter-mode-alist '("node" . js2-jsx-mode)))
-
-#+END_SRC
-*** simple-httpd
-#+BEGIN_SRC emacs-lisp
-  (use-package simple-httpd
-    :ensure t)
-#+END_SRC
-servidor web "minimalista"
-
-*** skewer mode
-#+BEGIN_SRC emacs-lisp
-  (use-package skewer-mode
-    :ensure t
-    :config
-    (add-hook 'js2-mode-hook 'skewer-mode)
-    (add-hook 'css-mode-hook 'skewer-css-mode)
-    (add-hook 'html-mode-hook 'skewer-html-mode))
-
-#+END_SRC
-Interpretador de forms de html/css/js, também tem um repl
-* TERMINAL
-** Força zsh no ansi-term
-#+BEGIN_SRC emacs-lisp
-  (defvar default-shell "/bin/zsh")
-  (defadvice ansi-term (before force-zsh)
-    (interactive (list default-shell)))
-  (ad-activate 'ansi-term)
-#+END_SRC
-Força zsh como shell do ansi-term
-
-** Keybind
-#+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "s-t") 'ansi-term)
-#+END_SRC
-
 * *GERAIS*
+** dired
+   #+begin_src emacs-lisp
+     (setq image-dired-thumb-margin 5)
+     (with-eval-after-load 'dired
+	 (require 'dired-x)
+	 (setq dired-guess-shell-alist-user '(
+					      ("\\.pdf\\'" "okular ? &")
+					      ("\\.mp4\\'" "mpv ? &")
+					      ("\\.mkv\\'" "mpv ? &"))))
+   #+end_src
 ** mail encrypt
 #+BEGIN_SRC emacs-lisp
 (setq mm-sign-option 'guided)
@@ -903,29 +412,524 @@ Isso deveria ser *default*.
 
 
 #+end_src
-
 ** Processos assíncronos
    #+begin_src emacs-lisp
-    (use-package async
-	:ensure t
-	:init
-	(dired-async-mode 1))
+	 (use-package async
+	     :ensure t
+	     :init
+	     (dired-async-mode 1)
+	     (async-bytecomp-package-mode 1))
    #+end_src
    Roubado do witchmacs (novamente)
+* MARAVILHOSA TELA INICIAL
+** DEPENDENZAS DO DASHBOARD
+*** page-break-lines
+#+BEGIN_SRC emacs-lisp
+  (use-package page-break-lines
+    :ensure t)
+#+END_SRC
+*** projectile
+#+BEGIN_SRC emacs-lisp
+  (use-package projectile
+    :ensure t
+    :config
+    (projectile-mode +1)
+    :bind
+    ("S-p" . projectile-command-mode))
 
-** Dired
+#+END_SRC
+** pagina inicial em si
+#+BEGIN_SRC emacs-lisp
+  ;; ANTIGO BUFFER
+  ;;(defun my-buffeiro ()
+  ;;  (let ((buffer (generate-new-buffer "intro")))
+  ;;    (switch-to-buffer buffer)
+  ;;    (center-line)
+  ;;    (insert "BEM VINDO AO MARAVILHOSO IMAKKUSU\n")
+  ;;    (insert-image (create-image "~/.emacs.d/img/kicchiri.png"))
+  ;;    (insert "\n\n\n\n\n")
+  ;;    buffer))
+  ;;(setq initial-buffer-choice 'my-buffeiro)
+
+  (use-package dashboard
+    :ensure t
+    :config
+    (dashboard-setup-startup-hook)
+     (setq dashboard-banner-logo-title "BEM VINDO AO MARAVILHOSO IMAKKUSU")
+     (setq dashboard-startup-banner (concat (getenv "XDG_CONFIG_HOME") "/emacs/img/kicchiri.png"))
+     (setq dashboard-center-content t)
+     (setq dashboard-show-shortcuts nil)
+     (setq dashboard-items '((recents . 20)
+			     (bookmarks . 5)
+			     (agenda . 10)
+			     (projects . 5)))
+     (setq dashboard-set-heading-icons t)
+     (setq dashboard-set-file-icons t)
+     (dashboard-modify-heading-icons '((recents . "ruby")
+				       (bookmarks . "bookmark" )
+				       (projects . "package" )))
+     ;; adds agenda 
+     (setq show-week-agenda-p t)
+
+     (setq dashboard-footer-messages '("emags :DDDDDDDD"))
+     (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*"))))
+#+END_SRC
+
+
+*Garanta que a imagem existe pls*
+
+* Configurações visuais
+** Fonte
+#+BEGIN_SRC emacs-lisp
+(setq default-frame-alist '((font . "Hack 12")))
+
+#+END_SRC
+Força por padrão a fonte Hack, tamanho 12
+
+** Barra de tarefas
+#+BEGIN_SRC emacs-lisp
+(tool-bar-mode -1)
+
+#+END_SRC
+Remove *toda* a barra de tarefas
+
+** Barra de menu
+#+BEGIN_SRC emacs-lisp
+(menu-bar-mode -1)
+
+#+END_SRC
+Menu é inútil e toma espaço
+
+** Highlight de linha
+#+BEGIN_SRC emacs-lisp
+(global-hl-line-mode t)
+#+END_SRC
+
+*LINHAS CHAMAM MAIS ATENÇÃO AGR*
+
+** TEMA ATUAL
+#+BEGIN_SRC emacs-lisp
+  (use-package sublime-themes
+     :ensure t
+     :init
+     (load-theme 'brin t))
+
+#+END_SRC
+Combina mais com o tema atual do meu desktop environment
+** modeline
+#+BEGIN_SRC emacs-lisp
+(use-package doom-modeline
+  :ensure t
+  :init (doom-modeline-mode 1)
+  :config 
+  (setq doom-modeline-mu4e t)
+  (setq doom-modeline-bar-width 1)
+  (setq doom-modeline-icon 1))
+#+END_SRC
+** line numbers
+#+BEGIN_SRC emacs-lisp
+  (defun mostrarLinhazitas ()
+      (interactive)
+      (display-line-numbers-mode))
+  (add-hook 'prog-mode-hook 'mostrarLinhazitas)
+
+#+END_SRC
+** Barra de scroll(?)
+#+BEGIN_SRC emacs-lisp
+  (scroll-bar-mode -1)
+#+END_SRC
+** Pretty symbols
+#+begin_src emacs-lisp
+(global-prettify-symbols-mode t)
+#+end_src
+** all-the-icons
+#+BEGIN_SRC emacs-lisp
+  (use-package all-the-icons
+    :ensure t)
+
+#+END_SRC
+* PACOTES GERAIS
+** visual-regexp
    #+begin_src emacs-lisp
-     (add-hook 'dired-load-hook
-	       (lambda ()
-		 (load "dired-x")
-		 ;; Set dired-x global variables here.  For example:
-		 ;; (setq dired-guess-shell-gnutar "gtar")
-		    (setq dired-x-hands-off-my-keys nil)
-		 ))
-     (add-hook 'dired-mode-hook
-	       (lambda ()
-		 ;; Set dired-x buffer-local variables here.  For example:
-		 ;; (dired-omit-mode 1)
-		 ))
-     (setq image-dired-thumb-margin 5)
+     (use-package visual-regexp
+       :ensure t)
+     (use-package visual-regexp-steroids
+       :after visual-regexp
+       :ensure t
+       :bind
+       ("C-c r" . vr/replace)
+       ("C-c k" . vr/query-replace))
    #+end_src
+** define-word
+   #+begin_src emacs-lisp
+     (use-package define-word
+       :ensure t
+       :bind
+       ("C-c d" . define-word)
+       ("C-c u" . define-word-at-point))
+
+   #+end_src
+   Bom para procurar significado de palavras.
+
+** undo-tree
+#+begin_src emacs-lisp
+(use-package undo-tree
+  :ensure t
+  :config
+  (global-undo-tree-mode))
+#+end_src
+** pyenv
+#+BEGIN_SRC emacs-lisp
+  (use-package pyenv-mode
+    :ensure t
+    :ensure-system-package pyenv
+    :hook
+    (pyenv-mode . python-mode))
+#+END_SRC
+Permite-me trabalhar com ambientes virtuais
+** magit
+#+BEGIN_SRC emacs-lisp
+  (use-package magit
+    :ensure t
+    :bind
+    ("C-x g" . magit-status))
+#+END_SRC
+** neotree
+#+BEGIN_SRC emacs-lisp
+  (use-package neotree
+    :ensure t
+    :config
+    (global-set-key (kbd "s-n") 'neotree-toggle)
+    (setq neo-theme (if (display-graphic-p) 'icons 'arrow)))
+
+#+END_SRC
+** column enforce mode
+#+BEGIN_SRC emacs-lisp
+  (use-package column-enforce-mode
+    :ensure t
+    :config
+    (add-hook 'prog-mode-hook 'column-enforce-mode)
+    (add-hook 'text-mode-hook 'column-enforce-mode))
+#+END_SRC
+Enforça a regra dos 80(?) caracteres em uma linha, ou pelo menos
+só mostra um limite
+** *Which key*
+#+BEGIN_SRC emacs-lisp
+(use-package which-key
+  :ensure t
+  :init
+  (which-key-mode))
+
+#+END_SRC
+** avy
+#+BEGIN_SRC emacs-lisp
+  (use-package avy
+    :ensure t
+    :bind
+    ("M-." . avy-goto-char)
+    ("M-g f" . avy-goto-line))
+#+END_SRC
+** Rainbow
+*** Rainbow-delimiters
+#+BEGIN_SRC emacs-lisp
+(use-package rainbow-delimiters
+    :ensure t
+    :config
+    (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
+
+#+END_SRC
+*** Rainbow mode
+#+BEGIN_SRC emacs-lisp
+  (use-package rainbow-mode
+    :ensure t
+    :hook
+    (prog-mode . rainbow-mode))
+#+END_SRC
+Códigos de cor *hexadecimais* ficam coloridos yay
+** smart tabs
+#+BEGIN_SRC emacs-lisp
+(use-package smart-tabs-mode
+ :ensure t
+ :config
+ (smart-tabs-add-language-support latex latex-mode-hook
+ ((latex-indent-line . 4)
+ (latex-indent-region . 4)))
+ (smart-tabs-insinuate 'c 'c++ 'java 'latex)
+ (smart-tabs-advice js2-indent-line js2-basic-offset))
+
+#+END_SRC
+esse código copiei de um anão
+** Switch window
+#+BEGIN_SRC emacs-lisp
+  (use-package switch-window
+    :ensure t
+    :config
+    (setq switch-window-input-style 'minibuffer)
+    (setq switch-window-increase 4)
+    (setq switch-window-threshold 2)
+    :bind
+    ([remap other-window] .  switch-window))
+#+END_SRC
+** autocompletion
+#+BEGIN_SRC emacs-lisp
+  (use-package company
+    :ensure t
+    :config
+    (setq company-idle-delay 0)
+    (setq company-minimum-prefix-length 2)
+    (setq company-selection-wrap-around t)
+    (company-tng-configure-default)
+    :hook
+    (after-init . global-company-mode)
+    :bind
+    ("s-c" . company-complete))
+#+END_SRC
+*** company-irony
+#+BEGIN_SRC emacs-lisp
+  (use-package company-irony
+    :ensure t
+    :after company 
+    :init
+    (add-to-list 'company-backends 'company-irony))
+#+END_SRC
+*** ac-js2
+#+BEGIN_SRC emacs-lisp
+  (use-package ac-js2
+    :ensure t
+    :after company
+    :init
+    (add-to-list 'company-backends 'ac-js2-company))
+#+END_SRC
+Para javascripto/jsx
+*** company-anaconda
+#+BEGIN_SRC emacs-lisp
+  (use-package company-anaconda
+    :ensure t
+    :after company
+    :init
+    (add-to-list 'company-backends 'company-anaconda)
+    :hook
+    (python-mode . anaconda-mode))
+#+END_SRC
+Autocomplete para python 
+*** company-latex
+**** auctex
+#+BEGIN_SRC emacs-lisp
+  (use-package company-auctex
+    :ensure t
+    :after company 
+    :init
+    (add-to-list 'company-backends 'company-auctex)
+    (company-auctex-init))
+#+END_SRC
+Autocomplete para latex tags
+**** math-symbols
+#+BEGIN_SRC emacs-lisp
+    (use-package company-math
+      :ensure t
+      :after company 
+      :init
+      (add-to-list 'company-backends 'company-math-symbols-unicode))
+#+END_SRC
+*** quickhelp
+#+BEGIN_SRC emacs-lisp
+  (use-package company-quickhelp
+    :ensure t
+    :init
+    (setq company-quickhelp-delay 0)
+    :hook
+    (prog-mode . company-quickhelp-mode))
+#+END_SRC
+Mostra documentação automaticamente
+
+*** company-c-headers
+#+BEGIN_SRC emacs-lisp
+    (use-package company-c-headers
+      :ensure t
+      :after company 
+      :init
+      (add-to-list 'company-backends 'company-c-headers))
+
+#+END_SRC
+** flycheck
+#+BEGIN_SRC emacs-lisp
+  (use-package flycheck
+    :ensure t
+    :init
+    (global-flycheck-mode t))
+
+#+END_SRC
+** browse kill ring
+#+BEGIN_SRC emacs-lisp
+  (use-package browse-kill-ring
+    :ensure t
+    :bind
+    ("M-y" . 'browse-kill-ring))
+
+#+END_SRC
+** Swiper
+#+BEGIN_SRC emacs-lisp
+    (use-package ivy
+      :ensure t
+      :config
+      (ivy-mode 1)
+      (setq ivy-use-virtual-buffers t)
+      (setq enable-recursive-minibuffers t))
+#+END_SRC
+Boa função para procurar, mostra as ocorrências num minibuffer 
+*** swiper
+#+begin_src emacs-lisp
+  (use-package swiper
+    :ensure t
+    :after ivy
+    :bind
+    ("C-s" . swiper))
+#+end_src
+*** Counsel
+#+begin_src emacs-lisp 
+  (defun preservar-output ()
+    (interactive)
+    (let ((input (ivy--input)))
+      (ivy-quit-and-run (counsel-file-jump))))
+
+  (use-package counsel
+    :ensure t
+    :after ivy
+    :config
+    (define-key ivy-minibuffer-map (kbd "TAB") 'ivy-partial)
+    (define-key counsel-find-file-map (kbd "s-j") 'preservar-output)
+    :bind
+    ("M-x" . counsel-M-x)
+    ("C-x C-f" . counsel-find-file)
+    ("C-c m" . counsel-imenu))
+
+#+end_src
+
+#+BEGIN_CENTER
+Entretanto, pode bugar em buffers maiores
+#+END_CENTER
+** multiple cursors
+#+BEGIN_SRC emacs-lisp
+  (use-package multiple-cursors
+    :ensure t
+    :bind
+    ("C-c q" . 'mc/mark-next-like-this)
+    ("C-c a" . 'mc/mark-all-like-this))
+
+#+END_SRC
+Pacote pra múltiplos cursores, muito daora
+** expand region
+#+BEGIN_SRC emacs-lisp
+  (use-package expand-region
+    :ensure t
+    :bind
+    ("C-c e" . er/expand-region))
+#+END_SRC
+#+BEGIN_CENTER
+*EXPANDS EVERYTHING*
+#+END_CENTER
+** web-mode
+#+BEGIN_SRC emacs-lisp
+  (use-package web-mode
+    :ensure t
+    :config
+    (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode)))
+
+#+END_SRC
+** sudo-edit
+#+BEGIN_SRC emacs-lisp
+  (use-package sudo-edit
+    :ensure t
+    :bind
+	("C-c C-s" . sudo-edit))
+
+#+END_SRC
+** transpose-frame
+#+BEGIN_SRC emacs-lisp
+  (use-package transpose-frame
+    :ensure t)
+#+END_SRC
+Pacote para /management/ de janelas
+
+** latex
+*** auctex
+#+BEGIN_SRC emacs-lisp
+  (use-package tex
+    :defer t
+    :ensure auctex
+    :hook
+    (LaTeX-mode . visual-line-mode)
+    (LaTeX-mode . flyspell-mode)
+    (LaTeX-mode . LaTeX-math-mode)
+    (LaTeX-mode . turn-on-reftex)
+    :config
+    (setq TeX-auto-save t)
+    (setq TeX-parse-self t)
+    (setq-default TeX-master nil)
+    (setq reftex-plug-into-AUCTeX t)
+    (setq TeX-PDF-mode t)
+    (add-hook 'TeX-mode-hook
+	      (lambda ()
+		(setq TeX-command-extra-options "-shell-escape")
+		)
+	      ))
+
+#+END_SRC 
+Para edição aprimorada de documentos TEX
+*** latex preview pane
+#+BEGIN_SRC emacs-lisp
+  (use-package latex-preview-pane
+    :ensure t
+    :hook
+    (LaTeX-mode . latex-preview-pane-mode))
+#+END_SRC
+** gnuplot-mode
+#+BEGIN_SRC emacs-lisp
+(use-package gnuplot-mode
+  :ensure t)
+#+END_SRC
+Para me auxiliar na plotagem de gráficos para a iniciação
+** Pacotinhos pra mobile/web
+*** JS2 mode
+#+BEGIN_SRC emacs-lisp
+  (use-package js2-mode
+    :ensure t
+    :config
+    (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+    (add-to-list 'auto-mode-alist '("\\.jsx?\\'" . js2-jsx-mode))
+    (add-to-list 'interpreter-mode-alist '("node" . js2-jsx-mode)))
+
+#+END_SRC
+*** simple-httpd
+#+BEGIN_SRC emacs-lisp
+  (use-package simple-httpd
+    :ensure t)
+#+END_SRC
+servidor web "minimalista"
+
+*** skewer mode
+#+BEGIN_SRC emacs-lisp
+  (use-package skewer-mode
+    :ensure t
+    :config
+    (add-hook 'js2-mode-hook 'skewer-mode)
+    (add-hook 'css-mode-hook 'skewer-css-mode)
+    (add-hook 'html-mode-hook 'skewer-html-mode))
+
+#+END_SRC
+Interpretador de forms de html/css/js, também tem um repl
+* TERMINAL
+** Força zsh no ansi-term
+#+BEGIN_SRC emacs-lisp
+  (defvar default-shell "/bin/zsh")
+  (defadvice ansi-term (before force-zsh)
+    (interactive (list default-shell)))
+  (ad-activate 'ansi-term)
+#+END_SRC
+Força zsh como shell do ansi-term
+
+** Keybind
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "s-t") 'ansi-term)
+#+END_SRC
+
