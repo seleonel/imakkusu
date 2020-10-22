@@ -1,4 +1,9 @@
 * *GERAIS*
+
+** acentos
+   #+begin_src emacs-lisp
+     (require 'iso-transl)
+   #+end_src
 ** dired
    #+begin_src emacs-lisp
      (setq image-dired-thumb-margin 5)
@@ -8,7 +13,15 @@
 					      ("\\.pdf\\'" "okular ? &")
 					      ("\\.mp4\\'" "mpv ? &")
 					      ("\\.mkv\\'" "mpv ? &"))))
+
    #+end_src
+*** icons-dired
+    #+begin_src emacs-lisp
+      (use-package all-the-icons-dired
+	:ensure t
+	:hook
+	(dired-mode . all-the-icons-dired-mode))
+    #+end_src
 ** mail encrypt
 #+BEGIN_SRC emacs-lisp
 (setq mm-sign-option 'guided)
@@ -274,7 +287,7 @@ cliente de email bem simples
   (setq org-display-inline-images t)
   (setq org-redisplay-inline-images t) 
   (setq org-startup-with-inline-images t)
-  (setq org-image-actual-width 900)
+  (setq org-image-actual-width 300)
   (with-eval-after-load 'org
     (add-hook 'org-babel-after-execute-hook
 	      '(lambda ()
