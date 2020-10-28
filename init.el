@@ -42,8 +42,9 @@ There are two things you can do about this warning:
    '(:foreground default :background default :scale 1.6 :html-foreground "Black" :html-background "Transparent" :html-scale 1.0 :matchers
 		 ("begin" "$1" "$" "$$" "\\(" "\\[")))
  '(package-selected-packages
-   '(visual-regexp-steroids visual-regexp define-word dired-x org-roam-protocol undo-tree counsel org-ref org-roam org-superstar company-math company-quickhelp company-c-headers company-auctex latex-preview-pane ac-js2 plantuml-mode pyenv-mode magit mu4e-alert use-package-ensure-system-package mu4e mu skewer-mode simple-httpd js2-mode emacs-neotree neotree column-enforce-mode gnuplot sublime-themes gnuplot-mode emms auto-dictionary doom-modeline with-editor git-commit transpose-frame rainbow-delimiters projectile all-the-icons dashboard sudo-edit noctilux-theme cyberpunk-theme web-mode yasnippet-snippets yasnippet rainbow-delimiters-mode expand-region multiple-cursors ivy swiper browse-kill-ring dmenu jedi flycheck auto-complete company-anaconda pyvenv pyenv spaceline virtualenvwrapper company-jedi company switch-window smart-tabs-mode rainbow-mode avy smex ample-theme which-key use-package dash latex-extra))
+   '(peep-dired flycheck-pycheckers visual-regexp-steroids visual-regexp define-word dired-x org-roam-protocol undo-tree counsel org-ref org-roam org-superstar company-math company-quickhelp company-c-headers company-auctex latex-preview-pane ac-js2 plantuml-mode pyenv-mode magit mu4e-alert use-package-ensure-system-package mu4e mu skewer-mode simple-httpd js2-mode emacs-neotree neotree column-enforce-mode gnuplot sublime-themes gnuplot-mode emms auto-dictionary doom-modeline with-editor git-commit transpose-frame rainbow-delimiters projectile all-the-icons dashboard sudo-edit noctilux-theme cyberpunk-theme web-mode yasnippet-snippets yasnippet rainbow-delimiters-mode expand-region multiple-cursors ivy swiper browse-kill-ring dmenu jedi flycheck auto-complete company-anaconda pyvenv pyenv spaceline virtualenvwrapper company-jedi company switch-window smart-tabs-mode rainbow-mode avy smex ample-theme which-key use-package dash latex-extra))
  '(pyvenv-mode t)
+ '(reb-re-syntax 'string)
  '(send-mail-function 'mailclient-send-it)
  '(shell-escape-mode "-shell-escape"))
 (custom-set-faces
@@ -52,6 +53,7 @@ There are two things you can do about this warning:
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(default ((t (:background nil))))
+ '(all-the-icons-dired-dir-face ((t (:foreground "HotPink1"))))
  '(comint-highlight-prompt ((t (:inherit minibuffer-prompt :foreground "HotPink1"))))
  '(company-scrollbar-bg ((t (:background "maroon3"))))
  '(company-scrollbar-fg ((t (:background "orchid"))))
@@ -61,6 +63,7 @@ There are two things you can do about this warning:
  '(company-tooltip-selection ((t (:background "LightPink1"))))
  '(custom-link ((t (:inherit link :foreground "maroon1"))))
  '(doom-modeline-bar ((t (:background "gray20"))))
+ '(error ((t (:foreground "IndianRed1" :weight bold))))
  '(font-latex-sectioning-5-face ((t (:inherit variable-pitch :foreground "VioletRed1" :weight bold))))
  '(highlight ((t (:background "dark orchid"))))
  '(hl-line ((t (:inherit highlight :background "HotPink4"))))
