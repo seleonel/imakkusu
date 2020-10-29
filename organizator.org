@@ -1,15 +1,18 @@
 * Customs do emacs
   
 ** destacar parenteses
-   #+begin_src elisp
-     ;; https://www.emacswiki.org/emacs/HighlightParentheses
-     (add-hook 'prog-mode-hook
-	       '(lambda ()
-		  (highlight-parentheses-mode)
-		  (setq autopair-handle-action-fns
-			(list 'autopair-default-handle-action
-			      '(lambda (action pair pos-before)
-				 (hl-paren-color-update))))))
+#+begin_src elisp
+    ;; https://www.emacswiki.org/emacs/HighlightParentheses
+  (use-package highlight-parentheses
+    :ensure t
+    :hook
+    (prog-mode .
+	      (lambda ()
+		 (highlight-parentheses-mode)
+		 (setq autopair-handle-action-fns
+		       (list 'autopair-default-handle-action
+			     '(lambda (action pair pos-before)
+				(hl-paren-color-update)))))))
 
 
    #+end_src
