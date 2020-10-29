@@ -1,4 +1,18 @@
 * Customs do emacs
+  
+** destacar parenteses
+   #+begin_src elisp
+     ;; https://www.emacswiki.org/emacs/HighlightParentheses
+     (add-hook 'prog-mode-hook
+	       '(lambda ()
+		  (highlight-parentheses-mode)
+		  (setq autopair-handle-action-fns
+			(list 'autopair-default-handle-action
+			      '(lambda (action pair pos-before)
+				 (hl-paren-color-update))))))
+
+
+   #+end_src
 ** e-mail
 *** mu4e
 #+begin_src elisp
@@ -299,7 +313,7 @@ Força zsh como shell do ansi-term
     :bind
     ("C-c c" . avy-goto-char)
     ("C-c l" . avy-goto-line)
-    ("C-c w" . avy-goto-word)
+    ("C-c w" . avy-goto-word-1)
     ("C-c y" . avy-copy-line))
 #+end_src
 *** swiper
@@ -816,6 +830,12 @@ Permite-me trabalhar com ambientes virtuais
 #+end_src
 Para me auxiliar na plotagem de gráficos para a iniciação
 * Org-mode
+** Refile
+   #+begin_src elisp
+     (setq org-refile-targets '((nil :maxlevel . 4)
+				(nil :tag . "candidate")
+				))
+   #+end_src
 ** Inline Images
 #+begin_src elisp
   (setq org-display-inline-images t)
@@ -890,21 +910,39 @@ Tae um bom nome.
 
 ** org-roam
 #+begin_src elisp
-    (use-package org-roam
-      :ensure t
-      :hook
-      (after-init . org-roam-mode)
-      :custom
-      (org-roam-directory (concat (getenv "HOME") "/Estudo/arquivos-org/"))
-      :bind (:map org-roam-mode-map
-		  (("C-c n l" . org-roam)
-		   ("C-c n f" . org-roam-find-file)
-		   ("C-c n g" . org-roam-graph-show))
-		  :map org-mode-map
-		  (("C-c n i" . org-roam-insert)))
-      :config
-      (setq org-roam-index-file "./index.org")
-      (require 'org-roam-protocol))
+  (use-package org-roam
+    :ensure t
+    :hook
+    (after-init . org-roam-mode)
+    :custom
+    (org-roam-directory (concat (getenv "HOME") "/Estudo/arquivos-org/"))
+    :bind (:map org-roam-mode-map
+		(("C-c n l" . org-roam)
+		 ("C-c n f" . org-roam-find-file)
+		 ("C-c n g" . org-roam-graph))
+		:map org-mode-map
+		(("C-c n i" . org-roam-insert)))
+    :config
+    (setq org-roam-index-file "./index.org")
+    (require 'org-roam-protocol)
+    ;; graphing options
+    (setq org-roam-completion-system 'ivy)
+    (setq org-roam-graph-viewer "/usr/bin/firefox-esr")
+    (setq org-roam-graph-node-extra-config '(
+					     ("shape" . "oval")
+					     ("style" . "filled")
+					     ("fillcolor" . "PaleVioletRed1")
+					     ("color" . "VioletRed1")
+					     ("fontcolor" . "black")
+					     ("fontname" . "Roboto")))
+    (setq org-roam-graph-extra-config '(("rankdir" . "BT")))
+    (setq org-roam-graph-edge-extra-config '(("dir" . "none")
+					     ("color" . "PaleVioletRed1"))))
+
+
+
+
+
 #+end_src
 Bom pra brainstorming
 ** org-download
