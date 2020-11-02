@@ -10,7 +10,7 @@
 		 (highlight-parentheses-mode)
 		 (setq autopair-handle-action-fns
 		       (list 'autopair-default-handle-action
-			     '(lambda (action pair pos-before)
+			     #'(lambda (action pair pos-before)
 				(hl-paren-color-update)))))))
    #+end_src
 ** e-mail
@@ -288,7 +288,8 @@ Força zsh como shell do ansi-term
     :config
     (projectile-mode +1)
     :bind
-    ("C-S-p" . projectile-command-mode))
+    ("C-c f" . projectile-command-map))
+
 #+end_src
 ** *Which key*
 #+begin_src elisp
@@ -328,7 +329,7 @@ Força zsh como shell do ansi-term
      :after ivy
      :config
      (define-key ivy-minibuffer-map (kbd "TAB") 'ivy-partial)
-     (define-key counsel-find-file-map (kbd "s-j") '(lambda ()
+     (define-key counsel-find-file-map (kbd "s-j") #'(lambda ()
 						      (interactive)
 						      (let ((input (ivy--input)))
 							(ivy-quit-and-run
@@ -389,9 +390,7 @@ Para javascripto/jsx
   (use-package company-anaconda
     :after company
     :init
-    (add-to-list 'company-backends 'company-anaconda)
-    :hook
-    (python-mode . anaconda-mode))
+    (add-to-list 'company-backends 'company-anaconda))
 #+end_src
 Autocomplete para python 
 *** company-latex
@@ -776,6 +775,14 @@ Para edição aprimorada de documentos TEX
     (LaTeX-mode . latex-preview-pane-mode))
 #+end_src
 ** python
+*** anaconda-mode
+    #+begin_src elisp
+      (use-package anaconda-mode
+	:ensure t
+	:hook
+	(python-mode . anaconda-mode)
+	(python-mode . anaconda-eldoc-mode))
+    #+end_src
 *** flycheck python
     #+begin_src elisp
       (use-package flycheck-pycheckers
@@ -813,7 +820,7 @@ Para me auxiliar na plotagem de gráficos para a iniciação
   (setq org-image-actual-width 300)
   (with-eval-after-load 'org
     (add-hook 'org-babel-after-execute-hook
-	      '(lambda ()
+	      #'(lambda ()
 		 (when org-inline-image-overlays
 		   (org-redisplay-inline-images)))))
 #+end_src
@@ -829,14 +836,7 @@ Mostra por padrão as imagens no próprio buffer do org
 #+end_src
 Gnuplot para plotagem de gráficos a partir de tabelas
 ** plantuml
-#+begin_src elisp
-      (setq org-plantuml-jar-path (expand-file-name
-				   (concat
-				    (getenv "XDG_DATA_HOME") "/plantuml/plantuml.jar")))
-      (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
-#+end_src
 Programito bom para desenvolver diagramas de classes e fluxogramas.
-*** plantuml-mode
 #+begin_src elisp
       (use-package plantuml-mode
 	
