@@ -2,9 +2,8 @@
   
 ** destacar parenteses
 #+begin_src elisp
-    ;; https://www.emacswiki.org/emacs/HighlightParentheses
+  ;; https://www.emacswiki.org/emacs/HighlightParentheses
   (use-package highlight-parentheses
-    :ensure t
     :hook
     (prog-mode .
 	      (lambda ()
@@ -13,14 +12,11 @@
 		       (list 'autopair-default-handle-action
 			     '(lambda (action pair pos-before)
 				(hl-paren-color-update)))))))
-
-
    #+end_src
 ** e-mail
 *** mu4e
 #+begin_src elisp
   (use-package mu4e
-    :ensure nil
     :ensure-system-package mu
     :load-path "/usr/share/emacs/site-lisp"
     :config
@@ -31,8 +27,6 @@
      mu4e-trash-folder  "/Outlook/Deletadas"
      mu4e-refile-folder "/Outlook/INBOX"   ;; saved messages
      mu4e-attachment-dir "~/Downloads/Mail")
-
-
     (setq mu4e-get-mail-command "mbsync -c ~/.config/isync/mbsyncrc Outlookerson")
 
     ;; por enquanto este comando não está funcionando no momento
@@ -75,7 +69,6 @@
 **** mu4e-alert
  #+begin_src elisp
    (use-package mu4e-alert
-     :ensure t
      :after mu4e
      :hook
      (after-init . mu4e-alert-enable-notifications)
@@ -113,7 +106,6 @@
 *** icons-dired
     #+begin_src emacs-lisp
       (use-package all-the-icons-dired
-	:ensure t
 	:hook
 	(dired-mode . all-the-icons-dired-mode))
     #+end_src
@@ -140,7 +132,6 @@ Não acho que alguém goste de escrever
 #+begin_src elisp
   ;; configs do uncle dave
   (use-package emms
-    :ensure t
     :config
       (require 'emms-setup)
       (require 'emms-player-mpd)
@@ -282,7 +273,6 @@ Força zsh como shell do ansi-term
 ** Processos assíncronos
    #+begin_src emacs-lisp
 	 (use-package async
-	     :ensure t
 	     :init
 	     (dired-async-mode 1)
 	     (async-bytecomp-package-mode 1))
@@ -290,13 +280,11 @@ Força zsh como shell do ansi-term
    Roubado do witchmacs (novamente)
 ** page-break-lines
 #+begin_src elisp
-  (use-package page-break-lines
-    :ensure t)
+  (use-package page-break-lines)
 #+end_src
 ** projectile
 #+begin_src elisp
   (use-package projectile
-    :ensure t
     :config
     (projectile-mode +1)
     :bind
@@ -305,14 +293,12 @@ Força zsh como shell do ansi-term
 ** *Which key*
 #+begin_src elisp
 (use-package which-key
-  :ensure t
   :init
   (which-key-mode))
 #+end_src
 ** avy
 #+begin_src elisp
   (use-package avy
-    :ensure t
     :bind
     ("C-c c" . avy-goto-char)
     ("C-c l" . avy-goto-line)
@@ -322,7 +308,6 @@ Força zsh como shell do ansi-term
 *** swiper
  #+begin_src elisp
      (use-package ivy
-       :ensure t
        :config
        (ivy-mode 1)
        (setq ivy-use-virtual-buffers t)
@@ -332,7 +317,6 @@ Força zsh como shell do ansi-term
 **** swiper
  #+begin_src emacs-lisp
    (use-package swiper
-     :ensure t
      :after ivy
      :bind
      ("C-s" . swiper-isearch)
@@ -341,7 +325,6 @@ Força zsh como shell do ansi-term
 **** Counsel
  #+begin_src emacs-lisp 
    (use-package counsel
-     :ensure t
      :after ivy
      :config
      (define-key ivy-minibuffer-map (kbd "TAB") 'ivy-partial)
@@ -370,14 +353,12 @@ Força zsh como shell do ansi-term
 ** magit
 #+begin_src elisp
   (use-package magit
-    :ensure t
     :bind
     ("C-x g" . magit-status))
 #+end_src
 ** autocompletion
 #+begin_src elisp
   (use-package company
-    :ensure t
     :config
     (setq company-idle-delay 0)
     (setq company-minimum-prefix-length 2)
@@ -391,7 +372,6 @@ Força zsh como shell do ansi-term
 *** company-irony
 #+begin_src elisp
   (use-package company-irony
-    :ensure t
     :after company 
     :init
     (add-to-list 'company-backends 'company-irony))
@@ -399,7 +379,6 @@ Força zsh como shell do ansi-term
 *** ac-js2
 #+begin_src elisp
   (use-package ac-js2
-    :ensure t
     :after company
     :init
     (add-to-list 'company-backends 'ac-js2-company))
@@ -408,7 +387,6 @@ Para javascripto/jsx
 *** company-anaconda
 #+begin_src elisp
   (use-package company-anaconda
-    :ensure t
     :after company
     :init
     (add-to-list 'company-backends 'company-anaconda)
@@ -420,7 +398,6 @@ Autocomplete para python
 **** auctex
 #+begin_src elisp
     (use-package company-auctex
-      :ensure t
       :after (company tex)
       :init
       (company-auctex-init))
@@ -429,7 +406,6 @@ Autocomplete para latex tags
 **** math-symbols
 #+begin_src elisp
     (use-package company-math
-      :ensure t
       :after company 
       :init
       (add-to-list 'company-backends 'company-math-symbols-unicode))
@@ -437,7 +413,6 @@ Autocomplete para latex tags
 *** quickhelp
 #+begin_src elisp
   (use-package company-quickhelp
-    :ensure t
     :init
     (setq company-quickhelp-delay 0)
     :hook
@@ -448,7 +423,6 @@ Mostra documentação automaticamente
 *** company-c-headers
 #+begin_src elisp
     (use-package company-c-headers
-      :ensure t
       :after company 
       :init
       (add-to-list 'company-backends 'company-c-headers))
@@ -457,7 +431,6 @@ Mostra documentação automaticamente
 ** browse kill ring
 #+begin_src elisp
   (use-package browse-kill-ring
-    :ensure t
     :bind
     ("M-y" . 'browse-kill-ring))
 
@@ -465,14 +438,12 @@ Mostra documentação automaticamente
 ** expand region
 #+begin_src elisp
   (use-package expand-region
-    :ensure t
     :bind
     ("C-c e" . er/expand-region))
 #+end_src
 ** multiple cursors
 #+begin_src elisp
   (use-package multiple-cursors
-    :ensure t
     :bind
     ("C-c q" . 'mc/mark-next-like-this)
     ("C-c a" . 'mc/mark-all-like-this))
@@ -482,22 +453,19 @@ Pacote pra múltiplos cursores.
 ** sudo-edit
 #+begin_src elisp
   (use-package sudo-edit
-    :ensure t
     :bind
 	("C-c s" . sudo-edit))
 
 #+end_src
 ** transpose-frame
 #+begin_src elisp
-  (use-package transpose-frame
-    :ensure t)
+  (use-package transpose-frame)
 #+end_src
 Pacote para /management/ de janelas
 
 ** smart tabs
 #+begin_src elisp
 (use-package smart-tabs-mode
- :ensure t
  :config
  (smart-tabs-add-language-support latex latex-mode-hook
  ((latex-indent-line . 4)
@@ -510,7 +478,6 @@ esse código copiei de um anão
 ** define-word
    #+begin_src emacs-lisp
      (use-package define-word
-       :ensure t
        :bind
        ("C-c d" . define-word)
        ("C-c u" . define-word-at-point))
@@ -521,25 +488,21 @@ esse código copiei de um anão
 ** undo-tree
 #+begin_src emacs-lisp
 (use-package undo-tree
-  :ensure t
   :config
   (global-undo-tree-mode))
 #+end_src
 ** visual-regexp
    #+begin_src emacs-lisp
      (use-package visual-regexp
-       :ensure t
        :bind
        ("C-c r" . vr/replace)
        ("C-c k" . vr/query-replace)
        :config
-       (use-package visual-regexp-steroids
-	 :ensure t))
+       (use-package visual-regexp-steroids))
    #+end_src
 ** column enforce mode
 #+begin_src elisp
   (use-package column-enforce-mode
-    :ensure t
     :hook
     (prog-mode . column-enforce-mode)
     (text-mode . column-enforce-mode))
@@ -551,14 +514,12 @@ só mostra um limite
 *** Rainbow-delimiters
 #+begin_src elisp
 (use-package rainbow-delimiters
-    :ensure t
     :hook
     (prog-mode . rainbow-delimiters-mode))
 #+end_src
 *** Rainbow mode
 #+begin_src elisp
   (use-package rainbow-mode
-    :ensure t
     :hook
     (prog-mode . rainbow-mode))
 #+end_src
@@ -566,7 +527,6 @@ Códigos de cor *hexadecimais* ficam coloridos yay
 ** Switch window
 #+begin_src elisp
   (use-package switch-window
-    :ensure t
     :config
     (setq switch-window-input-style 'minibuffer)
     (setq switch-window-increase 4)
@@ -577,7 +537,6 @@ Códigos de cor *hexadecimais* ficam coloridos yay
 ** flycheck
 #+begin_src elisp
   (use-package flycheck
-    :ensure t
     :init
     (global-flycheck-mode t))
 
@@ -586,8 +545,7 @@ Códigos de cor *hexadecimais* ficam coloridos yay
 * Configurações do use-package  
 ** ensure-system-package
 #+begin_src elisp
-(use-package use-package-ensure-system-package
-  :ensure t)
+(use-package use-package-ensure-system-package)
 #+end_src
 Pacotinho legal para garantir que pacotes externos existem (bom para o mu4e)
 * Configurações visuais
@@ -605,7 +563,6 @@ Pacotinho legal para garantir que pacotes externos existem (bom para o mu4e)
   ;;(setq initial-buffer-choice 'my-buffeiro)
 
   (use-package dashboard
-    :ensure t
     :config
     (dashboard-setup-startup-hook)
      (setq dashboard-banner-logo-title "BEM VINDO AO MARAVILHOSO IMAKKUSU")
@@ -667,7 +624,7 @@ Menu é inútil e toma espaço
 ** TEMA ATUAL
 #+begin_src elisp
   (use-package sublime-themes
-     :ensure t
+     
      :init
      (load-theme 'brin t))
 
@@ -676,7 +633,7 @@ Combina mais com o tema atual do meu desktop environment
 ** modeline
 #+begin_src elisp
 (use-package doom-modeline
-  :ensure t
+  
   :init (doom-modeline-mode 1)
   :config 
   (setq doom-modeline-mu4e t)
@@ -702,14 +659,25 @@ Combina mais com o tema atual do meu desktop environment
 ** all-the-icons
    #+begin_src elisp
   (use-package all-the-icons
-    :ensure t)
+    )
 #+end_src
 * Modos para linguagens de programação e markdown
+** lispy
+   #+begin_src elisp
+     (use-package lispy
+       :hook
+       (emacs-lisp-mode . (lambda () (lispy-mode 1))))
 
+     ;; lispy on eval expression
+     (defun conditionally-enable-lispy ()
+       (when (eq this-command 'eval-expression)
+	 (lispy-mode 1)))
+     (add-hook 'minibuffer-setup-hook 'conditionally-enable-lispy)
+   #+end_src
 ** Yasnippet
 #+begin_src elisp
   (use-package yasnippet
-    :ensure t
+    
     :config
     (yas-reload-all)
     :hook
@@ -718,7 +686,7 @@ Combina mais com o tema atual do meu desktop environment
 *** Yasnippet snippets
 #+begin_src elisp
   (use-package yasnippet-snippets
-    :ensure t)
+    )
 
 #+end_src
 ** C e C++
@@ -731,7 +699,7 @@ Combina mais com o tema atual do meu desktop environment
 *** irony mode
 #+begin_src emacs-lisp 
   (use-package irony
-    :ensure t
+    
     :hook
     (c++-mode . irony-mode)
     (c-mode . irony-mode)
@@ -741,7 +709,7 @@ Combina mais com o tema atual do meu desktop environment
 *** web-mode
  #+begin_src elisp
    (use-package web-mode
-     :ensure t
+     
      :config
      (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode)))
 
@@ -749,7 +717,7 @@ Combina mais com o tema atual do meu desktop environment
 *** JS2 mode
 #+begin_src elisp
   (use-package js2-mode
-    :ensure t
+    
     :config
     (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
     (add-to-list 'auto-mode-alist '("\\.jsx?\\'" . js2-jsx-mode))
@@ -759,13 +727,13 @@ Combina mais com o tema atual do meu desktop environment
 *** simple-httpd
 #+begin_src elisp
   (use-package simple-httpd
-    :ensure t)
+    )
 #+end_src
 servidor web "minimalista"
 *** skewer mode
 #+begin_src elisp
   (use-package skewer-mode
-    :ensure t
+    
     :hook
     (js2-mode . skewer-mode)
     (css-mode . skewer-css-mode)
@@ -774,13 +742,12 @@ servidor web "minimalista"
 #+end_src
 Interpretador de forms de html/css/js, também tem um repl
 
-
 ** latex
 *** auctex
 #+begin_src elisp
   (use-package tex
     :defer t
-    :ensure auctex
+    :straight auctex
     :hook
     (LaTeX-mode . visual-line-mode)
     (LaTeX-mode . flyspell-mode)
@@ -804,7 +771,7 @@ Para edição aprimorada de documentos TEX
 *** latex preview pane
 #+begin_src elisp
   (use-package latex-preview-pane
-    :ensure t
+    
     :hook
     (LaTeX-mode . latex-preview-pane-mode))
 #+end_src
@@ -812,7 +779,7 @@ Para edição aprimorada de documentos TEX
 *** flycheck python
     #+begin_src elisp
       (use-package flycheck-pycheckers
-	:ensure t
+	
 	:after flycheck
 	:hook
 	(flycheck-mode . flycheck-pycheckers-setup))
@@ -820,7 +787,6 @@ Para edição aprimorada de documentos TEX
 *** pyenv   
 #+begin_src elisp
   (use-package pyenv-mode
-    :ensure t
     :ensure-system-package pyenv
     :hook
     (pyenv-mode . python-mode))
@@ -829,7 +795,7 @@ Permite-me trabalhar com ambientes virtuais
 ** gnuplot-mode
 #+begin_src elisp
 (use-package gnuplot-mode
-  :ensure t)
+  )
 #+end_src
 Para me auxiliar na plotagem de gráficos para a iniciação
 * Org-mode
@@ -854,10 +820,8 @@ Para me auxiliar na plotagem de gráficos para a iniciação
 Mostra por padrão as imagens no próprio buffer do org
 ** gnuplot
 #+begin_src elisp
-(use-package gnuplot
-  :ensure t)
-(use-package gnuplot-mode
-  :ensure t)
+(use-package gnuplot)
+(use-package gnuplot-mode)
 #+end_src
 ** gnuplot binding
 #+begin_src elisp
@@ -875,7 +839,7 @@ Programito bom para desenvolver diagramas de classes e fluxogramas.
 *** plantuml-mode
 #+begin_src elisp
       (use-package plantuml-mode
-	:ensure t
+	
 	:config
 	(setq plantuml-jar-path (expand-file-name
 				 (concat
@@ -896,7 +860,7 @@ Algumas opções de linguagens do babel
 ** org-superstar
 #+begin_src elisp
   (use-package org-superstar
-    :ensure t
+    
     :hook
     (org-mode . (lambda () (org-superstar-mode 1)))
     :init
@@ -914,7 +878,6 @@ Tae um bom nome.
 ** org-roam
 #+begin_src elisp
   (use-package org-roam
-    :ensure t
     :hook
     (after-init . org-roam-mode)
     :custom
@@ -941,17 +904,11 @@ Tae um bom nome.
     (setq org-roam-graph-extra-config '(("rankdir" . "BT")))
     (setq org-roam-graph-edge-extra-config '(("dir" . "none")
 					     ("color" . "PaleVioletRed1"))))
-
-
-
-
-
 #+end_src
 Bom pra brainstorming
 ** org-download
    #+begin_src emacs-lisp
      (use-package org-download
-       :ensure t
        :custom
        (org-download-method 'directory)
        (org-download-image-dir "~/Pictures/org/")
@@ -960,7 +917,6 @@ Bom pra brainstorming
        :config
        (require 'org-download)
        (add-hook 'dired-mode-hook 'org-download-enable))
-
    #+end_src
 * *Minhas* funções (algumas roubadas)
 ** assassino de palavras
