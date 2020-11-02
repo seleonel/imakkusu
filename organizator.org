@@ -1,7 +1,6 @@
 * Customs do emacs
-  
 ** destacar parenteses
-#+begin_src elisp
+#+begin_src emacs-lisp
   ;; https://www.emacswiki.org/emacs/HighlightParentheses
   (use-package highlight-parentheses
     :hook
@@ -11,11 +10,11 @@
 		 (setq autopair-handle-action-fns
 		       (list 'autopair-default-handle-action
 			     #'(lambda (action pair pos-before)
-				(hl-paren-color-update)))))))
-   #+end_src
+				(hl-paren-color-update)))))))'
+#+end_src
 ** e-mail
 *** mu4e
-#+begin_src elisp
+#+begin_src emacs-lisp
   (use-package mu4e
     :ensure-system-package mu
     :load-path "/usr/share/emacs/site-lisp"
@@ -54,7 +53,7 @@
 
 #+end_src
 **** smtpmail
- #+begin_src elisp
+ #+begin_src emacs-lisp
    (use-package smtpmail
      :after mu4e
      :init
@@ -67,7 +66,7 @@
  #+end_src
  cliente de email bem simples
 **** mu4e-alert
- #+begin_src elisp
+ #+begin_src emacs-lisp
    (use-package mu4e-alert
      :after mu4e
      :hook
@@ -83,7 +82,7 @@
  #+end_src
     
 *** mail encrypt
- #+begin_src elisp
+ #+begin_src emacs-lisp
  (setq mm-sign-option 'guided)
  (add-hook 'message-send-hook 'mml-secure-message-sign)
  #+end_src
@@ -110,26 +109,26 @@
 	(dired-mode . all-the-icons-dired-mode))
     #+end_src
 ** Yes or No por Y or N
-#+begin_src elisp
+#+begin_src emacs-lisp
 (defalias 'yes-or-no-p 'y-or-n-p)
 #+end_src
 Não acho que alguém goste de escrever
 "Yes" por inteiro.
 ** Ido mode
-#+begin_src elisp
+#+begin_src emacs-lisp
   (setq ido-enable-flex-matching nil)
   (setq ido-create-new-buffer 'always)
   (setq ido-everywhere t)
   (ido-mode 1)
 #+end_src
 ** enabling the current screen buffer (ibuffer)
-#+begin_src elisp
+#+begin_src emacs-lisp
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 #+end_src
 
 ** Midia em geral
 *** EMMS
-#+begin_src elisp
+#+begin_src emacs-lisp
   ;; configs do uncle dave
   (use-package emms
     :config
@@ -150,12 +149,12 @@ Não acho que alguém goste de escrever
       ("<C-XF86AudioPlay>" . emms-pause))
 #+end_src
 **** mpc
- #+begin_src elisp
+ #+begin_src emacs-lisp
  (setq mpc-host "localhost:6000")
 
  #+end_src
 **** funcao para atualizar o database
- #+begin_src elisp
+ #+begin_src emacs-lisp
  (defun mpd/update-database ()
    "Updates the MPD database synchronously."
    (interactive)
@@ -165,7 +164,7 @@ Não acho que alguém goste de escrever
 
  #+end_src
 **** funcao para iniciar mpd
-#+begin_src elisp
+#+begin_src emacs-lisp
 (defun mpd/start-music-daemon ()
   "Start MPD, connects to it and syncs the metadata cache."
   (interactive)
@@ -178,23 +177,23 @@ Não acho que alguém goste de escrever
 #+end_src
 ** autosave e backups
 Configs roubadas de um anão 2.0
-#+begin_src elisp
+#+begin_src emacs-lisp
   (setq-default backup-directory-alist
    '(("." . "~/.cache/emacs/backups/")))
   (add-to-list 'auto-save-file-name-transforms
    `(".*" "~/.cache/emacs/autosave/\\1" t) 'append)
 #+end_src
 ** Mover de acordo com camelCase
-#+begin_src elisp
+#+begin_src emacs-lisp
   (global-subword-mode 1)
 #+end_src
 ** aspell 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (setq ispell-program-name "aspell")
 #+end_src
 Aspell me parece mais efetivo que ispell.
 *** flyspell
-#+begin_src elisp
+#+begin_src emacs-lisp
       (dolist (hook '(text-mode-hook))
 	(add-hook hook (lambda () (flyspell-mode 1))))
       (dolist (hook '(change-log-mode-hook log-edit-mode-hook))
@@ -217,7 +216,7 @@ Aspell me parece mais efetivo que ispell.
 #+end_src
 
 ** Forçar UTF-8
-#+begin_src elisp
+#+begin_src emacs-lisp
 (prefer-coding-system 'utf-8)
 (set-default-coding-systems 'utf-8)
 (set-terminal-coding-system 'utf-8)
@@ -225,7 +224,7 @@ Aspell me parece mais efetivo que ispell.
 (set-language-environment 'utf-8)
 #+end_src
 ** emacs daemon
-#+begin_src elisp
+#+begin_src emacs-lisp
 ;; define function to shutdown emacs server instance
 (defun matar-server ()
   "Save buffers, Quit, and Shutdown (kill) server"
@@ -245,7 +244,7 @@ Roubado da wiki, esta funcao mata o daemon e pede para salvar os buffers
 #+end_src
 Roubado do witchmacs. Praise Marisa
 ** salvar clipboard antes de kill
-#+begin_src elisp
+#+begin_src emacs-lisp
 (setq save-interprogram-paste-before-kill t)
 #+end_src
 Isso deveria ser *default*.
@@ -257,12 +256,12 @@ Isso deveria ser *default*.
   ;; copiado de https://tuhdo.github.io/c-ide.html
 #+end_src
 ** Keybind
-#+begin_src elisp
+#+begin_src emacs-lisp
 (global-set-key (kbd "C-c t") 'ansi-term)
 #+end_src
 
 ** Força zsh no ansi-term
-#+begin_src elisp
+#+begin_src emacs-lisp
   (defvar default-shell "/bin/zsh")
   (defadvice ansi-term (before force-zsh)
     (interactive (list default-shell)))
@@ -279,11 +278,11 @@ Força zsh como shell do ansi-term
    #+end_src
    Roubado do witchmacs (novamente)
 ** page-break-lines
-#+begin_src elisp
+#+begin_src emacs-lisp
   (use-package page-break-lines)
 #+end_src
 ** projectile
-#+begin_src elisp
+#+begin_src emacs-lisp
   (use-package projectile
     :config
     (projectile-mode +1)
@@ -292,13 +291,13 @@ Força zsh como shell do ansi-term
 
 #+end_src
 ** *Which key*
-#+begin_src elisp
+#+begin_src emacs-lisp
 (use-package which-key
   :init
   (which-key-mode))
 #+end_src
 ** avy
-#+begin_src elisp
+#+begin_src emacs-lisp
   (use-package avy
     :bind
     ("C-c c" . avy-goto-char)
@@ -307,7 +306,7 @@ Força zsh como shell do ansi-term
     ("C-c y" . avy-copy-line))
 #+end_src
 *** swiper
- #+begin_src elisp
+ #+begin_src emacs-lisp
      (use-package ivy
        :config
        (ivy-mode 1)
@@ -344,7 +343,7 @@ Força zsh como shell do ansi-term
      ("C-c m" . counsel-imenu)
      ;; file jump is recursive, but kinda slow
      ("C-c J" . counsel-file-jump)
-     ;; good for searching elisp functions
+     ;; good for searching emacs-lisp functions
      ("C-c i" . counsel-info-lookup-symbol)
      ;; external things
      ("C-c p" . counsel-linux-app)
@@ -352,13 +351,13 @@ Força zsh como shell do ansi-term
 
  #+end_src
 ** magit
-#+begin_src elisp
+#+begin_src emacs-lisp
   (use-package magit
     :bind
     ("C-x g" . magit-status))
 #+end_src
 ** autocompletion
-#+begin_src elisp
+#+begin_src emacs-lisp
   (use-package company
     :config
     (setq company-idle-delay 0)
@@ -371,14 +370,14 @@ Força zsh como shell do ansi-term
     ("s-c" . company-complete))
 #+end_src
 *** company-irony
-#+begin_src elisp
+#+begin_src emacs-lisp
   (use-package company-irony
     :after company 
     :init
     (add-to-list 'company-backends 'company-irony))
 #+end_src
 *** ac-js2
-#+begin_src elisp
+#+begin_src emacs-lisp
   (use-package ac-js2
     :after company
     :init
@@ -386,7 +385,7 @@ Força zsh como shell do ansi-term
 #+end_src
 Para javascripto/jsx
 *** company-anaconda
-#+begin_src elisp
+#+begin_src emacs-lisp
   (use-package company-anaconda
     :after company
     :init
@@ -395,7 +394,7 @@ Para javascripto/jsx
 Autocomplete para python 
 *** company-latex
 **** auctex
-#+begin_src elisp
+#+begin_src emacs-lisp
     (use-package company-auctex
       :after (company tex)
       :init
@@ -403,14 +402,14 @@ Autocomplete para python
 #+end_src
 Autocomplete para latex tags
 **** math-symbols
-#+begin_src elisp
+#+begin_src emacs-lisp
     (use-package company-math
       :after company 
       :init
       (add-to-list 'company-backends 'company-math-symbols-unicode))
 #+end_src
 *** quickhelp
-#+begin_src elisp
+#+begin_src emacs-lisp
   (use-package company-quickhelp
     :init
     (setq company-quickhelp-delay 0)
@@ -420,7 +419,7 @@ Autocomplete para latex tags
 Mostra documentação automaticamente
 
 *** company-c-headers
-#+begin_src elisp
+#+begin_src emacs-lisp
     (use-package company-c-headers
       :after company 
       :init
@@ -428,20 +427,20 @@ Mostra documentação automaticamente
 
 #+end_src
 ** browse kill ring
-#+begin_src elisp
+#+begin_src emacs-lisp
   (use-package browse-kill-ring
     :bind
     ("M-y" . 'browse-kill-ring))
 
 #+end_src
 ** expand region
-#+begin_src elisp
+#+begin_src emacs-lisp
   (use-package expand-region
     :bind
     ("C-c e" . er/expand-region))
 #+end_src
 ** multiple cursors
-#+begin_src elisp
+#+begin_src emacs-lisp
   (use-package multiple-cursors
     :bind
     ("C-c q" . 'mc/mark-next-like-this)
@@ -450,20 +449,20 @@ Mostra documentação automaticamente
 #+end_src
 Pacote pra múltiplos cursores.
 ** sudo-edit
-#+begin_src elisp
+#+begin_src emacs-lisp
   (use-package sudo-edit
     :bind
 	("C-c s" . sudo-edit))
 
 #+end_src
 ** transpose-frame
-#+begin_src elisp
+#+begin_src emacs-lisp
   (use-package transpose-frame)
 #+end_src
 Pacote para /management/ de janelas
 
 ** smart tabs
-#+begin_src elisp
+#+begin_src emacs-lisp
 (use-package smart-tabs-mode
  :config
  (smart-tabs-add-language-support latex latex-mode-hook
@@ -500,7 +499,7 @@ esse código copiei de um anão
        (use-package visual-regexp-steroids))
    #+end_src
 ** column enforce mode
-#+begin_src elisp
+#+begin_src emacs-lisp
   (use-package column-enforce-mode
     :hook
     (prog-mode . column-enforce-mode)
@@ -511,20 +510,20 @@ Enforça a regra dos 80(?) caracteres em uma linha, ou pelo menos
 só mostra um limite
 ** Rainbow
 *** Rainbow-delimiters
-#+begin_src elisp
+#+begin_src emacs-lisp
 (use-package rainbow-delimiters
     :hook
     (prog-mode . rainbow-delimiters-mode))
 #+end_src
 *** Rainbow mode
-#+begin_src elisp
+#+begin_src emacs-lisp
   (use-package rainbow-mode
     :hook
     (prog-mode . rainbow-mode))
 #+end_src
 Códigos de cor *hexadecimais* ficam coloridos yay
 ** Switch window
-#+begin_src elisp
+#+begin_src emacs-lisp
   (use-package switch-window
     :config
     (setq switch-window-input-style 'minibuffer)
@@ -534,7 +533,7 @@ Códigos de cor *hexadecimais* ficam coloridos yay
     ([remap other-window] .  switch-window))
 #+end_src
 ** flycheck
-#+begin_src elisp
+#+begin_src emacs-lisp
   (use-package flycheck
     :init
     (global-flycheck-mode t))
@@ -543,13 +542,13 @@ Códigos de cor *hexadecimais* ficam coloridos yay
 
 * Configurações do use-package  
 ** ensure-system-package
-#+begin_src elisp
+#+begin_src emacs-lisp
 (use-package use-package-ensure-system-package)
 #+end_src
 Pacotinho legal para garantir que pacotes externos existem (bom para o mu4e)
 * Configurações visuais
 ** pagina inicial em si
-#+begin_src elisp
+#+begin_src emacs-lisp
   ;; ANTIGO BUFFER
   ;;(defun my-buffeiro ()
   ;;  (let ((buffer (generate-new-buffer "intro")))
@@ -588,40 +587,40 @@ Pacotinho legal para garantir que pacotes externos existem (bom para o mu4e)
 *Garanta que a imagem existe pls*
 
 ** Fonte
-#+begin_src elisp
+#+begin_src emacs-lisp
 (setq default-frame-alist '((font . "Hack 12")))
 
 #+end_src
 Força por padrão a fonte Hack, tamanho 12
 
 ** Barra de tarefas
-#+begin_src elisp
+#+begin_src emacs-lisp
 (tool-bar-mode -1)
 #+end_src
 Remove *toda* a barra de tarefas
 
 ** mostrar linhazitas
-#+begin_src elisp
+#+begin_src emacs-lisp
   (line-number-mode 1)
   (column-number-mode 1)
 #+end_src
 
 ** Barra de menu
-#+begin_src elisp
+#+begin_src emacs-lisp
 (menu-bar-mode -1)
 
 #+end_src
 Menu é inútil e toma espaço
 
 ** Highlight de linha
-#+begin_src elisp
+#+begin_src emacs-lisp
 (global-hl-line-mode t)
 #+end_src
 
 *LINHAS CHAMAM MAIS ATENÇÃO AGR*
 
 ** TEMA ATUAL
-#+begin_src elisp
+#+begin_src emacs-lisp
   (use-package sublime-themes
      
      :init
@@ -630,17 +629,16 @@ Menu é inútil e toma espaço
 #+end_src
 Combina mais com o tema atual do meu desktop environment
 ** modeline
-#+begin_src elisp
+#+begin_src emacs-lisp
 (use-package doom-modeline
-  
-  :init (doom-modeline-mode 1)
+    :init (doom-modeline-mode 1)
   :config 
   (setq doom-modeline-mu4e t)
   (setq doom-modeline-bar-width 1)
   (setq doom-modeline-icon 1))
 #+end_src
 ** line numbers
-#+begin_src elisp
+#+begin_src emacs-lisp
   (defun mostrarLinhazitas ()
       (interactive)
       (display-line-numbers-mode))
@@ -648,7 +646,7 @@ Combina mais com o tema atual do meu desktop environment
 
 #+end_src
 ** Barra de scroll(?)
-#+begin_src elisp
+#+begin_src emacs-lisp
   (scroll-bar-mode -1)
 #+end_src
 ** Pretty symbols
@@ -656,13 +654,13 @@ Combina mais com o tema atual do meu desktop environment
 (global-prettify-symbols-mode t)
 #+end_src
 ** all-the-icons
-   #+begin_src elisp
+   #+begin_src emacs-lisp
   (use-package all-the-icons
     )
 #+end_src
 * Modos para linguagens de programação e markdown
 ** lispy
-   #+begin_src elisp
+   #+begin_src emacs-lisp
      (use-package lispy
        :hook
        (emacs-lisp-mode . (lambda () (lispy-mode 1))))
@@ -674,7 +672,7 @@ Combina mais com o tema atual do meu desktop environment
      (add-hook 'minibuffer-setup-hook 'conditionally-enable-lispy)
    #+end_src
 ** Yasnippet
-#+begin_src elisp
+#+begin_src emacs-lisp
   (use-package yasnippet
     
     :config
@@ -683,14 +681,14 @@ Combina mais com o tema atual do meu desktop environment
     (prog-mode . yas-minor-mode))
 #+end_src
 *** Yasnippet snippets
-#+begin_src elisp
+#+begin_src emacs-lisp
   (use-package yasnippet-snippets
     )
 
 #+end_src
 ** C e C++
 *** c-headers 
-#+begin_src elisp
+#+begin_src emacs-lisp
   (defun c-open-header-in-place ()
        (local-set-key (kbd "C-c h") 'ff-find-other-file))
   (add-hook 'c-initialization-hook 'c-open-header-in-place)
@@ -706,7 +704,7 @@ Combina mais com o tema atual do meu desktop environment
 #+end_src
 ** Pacotinhos pra mobile/web
 *** web-mode
- #+begin_src elisp
+ #+begin_src emacs-lisp
    (use-package web-mode
      
      :config
@@ -714,7 +712,7 @@ Combina mais com o tema atual do meu desktop environment
 
  #+end_src
 *** JS2 mode
-#+begin_src elisp
+#+begin_src emacs-lisp
   (use-package js2-mode
     
     :config
@@ -724,13 +722,13 @@ Combina mais com o tema atual do meu desktop environment
 
 #+end_src
 *** simple-httpd
-#+begin_src elisp
+#+begin_src emacs-lisp
   (use-package simple-httpd
     )
 #+end_src
 servidor web "minimalista"
 *** skewer mode
-#+begin_src elisp
+#+begin_src emacs-lisp
   (use-package skewer-mode
     
     :hook
@@ -743,7 +741,7 @@ Interpretador de forms de html/css/js, também tem um repl
 
 ** latex
 *** auctex
-#+begin_src elisp
+#+begin_src emacs-lisp
   (use-package tex
     :defer t
     :straight auctex
@@ -768,7 +766,7 @@ Interpretador de forms de html/css/js, também tem um repl
 #+end_src 
 Para edição aprimorada de documentos TEX
 *** latex preview pane
-#+begin_src elisp
+#+begin_src emacs-lisp
   (use-package latex-preview-pane
     
     :hook
@@ -776,15 +774,14 @@ Para edição aprimorada de documentos TEX
 #+end_src
 ** python
 *** anaconda-mode
-    #+begin_src elisp
+    #+begin_src emacs-lisp
       (use-package anaconda-mode
-	:ensure t
 	:hook
 	(python-mode . anaconda-mode)
 	(python-mode . anaconda-eldoc-mode))
     #+end_src
 *** flycheck python
-    #+begin_src elisp
+    #+begin_src emacs-lisp
       (use-package flycheck-pycheckers
 	
 	:after flycheck
@@ -792,7 +789,7 @@ Para edição aprimorada de documentos TEX
 	(flycheck-mode . flycheck-pycheckers-setup))
     #+end_src
 *** pyenv   
-#+begin_src elisp
+#+begin_src emacs-lisp
   (use-package pyenv-mode
     :ensure-system-package pyenv
     :hook
@@ -800,20 +797,20 @@ Para edição aprimorada de documentos TEX
 #+end_src
 Permite-me trabalhar com ambientes virtuais
 ** gnuplot-mode
-#+begin_src elisp
+#+begin_src emacs-lisp
 (use-package gnuplot-mode
   )
 #+end_src
 Para me auxiliar na plotagem de gráficos para a iniciação
 * Org-mode
 ** Refile
-   #+begin_src elisp
+   #+begin_src emacs-lisp
      (setq org-refile-targets '((nil :maxlevel . 4)
 				(nil :tag . "candidate")
 				))
    #+end_src
 ** Inline Images
-#+begin_src elisp
+#+begin_src emacs-lisp
   (setq org-display-inline-images t)
   (setq org-redisplay-inline-images t) 
   (setq org-startup-with-inline-images t)
@@ -826,18 +823,18 @@ Para me auxiliar na plotagem de gráficos para a iniciação
 #+end_src
 Mostra por padrão as imagens no próprio buffer do org
 ** gnuplot
-#+begin_src elisp
+#+begin_src emacs-lisp
 (use-package gnuplot)
 (use-package gnuplot-mode)
 #+end_src
 ** gnuplot binding
-#+begin_src elisp
+#+begin_src emacs-lisp
 (local-set-key "M-C-g" 'org-plot/gnuplot) 
 #+end_src
 Gnuplot para plotagem de gráficos a partir de tabelas
 ** plantuml
 Programito bom para desenvolver diagramas de classes e fluxogramas.
-#+begin_src elisp
+#+begin_src emacs-lisp
       (use-package plantuml-mode
 	
 	:config
@@ -847,18 +844,18 @@ Programito bom para desenvolver diagramas de classes e fluxogramas.
 	(setq plantuml-default-exec-mode 'jar))
 #+end_src
 ** belos simbolos
-#+begin_src elisp
+#+begin_src emacs-lisp
   (add-hook 'org-mode-hook 'org-toggle-pretty-entities)
 #+end_src
 ** babel
-#+begin_src elisp
+#+begin_src emacs-lisp
     (org-babel-do-load-languages 
      'org-babel-load-languages 
      '((plantuml . t) (python . t) (dot . t)))
 #+end_src
 Algumas opções de linguagens do babel
 ** org-superstar
-#+begin_src elisp
+#+begin_src emacs-lisp
   (use-package org-superstar
     
     :hook
@@ -876,7 +873,7 @@ Algumas opções de linguagens do babel
 Tae um bom nome.
 
 ** org-roam
-#+begin_src elisp
+#+begin_src emacs-lisp
   (use-package org-roam
     :hook
     (after-init . org-roam-mode)
@@ -920,7 +917,7 @@ Bom pra brainstorming
    #+end_src
 * *Minhas* funções (algumas roubadas)
 ** assassino de palavras
-#+begin_src elisp
+#+begin_src emacs-lisp
   (defun matarPalavra ()
     (interactive)
     (backward-word)
