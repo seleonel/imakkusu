@@ -1,3 +1,4 @@
+#+title: Imakkusu configs, electric boogaloo
 * Customs do emacs
 ** destacar parenteses
 #+begin_src emacs-lisp
@@ -230,8 +231,7 @@ Aspell me parece mais efetivo que ispell.
   "Save buffers, Quit, and Shutdown (kill) server"
   (interactive)
   (save-some-buffers)
-  (kill-emacs)
-  )
+  (kill-emacs))
 
 #+end_src
 Roubado da wiki, esta funcao mata o daemon e pede para salvar os buffers
@@ -659,6 +659,15 @@ Combina mais com o tema atual do meu desktop environment
     )
 #+end_src
 * Modos para linguagens de programação e markdown
+** common lisp
+   #+begin_src emacs-lisp
+     ;; common lisp implementation that I've chosen
+     (setq inferior-lisp-program "sbcl")
+
+     (use-package slime
+       :hook
+       (common-lisp-mode . slime))
+   #+end_src
 ** lispy
    #+begin_src emacs-lisp
      (use-package lispy
@@ -835,13 +844,15 @@ Gnuplot para plotagem de gráficos a partir de tabelas
 ** plantuml
 Programito bom para desenvolver diagramas de classes e fluxogramas.
 #+begin_src emacs-lisp
-      (use-package plantuml-mode
-	
-	:config
-	(setq plantuml-jar-path (expand-file-name
-				 (concat
-				  (getenv "XDG_DATA_HOME") "/plantuml/plantuml.jar")))
-	(setq plantuml-default-exec-mode 'jar))
+  (setq plantuml-jar-path (expand-file-name
+			   (concat
+			    (getenv "XDG_DATA_HOME") "/plantuml/plantuml.jar")))
+  (setq org-plantuml-jar-path (expand-file-name
+			   (concat
+			    (getenv "XDG_DATA_HOME") "/plantuml/plantuml.jar")))
+    (setq plantuml-default-exec-mode 'jar)
+  (use-package plantuml-mode)
+
 #+end_src
 ** belos simbolos
 #+begin_src emacs-lisp
@@ -916,6 +927,16 @@ Bom pra brainstorming
        (add-hook 'dired-mode-hook 'org-download-enable))
    #+end_src
 * *Minhas* funções (algumas roubadas)
+** numeros aleatorios num dado range
+   #+begin_src emacs-lisp
+     (defun numero-random (user-input)
+       "Gera um numero com a quantidade de digitos especificada pelo user."
+       (interactive "s Insira a quantidade de dígitos: ")
+       (let ((string-to-transform ""))
+	 (dotimes (i (string-to-number user-input))
+	   (setq string-to-transform (concat string-to-transform (calc-eval "random(10)"))))
+	 (insert string-to-transform)))
+   #+end_src
 ** assassino de palavras
 #+begin_src emacs-lisp
   (defun matarPalavra ()
