@@ -18,7 +18,7 @@
 (setq straight-use-package-by-default t)
 (straight-use-package 'use-package)
 (straight-use-package 'org)
-
+(straight-use-package 'gnus)
 ;; org configs load
 (org-babel-load-file (expand-file-name (concat (getenv "XDG_CONFIG_HOME") "/emacs/organizator.org")))
 

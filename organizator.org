@@ -11,77 +11,38 @@
 		 (setq autopair-handle-action-fns
 		       (list 'autopair-default-handle-action
 			     #'(lambda (action pair pos-before)
-				(hl-paren-color-update)))))))'
+				(hl-paren-color-update)))))))
 #+end_src
 ** e-mail
-*** mu4e
+*** GNUs
+    #+begin_src emacs-lisp
+      ;; Mail and username defined directly here
+      (setq user-mail-address "leon_bellini@outlook.com")
+      (setq user-full-name "Leon Ferreira Bellini")
+      (setq message-signature (concat "Leon F. Bellini\n"
+				      "Estudante de Ciência da Computação no Centro Universitário FEI\n"
+
+				      "\nGitHub: https://github.com/seleonel\n"))
+
+      (setq gnus-select-method '(nnimap "outlook"
+					(nnimap-address "outlook.office365.com")
+					(nnimap-server-port 993)
+					(nnimap-stream ssl)))
+    #+end_src
+*** smtpmail
 #+begin_src emacs-lisp
-  (use-package mu4e
-    :ensure-system-package mu
-    :load-path "/usr/share/emacs/site-lisp"
-    :config
-    ;; pastinhas
-    (setq
-     mu4e-maildir       "~/.local/share/Mail"   ;; top-level Maildir
-     mu4e-sent-folder   "/Outlook/Enviadas"       ;; folder for sent m essages
-     mu4e-trash-folder  "/Outlook/Deletadas"
-     mu4e-refile-folder "/Outlook/INBOX"   ;; saved messages
-     mu4e-attachment-dir "~/Downloads/Mail")
-    (setq mu4e-get-mail-command "mbsync -c ~/.config/isync/mbsyncrc Outlookerson")
-
-    ;; por enquanto este comando não está funcionando no momento
-    ;; utilizando systemd no lugar
-    ;; (mu4e-update-interval 240)
-    (setq mu4e-enable-notifications t
-	  ;; enable inline images
-	  mu4e-view-show-images t
-	  mu4e-index-update-error-warning t
-	  mu4e-headers-auto-update t)
-
-    (setq mu4e-change-filenames-when-moving t)
-    ;; use imagemagick, if available
-    (when (fboundp 'imagemagick-register-types)
-      (imagemagick-register-types))
-    (setq mu4e-use-fancy-chars t)
-    ;; assinatura yay
-    (setq user-mail-address "leon_bellini@outlook.com"
-	  user-full-name "Leon Ferreira Bellini"
-	  mu4e-compose-signature
-	  (concat "Leon F. Bellini\n"
-		  "Estudante de Ciência da Computação no Centro Universitário FEI\n"
-
-		  "\nGitHub: https://github.com/seleonel\n")))
-
+  (use-package smtpmail
+    :init
+    (setq message-send-mail-function 'smtpmail-send-it
+	  send-mail-functon 'smtpmail-send-it
+	  smtpmail-stream-type 'starttls
+	  smtpmail-default-smtp-server "smtp.office365.com"
+	  smtpmail-smtp-server "smtp.office365.com"
+	  smtpmail-smtp-service 587))
+  ;; todas as informações necessárias carregadas do ~/.authfile.gpg
 #+end_src
-**** smtpmail
- #+begin_src emacs-lisp
-   (use-package smtpmail
-     :after mu4e
-     :init
-     (setq message-send-mail-function 'smtpmail-send-it
-       smtpmail-stream-type 'starttls
-       smtpmail-default-smtp-server "smtp.office365.com"
-       smtpmail-smtp-server "smtp.office365.com"
-       smtpmail-smtp-service 587))
- ;; todas as informações necessárias carregadas do ~/.authfile.gpg
- #+end_src
- cliente de email bem simples
-**** mu4e-alert
- #+begin_src emacs-lisp
-   (use-package mu4e-alert
-     :after mu4e
-     :hook
-     (after-init . mu4e-alert-enable-notifications)
-     (after-init . mu4e-alert-enable-mode-line-display)
-     :init
-     (mu4e-alert-set-default-style 'libnotify)
-	(setq mu4e-alert-interesting-mail-query
-	      (concat
-	       "flag:unread"
-	       " AND NOT flag:trashed")))
+cliente de email bem simples
 
- #+end_src
-    
 *** mail encrypt
  #+begin_src emacs-lisp
  (setq mm-sign-option 'guided)
@@ -95,13 +56,17 @@
    e acentos. 
 ** dired
    #+begin_src emacs-lisp
-     (setq image-dired-thumb-margin 5) 
+     (setq image-dired-thumb-margin 5)
+     (setq dired-dwin-target t)
+     (add-hook 'dired-mode-hook #'(lambda () (dired-hide-details-mode t)))
+     (add-hook 'dired-mode-hook #'(lambda () (dired-hide-details-mode t)))
+     (setq dired-dwim-target t)
      (with-eval-after-load 'dired
-	 (require 'dired-x)
-	 (setq dired-guess-shell-alist-user '(
-					      ("\\.pdf\\'" "okular ? &")
-					      ("\\.mp4\\'" "mpv ? &")
-					      ("\\.mkv\\'" "mpv ? &"))))
+       (require 'dired-x)
+       (setq dired-guess-shell-alist-user '(
+					    ("\\.pdf\\'" "okular ? &")
+					    ("\\.mp4\\'" "mpv ? &")
+					    ("\\.mkv\\'" "mpv ? &"))))
    #+end_src
 *** icons-dired
     #+begin_src emacs-lisp
@@ -540,12 +505,6 @@ Códigos de cor *hexadecimais* ficam coloridos yay
 
 #+end_src
 
-* Configurações do use-package  
-** ensure-system-package
-#+begin_src emacs-lisp
-(use-package use-package-ensure-system-package)
-#+end_src
-Pacotinho legal para garantir que pacotes externos existem (bom para o mu4e)
 * Configurações visuais
 ** pagina inicial em si
 #+begin_src emacs-lisp
@@ -672,7 +631,8 @@ Combina mais com o tema atual do meu desktop environment
    #+begin_src emacs-lisp
      (use-package lispy
        :hook
-       (emacs-lisp-mode . (lambda () (lispy-mode 1))))
+       (emacs-lisp-mode . (lambda () (lispy-mode 1)))
+       (common-lisp-mode . (lambda () (lispy-mode 1))))
 
      ;; lispy on eval expression
      (defun conditionally-enable-lispy ()
@@ -800,7 +760,6 @@ Para edição aprimorada de documentos TEX
 *** pyenv   
 #+begin_src emacs-lisp
   (use-package pyenv-mode
-    :ensure-system-package pyenv
     :hook
     (pyenv-mode . python-mode))
 #+end_src
