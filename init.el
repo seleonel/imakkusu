@@ -30,43 +30,18 @@
  '(browse-url-browser-function 'browse-url-chromium)
  '(custom-safe-themes
    '("8885761700542f5d0ea63436874bf3f9e279211707d4b1ca9ed6f53522f21934" default))
- '(org-agenda-files nil)
+ '(linum-format " %5i ")
+ '(org-agenda-files '("~/.config/emacs/organizator.org"))
  '(org-format-latex-options
    '(:foreground default :background default :scale 1.6 :html-foreground "Black" :html-background "Transparent" :html-scale 1.0 :matchers
 		 ("begin" "$1" "$" "$$" "\\(" "\\[")))
- '(package-selected-packages
-   '(peep-dired flycheck-pycheckers visual-regexp-steroids visual-regexp define-word dired-x org-roam-protocol undo-tree counsel org-ref org-roam org-superstar company-math company-quickhelp company-c-headers company-auctex latex-preview-pane ac-js2 plantuml-mode pyenv-mode magit mu4e-alert use-package-ensure-system-package mu4e mu skewer-mode simple-httpd js2-mode emacs-neotree neotree column-enforce-mode gnuplot sublime-themes gnuplot-mode emms auto-dictionary doom-modeline with-editor git-commit transpose-frame rainbow-delimiters projectile all-the-icons dashboard sudo-edit noctilux-theme cyberpunk-theme web-mode yasnippet-snippets yasnippet rainbow-delimiters-mode expand-region multiple-cursors ivy swiper browse-kill-ring dmenu jedi flycheck auto-complete company-anaconda pyvenv pyenv spaceline virtualenvwrapper company-jedi company switch-window smart-tabs-mode rainbow-mode avy smex ample-theme which-key use-package dash latex-extra))
+ '(org-src-window-setup 'split-window-below)
  '(pyvenv-mode t)
  '(reb-re-syntax 'string)
+ '(safe-local-variable-values '((org-download-image-dir . \.\./\.\./imgs/)))
  '(send-mail-function 'mailclient-send-it)
  '(shell-escape-mode "-shell-escape"))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:background nil))))
- '(all-the-icons-dired-dir-face ((t (:foreground "HotPink1"))))
- '(comint-highlight-prompt ((t (:inherit minibuffer-prompt :foreground "HotPink1"))))
- '(company-scrollbar-bg ((t (:background "maroon3"))))
- '(company-scrollbar-fg ((t (:background "orchid"))))
- '(company-template-field ((t (:background "maroon3" :foreground "black"))))
- '(company-tooltip ((t (:background "maroon3" :foreground "black"))))
- '(company-tooltip-common ((t (:foreground "white"))))
- '(company-tooltip-selection ((t (:background "LightPink1"))))
- '(custom-link ((t (:inherit link :foreground "maroon1"))))
- '(doom-modeline-bar ((t (:background "gray20"))))
- '(error ((t (:foreground "IndianRed1" :weight bold))))
- '(font-latex-sectioning-5-face ((t (:inherit variable-pitch :foreground "VioletRed1" :weight bold))))
- '(highlight ((t (:background "dark orchid"))))
- '(hl-line ((t (:inherit highlight :background "HotPink4"))))
- '(ido-first-match ((t (:foreground "pink" :weight bold))))
- '(ido-subdir ((t (:foreground "deep pink"))))
- '(line-number ((t (:inherit (shadow default) :foreground "HotPink3"))))
- '(link ((t (:foreground "CadetBlue3" :underline t))))
- '(minibuffer-prompt ((t (:foreground "magenta"))))
- '(mu4e-header-key-face ((t (:inherit message-header-name :foreground "DeepPink1" :weight bold))))
- '(swiper-line-face ((t (:background "DeepPink4" :foreground "PeachPuff1")))))
+
 
 
 
