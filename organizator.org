@@ -180,19 +180,16 @@
 	   gdb-show-main t)
      ;; copiado de https://tuhdo.github.io/c-ide.html
    #+end_src
-** Keybind
+** Eshell agora oficial
    #+begin_src emacs-lisp
-     (global-set-key (kbd "C-c t") 'ansi-term)
+     (defun eshell-janela-abaixo ()
+       (interactive)
+       (call-interactively 'split-window-below)
+       (call-interactively 'other-window)
+       (call-interactively 'eshell))
+     (global-set-key (kbd "C-c t") 'eshell-janela-abaixo)
    #+end_src
-
-** Força zsh no ansi-term
-   #+begin_src emacs-lisp
-     (defvar default-shell "/bin/zsh")
-     (defadvice ansi-term (before force-zsh)
-       (interactive (list default-shell)))
-     (ad-activate 'ansi-term)
-   #+end_src
-   Força zsh como shell do ansi-term
+   Eshell é muito bom para ser ignorado
 * Modos para uso em geral
 ** volume
    #+begin_src emacs-lisp
@@ -664,14 +661,13 @@
 ** Yasnippet
    #+begin_src emacs-lisp
      (use-package yasnippet
-       :config
-       (yas-reload-all)
        :hook
        (prog-mode . yas-minor-mode))
    #+end_src
 *** Yasnippet snippets
     #+begin_src emacs-lisp
       (use-package yasnippet-snippets
+        :after yasnippet
 	:defer t)
     #+end_src
 ** C e C++
@@ -779,6 +775,8 @@
 ** olivetti mode
    #+begin_src emacs-lisp
      (use-package olivetti
+       :custom
+       (olivetti-body-width 80)
        :defer t)
    #+end_src
    Melhor para a escrita de documentos. 
@@ -842,6 +840,7 @@
 ** org-superstar
    #+begin_src emacs-lisp
      (use-package org-superstar
+       :defer t
        :hook
        (org-mode . (lambda () (org-superstar-mode 1)))
        :config 
