@@ -1,5 +1,6 @@
 #+title: Imakkusu configs, electric boogaloo
 * Customs do emacs
+  
 ** Morte ao C-z
    #+begin_src emacs-lisp
      (define-key global-map (kbd "C-z") 'undo)
@@ -190,6 +191,11 @@
      (global-set-key (kbd "C-c t") 'eshell-janela-abaixo)
    #+end_src
    Eshell é muito bom para ser ignorado
+** Re-builder
+   #+begin_src emacs-lisp
+     (setq reb-re-syntax 'string)
+   #+end_src
+   Não utiliza tantos backlashes para escaping.
 * Modos para uso em geral
 ** volume
    #+begin_src emacs-lisp
@@ -207,7 +213,7 @@
    #+begin_src emacs-lisp
      (use-package pdf-tools
        :defer t
-       :init
+       :config
        (pdf-loader-install))
    #+end_src
 ** nov.el
@@ -224,7 +230,7 @@
    #+begin_src emacs-lisp
      (use-package async
        :defer t
-       :init
+       :config
        (dired-async-mode 1)
        (async-bytecomp-package-mode 1))
    #+end_src
@@ -246,7 +252,7 @@
    #+begin_src emacs-lisp
      (use-package which-key
        :defer t
-       :init
+       :config
        (which-key-mode))
    #+end_src
 ** avy
@@ -258,10 +264,10 @@
        ("C-c w" . avy-goto-word-1)
        ("C-c y" . avy-copy-line))
    #+end_src
-*** swiper
+*** ivy
     #+begin_src emacs-lisp
       (use-package ivy
-	:init
+	:config
 	(ivy-mode 1)
 	:custom
 	(ivy-use-virtual-buffers t)
@@ -301,6 +307,7 @@
 	 ("C-c i" . counsel-info-lookup-symbol)
 	 ;; external things
 	 ("C-c p" . counsel-linux-app)
+         ("C-c g" . counsel-git-grep)
 	 ("<f5>" . counsel-compile))
      #+end_src
 ** magit
@@ -331,7 +338,7 @@
       (use-package company-irony
 	:after company
 	:defer t
-	:init
+	:config
 	(add-to-list 'company-backends 'company-irony))
     #+end_src
 *** ac-js2
@@ -339,7 +346,7 @@
       (use-package ac-js2
 	:after company
 	:defer t
-	:init
+	:config
 	(add-to-list 'company-backends 'ac-js2-company))
     #+end_src
     Para javascripto/jsx
@@ -348,7 +355,7 @@
       (use-package company-anaconda
 	:after company
 	:defer t
-	:init
+	:config
 	(add-to-list 'company-backends 'company-anaconda))
     #+end_src
     Autocomplete para python 
@@ -358,7 +365,7 @@
        (use-package company-auctex
 	 :after (company tex)
 	 :defer t
-	 :init
+	 :config
 	 (company-auctex-init))
      #+end_src
      Autocomplete para latex tags
@@ -367,7 +374,7 @@
        (use-package company-math
 	 :after company
 	 :defer t
-	 :init
+	 :config
 	 (add-to-list 'company-backends 'company-math-symbols-unicode))
      #+end_src
 *** quickhelp
@@ -385,7 +392,7 @@
       (use-package company-c-headers
 	:after company
 	:defer t
-	:init
+	:config
 	(add-to-list 'company-backends 'company-c-headers))
     #+end_src
 ** browse kill ring
@@ -448,7 +455,7 @@
    #+begin_src emacs-lisp
      (use-package undo-tree
        :defer t
-       :init
+       :config
        (global-undo-tree-mode))
    #+end_src
 ** visual-regexp
@@ -507,7 +514,7 @@
    #+begin_src emacs-lisp
      (use-package flycheck
        :defer t
-       :init
+       :config
        (global-flycheck-mode t))
    #+end_src
 
@@ -586,12 +593,11 @@
 ** modeline
    #+begin_src emacs-lisp
      (use-package doom-modeline
-       :defer t
-       :init (doom-modeline-mode 1)
-       :config 
-       (setq doom-modeline-mu4e t)
-       (setq doom-modeline-bar-width 1)
-       (setq doom-modeline-icon 1))
+       :config
+       (doom-modeline-mode 1)
+       :custom
+       (doom-modeline-bar-width 1)
+       (doom-modeline-icon 1))
    #+end_src
 ** line numbers
    #+begin_src emacs-lisp
@@ -690,7 +696,7 @@
     #+begin_src emacs-lisp
       (use-package web-mode
 	:defer t
-	:init
+	:config
 	(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode)))
 
     #+end_src
@@ -698,7 +704,7 @@
     #+begin_src emacs-lisp
       (use-package js2-mode
 	:defer t
-	:init
+	:config
 	(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 	(add-to-list 'auto-mode-alist '("\\.jsx?\\'" . js2-jsx-mode))
 	(add-to-list 'interpreter-mode-alist '("node" . js2-jsx-mode)))
@@ -785,6 +791,10 @@
      (setq org-refile-targets '((nil :maxlevel . 4)
 				(nil :tag . "candidate")))
    #+end_src
+** Src split window
+   #+begin_src emacs-lisp
+     (setq org-src-window-setup 'split-window-below)
+   #+end_src
 ** Inline Images
    #+begin_src emacs-lisp
      (setq org-display-inline-images t)
@@ -843,14 +853,13 @@
        :defer t
        :hook
        (org-mode . (lambda () (org-superstar-mode 1)))
-       :config 
-       (setq org-hide-leading-stars nil)
-       (setq org-superstar-leading-bullet ?\s)
-       (setq org-superstar-prettify-item-bullets t)
-       (setq org-superstar-item-bullet-alist
-	     '((?* . ?►)
-	       (?+ . ?◐)
-	       (?- . ?◆))))
+       :custom
+       (org-hide-leading-stars nil)
+       (org-superstar-leading-bullet ?\s)
+       (org-superstar-prettify-item-bullets t)
+       (org-superstar-item-bullet-alist '((?* . ?►)
+					  (?+ . ?◐)
+					  (?- . ?◆))))
    #+end_src
    Tae um bom nome.
 ** org-roam
