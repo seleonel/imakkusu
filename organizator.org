@@ -38,19 +38,20 @@
 *** smtpmail
     #+begin_src emacs-lisp
       (use-package smtpmail
-	:init
-	(setq message-send-mail-function 'smtpmail-send-it
-	      send-mail-functon 'smtpmail-send-it
-	      smtpmail-stream-type 'starttls
-	      smtpmail-default-smtp-server "smtp.office365.com"
-	      smtpmail-smtp-server "smtp.office365.com"
-	      smtpmail-smtp-service 587))
+	:custom
+	(message-send-mail-function 'smtpmail-send-it)
+	(send-mail-functon 'smtpmail-send-it)
+	(smtpmail-stream-type 'starttls)
+	(smtpmail-default-smtp-server "smtp.office365.com")
+	(smtpmail-smtp-server "smtp.office365.com")
+	(smtpmail-smtp-service 587))
       ;; todas as informações necessárias carregadas do ~/.authfile.gpg
     #+end_src
     cliente de email bem simples
 *** notify
     #+begin_src emacs-lisp
-      (use-package gnus-desktop-notify)
+      (use-package gnus-desktop-notify
+	:defer t)
     #+end_src
 *** mail encrypt
     #+begin_src emacs-lisp
@@ -76,11 +77,10 @@
 					    ("\\.pdf\\'" "okular ? &")
 					    ("\\.mp4\\'" "mpv ? &")
 					    ("\\.mkv\\'" "mpv ? &"))))
-
    #+end_src
 *** dired-gnus
     #+begin_src emacs-lisp
-      (require 'gnus-dired)
+      (autoload 'gnus-dired "gnus-dired" "dired integration with gnus" t)
       (defun gnus-dired-mail-buffers ()
 	"Return a list of active message buffers."
 	(let (buffers)
@@ -103,56 +103,6 @@
    #+begin_src emacs-lisp
      (global-set-key (kbd "C-x C-b") 'ibuffer)
    #+end_src
-
-** Midia em geral
-*** EMMS
-    #+begin_src emacs-lisp
-      ;; configs do uncle dave
-      (use-package emms
-	:config
-	(require 'emms-setup)
-	(require 'emms-player-mpd)
-	(emms-all) ; don't change this to values you see on stackoverflow questions if you expect emms to work
-	(setq emms-seek-seconds 1)
-	(setq emms-player-list '(emms-player-mpd))
-	(setq emms-info-functions '(emms-info-mpd))
-	(setq emms-player-mpd-server-name "localhost")
-	(setq emms-player-mpd-server-port "6600")
-	:bind
-	("s-m p" . emms)
-	("s-m b" . emms-smart-browse)
-	("s-m r" . emms-player-mpd-update-all-reset-cache)
-	("<C-XF86AudioPrev>" . emms-previous)
-	("<C-XF86AudioNext>" . emms-next)
-	("<C-XF86AudioPlay>" . emms-pause))
-    #+end_src
-**** mpc
-     #+begin_src emacs-lisp
-       (setq mpc-host "localhost:6000")
-
-     #+end_src
-**** funcao para atualizar o database
-     #+begin_src emacs-lisp
-       (defun mpd/update-database ()
-	 "Updates the MPD database synchronously."
-	 (interactive)
-	 (call-process "mpc" nil nil nil "update")
-	 (message "Database atualizado"))
-       (global-set-key (kbd "s-m u") 'mpd/update-database)
-
-     #+end_src
-**** funcao para iniciar mpd
-     #+begin_src emacs-lisp
-       (defun mpd/start-music-daemon ()
-	 "Start MPD, connects to it and syncs the metadata cache."
-	 (interactive)
-	 (shell-command "mpd")
-	 (mpd/update-database)
-	 (emms-player-mpd-connect)
-	 (emms-cache-set-from-mpd-all)
-	 (message "MPD atualizederson"))
-       (global-set-key (kbd "s-m c") 'mpd/start-music-daemon)
-     #+end_src
 ** autosave e backups
    Configs roubadas de um anão 2.0
    #+begin_src emacs-lisp
@@ -190,7 +140,6 @@
 	(ispell-word)
 	)
       (global-set-key (kbd "M-<f8>") 'flyspell-check-next-highlighted-word)
-
     #+end_src
 
 ** Forçar UTF-8
@@ -209,7 +158,6 @@
        (interactive)
        (save-some-buffers)
        (kill-emacs))
-
    #+end_src
    Roubado da wiki, esta funcao mata o daemon e pede para salvar os buffers
 ** resize melhor
@@ -248,17 +196,20 @@
 * Modos para uso em geral
 ** volume
    #+begin_src emacs-lisp
-     (use-package volume)
+     (use-package volume
+       :defer t)
    #+end_src
    Controle de volume pelo emacs, combina bem com
    bongo. 
 ** tablist
    #+begin_src emacs-lisp
-    (use-package tablist)
+     (use-package tablist
+       :defer t)
    #+end_src
 ** pdf-tools
    #+begin_src emacs-lisp
      (use-package pdf-tools
+       :defer t
        :init
        (pdf-loader-install))
    #+end_src
@@ -271,12 +222,11 @@
        :hook
        (nov-mode . (lambda () (face-remap-add-relative 'variable-pitch :family "FreeSerif"
 						       :height 1.5))))
-
-
    #+end_src
 ** Processos assíncronos
    #+begin_src emacs-lisp
      (use-package async
+       :defer t
        :init
        (dired-async-mode 1)
        (async-bytecomp-package-mode 1))
@@ -284,20 +234,21 @@
    Roubado do witchmacs (novamente)
 ** page-break-lines
    #+begin_src emacs-lisp
-     (use-package page-break-lines)
+     (use-package page-break-lines
+       :defer t)
    #+end_src
 ** projectile
    #+begin_src emacs-lisp
      (use-package projectile
-       :config
+       :init
        (projectile-mode +1)
        :bind
        ("C-c f" . projectile-command-map))
-
    #+end_src
 ** *Which key*
    #+begin_src emacs-lisp
      (use-package which-key
+       :defer t
        :init
        (which-key-mode))
    #+end_src
@@ -313,10 +264,11 @@
 *** swiper
     #+begin_src emacs-lisp
       (use-package ivy
-	:config
+	:init
 	(ivy-mode 1)
-	(setq ivy-use-virtual-buffers t)
-	(setq enable-recursive-minibuffers t))
+	:custom
+	(ivy-use-virtual-buffers t)
+	(enable-recursive-minibuffers t))
     #+end_src
     Boa função para procurar, mostra as ocorrências num minibuffer 
 **** swiper
@@ -353,7 +305,6 @@
 	 ;; external things
 	 ("C-c p" . counsel-linux-app)
 	 ("<f5>" . counsel-compile))
-
      #+end_src
 ** magit
    #+begin_src emacs-lisp
@@ -365,13 +316,14 @@
    #+begin_src emacs-lisp
      (use-package company
        :config
-       (setq company-idle-delay 0)
-       (setq company-minimum-prefix-length 2)
-       (setq company-selection-wrap-around t)
-       (company-tng-configure-default)
        (define-key company-active-map (kbd "<return>") nil)
        (define-key company-active-map (kbd "RET") nil)
        (define-key company-active-map (kbd "<down>") #'company-complete-selection)
+       :custom
+       (company-idle-delay 0)
+       (company-minimum-prefix-length 2)
+       (company-selection-wrap-around t)
+       (company-tng-configure-default)
        :hook
        (after-init . global-company-mode)
        :bind
@@ -380,7 +332,8 @@
 *** company-irony
     #+begin_src emacs-lisp
       (use-package company-irony
-	:after company 
+	:after company
+	:defer t
 	:init
 	(add-to-list 'company-backends 'company-irony))
     #+end_src
@@ -388,6 +341,7 @@
     #+begin_src emacs-lisp
       (use-package ac-js2
 	:after company
+	:defer t
 	:init
 	(add-to-list 'company-backends 'ac-js2-company))
     #+end_src
@@ -396,6 +350,7 @@
     #+begin_src emacs-lisp
       (use-package company-anaconda
 	:after company
+	:defer t
 	:init
 	(add-to-list 'company-backends 'company-anaconda))
     #+end_src
@@ -405,6 +360,7 @@
      #+begin_src emacs-lisp
        (use-package company-auctex
 	 :after (company tex)
+	 :defer t
 	 :init
 	 (company-auctex-init))
      #+end_src
@@ -412,15 +368,16 @@
 **** math-symbols
      #+begin_src emacs-lisp
        (use-package company-math
-	 :after company 
+	 :after company
+	 :defer t
 	 :init
 	 (add-to-list 'company-backends 'company-math-symbols-unicode))
      #+end_src
 *** quickhelp
     #+begin_src emacs-lisp
       (use-package company-quickhelp
-	:init
-	(setq company-quickhelp-delay 0)
+	:custom
+	(company-quickhelp-delay 0)
 	:hook
 	(prog-mode . company-quickhelp-mode))
     #+end_src
@@ -429,17 +386,16 @@
 *** company-c-headers
     #+begin_src emacs-lisp
       (use-package company-c-headers
-	:after company 
+	:after company
+	:defer t
 	:init
 	(add-to-list 'company-backends 'company-c-headers))
-
     #+end_src
 ** browse kill ring
    #+begin_src emacs-lisp
      (use-package browse-kill-ring
        :bind
        ("M-y" . 'browse-kill-ring))
-
    #+end_src
 ** expand region
    #+begin_src emacs-lisp
@@ -465,20 +421,21 @@
    #+end_src
 ** transpose-frame
    #+begin_src emacs-lisp
-     (use-package transpose-frame)
+     (use-package transpose-frame
+       :defer t)
    #+end_src
    Pacote para /management/ de janelas
 
 ** smart tabs
    #+begin_src emacs-lisp
      (use-package smart-tabs-mode
+       :defer t
        :config
        (smart-tabs-add-language-support latex latex-mode-hook
 	 ((latex-indent-line . 4)
 	  (latex-indent-region . 4)))
        (smart-tabs-insinuate 'c 'c++ 'java 'latex)
        (smart-tabs-advice js2-indent-line js2-basic-offset))
-
    #+end_src
    esse código copiei de um anão
 ** define-word
@@ -487,14 +444,14 @@
        :bind
        ("C-c d" . define-word)
        ("C-c u" . define-word-at-point))
-
    #+end_src
    Bom para procurar significado de palavras.
 
 ** undo-tree
    #+begin_src emacs-lisp
      (use-package undo-tree
-       :config
+       :defer t
+       :init
        (global-undo-tree-mode))
    #+end_src
 ** visual-regexp
@@ -512,7 +469,6 @@
        :hook
        (prog-mode . column-enforce-mode)
        (text-mode . column-enforce-mode))
-
    #+end_src
    Enforça a regra dos 80(?) caracteres em uma linha, ou pelo menos
    só mostra um limite
@@ -542,15 +498,18 @@
 ** bongo
    #+begin_src emacs-lisp
      (use-package bongo
+       :defer t
        :config
        (setq bongo-default-directory "~/Music")
        (setq bongo-insert-whole-directory-trees t)
        (setq bongo-display-playback-mode-indicator t
-	     bongo-display-inline-playback-progress t))
+	     bongo-display-inline-playback-progress t)
+       (setq bongo-enabled-backends '(mpv vlc)))
    #+end_src
 ** flycheck
    #+begin_src emacs-lisp
      (use-package flycheck
+       :defer t
        :init
        (global-flycheck-mode t))
    #+end_src
@@ -558,38 +517,25 @@
 * Configurações visuais
 ** pagina inicial em si
    #+begin_src emacs-lisp
-     ;; ANTIGO BUFFER
-     ;;(defun my-buffeiro ()
-     ;;  (let ((buffer (generate-new-buffer "intro")))
-     ;;    (switch-to-buffer buffer)
-     ;;    (center-line)
-     ;;    (insert "BEM VINDO AO MARAVILHOSO IMAKKUSU\n")
-     ;;    (insert-image (create-image "~/.emacs.d/img/kicchiri.png"))
-     ;;    (insert "\n\n\n\n\n")
-     ;;    buffer))
-     ;;(setq initial-buffer-choice 'my-buffeiro)
-
      (use-package dashboard
-       :config
+       :init
        (dashboard-setup-startup-hook)
-       (setq dashboard-banner-logo-title "BEM VINDO AO MARAVILHOSO IMAKKUSU")
-       (setq dashboard-startup-banner (concat (getenv "XDG_CONFIG_HOME") "/emacs/img/kicchiri.png"))
-       (setq dashboard-center-content t)
-       (setq dashboard-show-shortcuts nil)
-       (setq dashboard-items '((recents . 20)
-			       (bookmarks . 5)
-			       (agenda . 10)
-			       (projects . 5)))
-       (setq dashboard-set-heading-icons t)
-       (setq dashboard-set-file-icons t)
-       (dashboard-modify-heading-icons '((recents . "ruby")
-					 (bookmarks . "bookmark" )
-					 (projects . "package" )))
+       :custom
+       (dashboard-banner-logo-title "BEM VINDO AO MARAVILHOSO IMAKKUSU")
+       (dashboard-startup-banner (concat (getenv "XDG_CONFIG_HOME") "/emacs/img/kicchiri.png"))
+       (dashboard-center-content t)
+       (dashboard-show-shortcuts nil)
+       (dashboard-items '((recents . 20)
+			  (bookmarks . 5)
+			  (agenda . 10)
+			  (projects . 5)))
+       (dashboard-set-heading-icons t)
+       (dashboard-set-file-icons t)
        ;; adds agenda 
-       (setq show-week-agenda-p t)
+       (show-week-agenda-p t)
 
-       (setq dashboard-footer-messages '("emags :DDDDDDDD"))
-       (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*"))))
+       (dashboard-footer-messages '("emags :DDDDDDDD"))
+       (initial-buffer-choice (lambda () (get-buffer "*dashboard*"))))
    #+end_src
 
 
@@ -598,7 +544,6 @@
 ** Fonte
    #+begin_src emacs-lisp
      (setq default-frame-alist '((font . "Hack 12")))
-
    #+end_src
    Força por padrão a fonte Hack, tamanho 12
 
@@ -617,7 +562,6 @@
 ** Barra de menu
    #+begin_src emacs-lisp
      (menu-bar-mode -1)
-
    #+end_src
    Menu é inútil e toma espaço
 
@@ -632,17 +576,20 @@
    
 *** Dark 
     #+begin_src emacs-lisp
-      (use-package dracula-theme)
+      (use-package dracula-theme
+	:defer t)
     #+end_src
 *** Tema branco
     #+begin_src emacs-lisp
       (use-package modus-operandi-theme
-	:config
+	:defer t
+	:init
 	(load-theme 'modus-operandi t)) 
     #+end_src
 ** modeline
    #+begin_src emacs-lisp
      (use-package doom-modeline
+       :defer t
        :init (doom-modeline-mode 1)
        :config 
        (setq doom-modeline-mu4e t)
@@ -667,7 +614,8 @@
    #+end_src
 ** all-the-icons
    #+begin_src emacs-lisp
-     (use-package all-the-icons)
+     (use-package all-the-icons
+       :defer t)
    #+end_src
 *** icons-dired
     #+begin_src emacs-lisp
@@ -697,6 +645,7 @@
 *** slime-company
     #+begin_src emacs-lisp
       (use-package slime-company
+	:defer t
 	:after (slime company))
     #+end_src
 ** lispy
@@ -715,7 +664,6 @@
 ** Yasnippet
    #+begin_src emacs-lisp
      (use-package yasnippet
-
        :config
        (yas-reload-all)
        :hook
@@ -724,8 +672,7 @@
 *** Yasnippet snippets
     #+begin_src emacs-lisp
       (use-package yasnippet-snippets
-	)
-
+	:defer t)
     #+end_src
 ** C e C++
 *** c-headers 
@@ -737,7 +684,6 @@
 *** irony mode
     #+begin_src emacs-lisp 
       (use-package irony
-
 	:hook
 	(c++-mode . irony-mode)
 	(c-mode . irony-mode)
@@ -747,36 +693,33 @@
 *** web-mode
     #+begin_src emacs-lisp
       (use-package web-mode
-
-	:config
+	:defer t
+	:init
 	(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode)))
 
     #+end_src
 *** JS2 mode
     #+begin_src emacs-lisp
       (use-package js2-mode
-
-	:config
+	:defer t
+	:init
 	(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 	(add-to-list 'auto-mode-alist '("\\.jsx?\\'" . js2-jsx-mode))
 	(add-to-list 'interpreter-mode-alist '("node" . js2-jsx-mode)))
-
     #+end_src
 *** simple-httpd
     #+begin_src emacs-lisp
       (use-package simple-httpd
-	)
+	:defer t)
     #+end_src
     servidor web "minimalista"
 *** skewer mode
     #+begin_src emacs-lisp
       (use-package skewer-mode
-
 	:hook
 	(js2-mode . skewer-mode)
 	(css-mode . skewer-css-mode)
 	(html-mode . skewer-html-mode))
-
     #+end_src
     Interpretador de forms de html/css/js, também tem um repl
 
@@ -800,9 +743,7 @@
 	:hook
 	(TeX-mode .
 		  (lambda ()
-		    (setq TeX-command-extra-options "-shell-escape")
-		    )
-		  ))
+		    (setq TeX-command-extra-options "-shell-escape"))))
 
     #+end_src 
     Para edição aprimorada de documentos TEX
@@ -817,7 +758,6 @@
 *** flycheck python
     #+begin_src emacs-lisp
       (use-package flycheck-pycheckers
-
 	:after flycheck
 	:hook
 	(flycheck-mode . flycheck-pycheckers-setup))
@@ -832,20 +772,20 @@
 ** gnuplot-mode
    #+begin_src emacs-lisp
      (use-package gnuplot-mode
-       )
+       :defer t)
    #+end_src
    Para me auxiliar na plotagem de gráficos para a iniciação
 * Org-mode
 ** olivetti mode
    #+begin_src emacs-lisp
-     (use-package olivetti)
+     (use-package olivetti
+       :defer t)
    #+end_src
    Melhor para a escrita de documentos. 
 ** Refile
    #+begin_src emacs-lisp
      (setq org-refile-targets '((nil :maxlevel . 4)
-				(nil :tag . "candidate")
-				))
+				(nil :tag . "candidate")))
    #+end_src
 ** Inline Images
    #+begin_src emacs-lisp
@@ -862,8 +802,10 @@
    Mostra por padrão as imagens no próprio buffer do org
 ** gnuplot
    #+begin_src emacs-lisp
-     (use-package gnuplot)
-     (use-package gnuplot-mode)
+     (use-package gnuplot
+       :defer t)
+     (use-package gnuplot-mode
+       :defer t)
    #+end_src
 ** gnuplot binding
    #+begin_src emacs-lisp
@@ -880,7 +822,8 @@
 				  (concat
 				   (getenv "XDG_DATA_HOME") "/plantuml/plantuml.jar")))
      (setq plantuml-default-exec-mode 'jar)
-     (use-package plantuml-mode)
+     (use-package plantuml-mode
+       :defer t)
    #+end_src
 ** belos simbolos
    #+begin_src emacs-lisp
@@ -901,7 +844,7 @@
      (use-package org-superstar
        :hook
        (org-mode . (lambda () (org-superstar-mode 1)))
-       :init
+       :config 
        (setq org-hide-leading-stars nil)
        (setq org-superstar-leading-bullet ?\s)
        (setq org-superstar-prettify-item-bullets t)
@@ -909,52 +852,53 @@
 	     '((?* . ?►)
 	       (?+ . ?◐)
 	       (?- . ?◆))))
-
    #+end_src
    Tae um bom nome.
-
 ** org-roam
    #+begin_src emacs-lisp
-     (use-package org-roam
-       :hook
-       (after-init . org-roam-mode)
-       :custom
-       (org-roam-directory (concat (getenv "HOME") "/Estudo/arquivos-org/"))
-       :bind (:map org-roam-mode-map
-		   (("C-c n l" . org-roam)
-		    ("C-c n f" . org-roam-find-file)
-		    ("C-c n g" . org-roam-graph))
-		   :map org-mode-map
-		   (("C-c n i" . org-roam-insert)))
-       :config
-       (setq org-roam-index-file "./index.org")
-       (require 'org-roam-protocol)
-       ;; graphing options
-       (setq org-roam-completion-system 'ivy)
-       (setq org-roam-graph-viewer "/usr/bin/firefox-esr")
-       (setq org-roam-graph-node-extra-config '(
-						("shape" . "oval")
-						("style" . "filled")
-						("fillcolor" . "PaleVioletRed1")
-						("color" . "VioletRed1")
-						("fontcolor" . "black")
-						("fontname" . "Roboto")))
-       (setq org-roam-graph-extra-config '(("rankdir" . "BT")))
-       (setq org-roam-graph-edge-extra-config '(("dir" . "none")
-						("color" . "PaleVioletRed1"))))
+	      (use-package org-roam
+		:hook
+		(after-init . org-roam-mode)
+		:custom
+		(org-roam-directory (concat (getenv "HOME") "/Estudo/arquivos-org/"))
+		:bind (:map org-roam-mode-map
+			    (("C-c n l" . org-roam)
+			     ("C-c n f" . org-roam-find-file)
+			     ("C-c n g" . org-roam-graph))
+			    :map org-mode-map
+			    (("C-c n i" . org-roam-insert)))
+		:init
+		(autoload 'org-roam-protocol "org-roam-protocol"
+		  "org roam's way of dealing with external input"
+		  t)
+		:custom 
+		(org-roam-index-file "./index.org")
+		;; graphing options
+		(org-roam-completion-system 'ivy)
+		(org-roam-graph-viewer "/usr/bin/firefox-esr")
+		(org-roam-graph-node-extra-config '(
+						    ("shape" . "oval")
+						    ("style" . "filled")
+						    ("fillcolor" . "PaleVioletRed1")
+						    ("color" . "VioletRed1")
+						    ("fontcolor" . "black")
+						    ("fontname" . "Roboto")))
+		(org-roam-graph-extra-config '(("rankdir" . "BT")))
+		(org-roam-graph-edge-extra-config '(("dir" . "none")
+						    ("color" . "PaleVioletRed1"))))
    #+end_src
    Bom pra brainstorming
 ** org-download
    #+begin_src emacs-lisp
      (use-package org-download
+       :defer t
        :custom
        (org-download-method 'directory)
        (org-download-image-dir "~/Pictures/org/")
        (org-download-heading-lvl nil)
        (org-download-screenshot-method "xclip")
-       :config
-       (require 'org-download)
-       (add-hook 'dired-mode-hook 'org-download-enable))
+       :init
+       (add-hook 'dired-mode-hook 'org-download-enable))      
    #+end_src
 ** hide highlight by default
    #+begin_src emacs-lisp
