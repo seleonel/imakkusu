@@ -317,7 +317,7 @@
 ** LSP-mode
    #+begin_src emacs-lisp
      (use-package lsp-mode
-       :ensure-system-package python-language-server
+       :ensure-system-package (pyls . python-language-server)
        :hook ((python-mode . lsp)
 	      (js2-mode . lsp)
 	      (lsp-mode . lsp-enable-which-key-integration))
