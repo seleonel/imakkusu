@@ -1,7 +1,7 @@
-;; Commentary: Meu init.el caótico para um caramba
-;; Utilizo do straight.el para management de meus pacotes
+;; Commentary: literal example of how to not config your emacs
+;;  Uses straight.el + use-package by default to deal with all
+;; packages listed in organizator.el
 
-;; facilita o port das configs do use-package 
 (defvar bootstrap-version)
 (let ((bootstrap-file
        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
@@ -17,7 +17,13 @@
 
 (setq straight-use-package-by-default t)
 (straight-use-package 'use-package)
+;; for all those lsp-servers
+(straight-use-package 'use-package-ensure-system-package)
+;; keep with the latest org version
+;; also force emacs to load straight's org
+;; and not the native one
 (straight-use-package 'org)
+;; mail and rss
 (straight-use-package 'gnus)
 ;; org configs load
 (org-babel-load-file (expand-file-name (concat (getenv "XDG_CONFIG_HOME") "/emacs/organizator.org")))
