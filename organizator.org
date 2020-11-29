@@ -8,18 +8,11 @@
    #+begin_src emacs-lisp
      (define-key global-map (kbd "C-z") 'undo)
    #+end_src
-** destacar parenteses
+** destacar e completar parenteses
    #+begin_src emacs-lisp
-     ;; https://www.emacswiki.org/emacs/HighlightParentheses
-     (use-package highlight-parentheses
-       :hook
-       (prog-mode .
-		  (lambda ()
-		    (highlight-parentheses-mode)
-		    (setq autopair-handle-action-fns
-			  (list 'autopair-default-handle-action
-				#'(lambda (action pair pos-before)
-				    (hl-paren-color-update)))))))
+     (add-hook 'prog-mode-hook '(lambda ()
+				  (electric-pair-mode)
+				  (show-paren-mode)))
    #+end_src
 ** e-mail
 *** GNUs
@@ -76,9 +69,8 @@
      (setq dired-dwim-target t)
      (with-eval-after-load 'dired
        (require 'dired-x)
-       (setq dired-guess-shell-alist-user '(("\\.pdf\\'" "okular ? &")
-					    ("\\.mp4\\'" "mpv ? &")
-					    ("\\.mkv\\'" "mpv ? &"))))
+       (setq dired-guess-shell-alist-user '(("\\.\\(:?mp4\\|mkv\\|webm\\)\\'" "mpv ? &")
+					    ("\\.exe\\'" "wine ? &"))))
    #+end_src
 *** dired-gnus
     #+begin_src emacs-lisp
@@ -196,6 +188,11 @@
    #+end_src
    Não utiliza tantos backlashes para escaping.
 * Modos para uso em geral
+** HTTP requests
+   #+begin_src emacs-lisp
+     (use-package request
+       :defer t)
+   #+end_src
 ** volume
    #+begin_src emacs-lisp
      (use-package volume
@@ -212,14 +209,15 @@
    #+begin_src emacs-lisp
      (use-package pdf-tools
        :defer t
-       :config
+       :init
        (pdf-loader-install))
    #+end_src
 ** nov.el
    #+begin_src emacs-lisp
      (use-package nov
+       :custom
+       (nov-text-width 80)
        :config
-       (setq nov-text-width 80)
        (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
        :hook
        (nov-mode . (lambda () (face-remap-add-relative 'variable-pitch :family "FreeSerif"
@@ -243,7 +241,7 @@
    #+begin_src emacs-lisp
      (use-package projectile
        :init
-       (projectile-mode +1)
+       (projectile-mode 1)
        :bind
        ("C-c f" . projectile-command-map))
    #+end_src
@@ -318,18 +316,15 @@
    #+begin_src emacs-lisp
      (use-package lsp-mode
        :ensure-system-package (pyls . python-language-server)
-       :hook ((python-mode . lsp)
-	      (js2-mode . lsp)
+       :init (setq lsp-keymap-prefix "C-c ]")
+       :hook (((python-mode js2-mode) . lsp)
 	      (lsp-mode . lsp-enable-which-key-integration))
-       :commands lsp
-       :custom
-       (lsp-keymap-prefix "C-c ]"))
+       :commands lsp)
 
      (use-package lsp-ui :commands lsp-ui-mode)
      ;; ivy integration
      (use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
    #+end_src
-   
 ** autocompletion
    #+begin_src emacs-lisp
      (use-package company
@@ -374,7 +369,6 @@
        :bind
        ("C-c q" . 'mc/mark-next-like-this)
        ("C-c a" . 'mc/mark-all-like-this))
-
    #+end_src
    Pacote pra múltiplos cursores.
 ** sudo-edit
@@ -382,7 +376,6 @@
      (use-package sudo-edit
        :bind
        ("C-c s" . sudo-edit))
-
    #+end_src
 ** transpose-frame
    #+begin_src emacs-lisp
@@ -419,21 +412,11 @@
        :init
        (global-undo-tree-mode))
    #+end_src
-** visual-regexp
-   #+begin_src emacs-lisp
-     (use-package visual-regexp
-       :bind
-       ("C-c r" . vr/replace)
-       ("C-c k" . vr/query-replace)
-       :config
-       (use-package visual-regexp-steroids))
-   #+end_src
 ** column enforce mode
    #+begin_src emacs-lisp
      (use-package column-enforce-mode
        :hook
-       (prog-mode . column-enforce-mode)
-       (text-mode . column-enforce-mode))
+       ((prog-mode text-mode) . column-enforce-mode))
    #+end_src
    Enforça a regra dos 80(?) caracteres em uma linha, ou pelo menos
    só mostra um limite
@@ -454,9 +437,9 @@
 ** Ace window
    #+begin_src emacs-lisp
      (use-package ace-window
-       :config
-       (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
-       (setq aw-background nil)
+       :custom
+       (aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
+       (aw-background nil)
        :bind
        ([remap other-window] .  ace-window))
    #+end_src
@@ -464,12 +447,12 @@
    #+begin_src emacs-lisp
      (use-package bongo
        :defer t
-       :config
-       (setq bongo-default-directory "~/Music")
-       (setq bongo-insert-whole-directory-trees t)
-       (setq bongo-display-playback-mode-indicator t
-	     bongo-display-inline-playback-progress t)
-       (setq bongo-enabled-backends '(mpv vlc)))
+       :custom
+       (bongo-default-directory "~/Music")
+       (bongo-insert-whole-directory-trees t)
+       (bongo-display-playback-mode-indicator t)
+       (bongo-display-inline-playback-progress t)
+       (bongo-enabled-backends '(mpv vlc)))
    #+end_src
 ** flycheck
    #+begin_src emacs-lisp
@@ -611,8 +594,7 @@
    #+begin_src emacs-lisp
      (use-package lispy
        :hook
-       (emacs-lisp-mode . (lambda () (lispy-mode 1)))
-       (lisp-mode . (lambda () (lispy-mode 1))))
+       ((emacs-lisp-mode lisp-mode) . (lambda () (lispy-mode 1))))
 
      ;; lispy on eval expression
      (defun conditionally-enable-lispy ()
@@ -691,12 +673,12 @@
 	(LaTeX-mode . flyspell-mode)
 	(LaTeX-mode . LaTeX-math-mode)
 	(LaTeX-mode . turn-on-reftex)
-	:config
-	(setq TeX-auto-save t)
-	(setq TeX-parse-self t)
-	(setq-default TeX-master nil)
-	(setq reftex-plug-into-AUCTeX t)
-	(setq TeX-PDF-mode t)
+	:custom
+	(TeX-auto-save t)
+	(TeX-parse-self t)
+	(TeX-master nil)
+	(reftex-plug-into-AUCTeX t)
+	(TeX-PDF-mode t)
 	:hook
 	(TeX-mode .
 		  (lambda ()
@@ -709,9 +691,7 @@
       (use-package lsp-latex
 	:ensure-system-package texlab
 	:hook
-	(TeX-mode . lsp)
-	(LaTeX-mode . lsp)
-	(bibtex-mode . lsp))
+	((TeX-mode LaTeX-mode bibtex-mode) . lsp))
     #+end_src
 ** python
 *** anaconda-mode
@@ -739,9 +719,9 @@
 ** olivetti mode
    #+begin_src emacs-lisp
      (use-package olivetti
+       :defer t
        :custom
-       (olivetti-body-width 80)
-       :defer t)
+       (olivetti-body-width 80))
    #+end_src
    Melhor para a escrita de documentos. 
 ** Refile
@@ -782,15 +762,15 @@
 ** plantuml
    Programito bom para desenvolver diagramas de classes e fluxogramas.
    #+begin_src emacs-lisp
-     (setq plantuml-jar-path (expand-file-name
-			      (concat
-			       (getenv "XDG_DATA_HOME") "/plantuml/plantuml.jar")))
-     (setq org-plantuml-jar-path (expand-file-name
-				  (concat
-				   (getenv "XDG_DATA_HOME") "/plantuml/plantuml.jar")))
-     (setq plantuml-default-exec-mode 'jar)
+     (setq jar-path (expand-file-name
+		     (concat
+		      (getenv "XDG_DATA_HOME") "/plantuml/plantuml.jar")))
      (use-package plantuml-mode
-       :defer t)
+       :defer t
+       :custom
+       (plantuml-jar-path jar-path)
+       (org-plantuml-jar-path jar-path)
+       (plantuml-default-exec-mode 'jar))
    #+end_src
 ** belos simbolos
    #+begin_src emacs-lisp
@@ -826,19 +806,19 @@
      (use-package org-roam
        :hook
        (after-init . org-roam-mode)
-       :custom
-       (org-roam-directory (concat (getenv "HOME") "/Estudo/arquivos-org/"))
        :bind (:map org-roam-mode-map
 		   (("C-c n l" . org-roam)
 		    ("C-c n f" . org-roam-find-file)
-		    ("C-c n g" . org-roam-graph))
+		    ("C-c n g" . org-roam-graph)
+		    ("C-c n d" . org-roam-dailies-date))
 		   :map org-mode-map
 		   (("C-c n i" . org-roam-insert)))
        :init
        (autoload 'org-roam-protocol "org-roam-protocol"
 	 "org roam's way of dealing with external input"
 	 t)
-       :custom 
+       :custom
+       (org-roam-directory (concat (getenv "HOME") "/Estudo/arquivos-org/"))
        (org-roam-index-file "./index.org")
        ;; graphing options
        (org-roam-completion-system 'ivy)
@@ -858,14 +838,14 @@
 ** org-download
    #+begin_src emacs-lisp
      (use-package org-download
-       :defer t
        :custom
        (org-download-method 'directory)
        (org-download-image-dir "~/Pictures/org/")
        (org-download-heading-lvl nil)
        (org-download-screenshot-method "xclip")
-       :init
-       (add-hook 'dired-mode-hook 'org-download-enable))      
+       :hook
+       (org-mode . (lambda () (require 'org-download)))
+       (dired-mode . org-download-enable))      
    #+end_src
 ** hide highlight by default
    #+begin_src emacs-lisp
