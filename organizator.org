@@ -1,5 +1,10 @@
 #+title: Imakkusu configs, electric boogaloo
 * Customs do emacs
+** Aviso de arquivo pesado
+   #+begin_src emacs-lisp
+     (setq large-file-warning-threshold nil)
+   #+end_src
+   Eu vivo no perigo
 ** Disable no maldito cursor piscante
    #+begin_src emacs-lisp
      (blink-cursor-mode 0)
@@ -63,6 +68,7 @@
    e acentos. 
 ** dired
    #+begin_src emacs-lisp
+     (setq dired-listing-switches "-alh")
      (setq image-dired-thumb-margin 5)
      (setq dired-dwin-target t)
      (add-hook 'dired-mode-hook #'(lambda () (dired-hide-details-mode t)))
@@ -327,20 +333,20 @@
    #+end_src
 ** autocompletion
    #+begin_src emacs-lisp
-     (use-package company
-       :config
-       (define-key company-active-map (kbd "<return>") nil)
-       (define-key company-active-map (kbd "RET") nil)
-       (define-key company-active-map (kbd "<down>") #'company-complete-selection)
-       :custom
-       (company-idle-delay 0)
-       (company-minimum-prefix-length 2)
-       (company-selection-wrap-around t)
-       (company-tng-configure-default)
-       :hook
-       (after-init . global-company-mode)
-       :bind
-       ("s-c" . company-complete))
+	  (use-package company
+	    :config
+	    (define-key company-active-map (kbd "<return>") nil)
+	    (define-key company-active-map (kbd "RET") nil)
+	    (define-key company-active-map (kbd "<down>") #'company-complete-selection)
+	    :custom
+	    (company-idle-delay 0)
+	    (company-minimum-prefix-length 2)
+	    (company-selection-wrap-around t)
+	    (company-tng-configure-default)
+	    :hook
+	    (after-init . global-company-mode)
+	    :bind
+	    ("C-c x" . company-complete))
    #+end_src
 *** quickhelp
     #+begin_src emacs-lisp
@@ -694,13 +700,6 @@
 	((TeX-mode LaTeX-mode bibtex-mode) . lsp))
     #+end_src
 ** python
-*** anaconda-mode
-    #+begin_src emacs-lisp
-      (use-package anaconda-mode
-	:hook
-	(python-mode . anaconda-mode)
-	(python-mode . anaconda-eldoc-mode))
-    #+end_src
 *** flycheck python
     #+begin_src emacs-lisp
       (use-package flycheck-pycheckers
@@ -738,7 +737,7 @@
      (setq org-display-inline-images t)
      (setq org-redisplay-inline-images t) 
      (setq org-startup-with-inline-images t)
-     (setq org-image-actual-width 800)
+     (setq org-image-actual-width 600)
      (with-eval-after-load 'org
        (add-hook 'org-babel-after-execute-hook
 		 #'(lambda ()
@@ -783,7 +782,8 @@
       '((plantuml . t)
 	(python . t)
 	(dot . t)
-	(lisp . t)))
+	(lisp . t)
+	(shell . t)))
    #+end_src
    Algumas opções de linguagens do babel
 ** org-superstar
@@ -850,6 +850,12 @@
 ** hide highlight by default
    #+begin_src emacs-lisp
      (setq org-hide-emphasis-markers t)
+   #+end_src
+** moderncv
+   #+begin_src emacs-lisp
+     (use-package ox-moderncv
+       :straight (:host gitlab :repo "Titan-C/org-cv")
+       :init (require 'ox-moderncv))
    #+end_src
 * *Minhas* funções (algumas roubadas)
 ** numeros aleatorios num dado range
