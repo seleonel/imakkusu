@@ -325,11 +325,20 @@
        :init (setq lsp-keymap-prefix "C-c ]")
        :hook (((python-mode js2-mode) . lsp)
 	      (lsp-mode . lsp-enable-which-key-integration))
-       :commands lsp)
+       :commands lsp
+       :custom
+       ;; shows breadcrumb line and change its default layout
+       (lsp-headerline-breadcrumb-mode t)
+       (lsp-headerline-breadcrumb-segments '(project file symbols))
+
+       ;; shows all possible code actions available
+       (lsp-modeline-code-actions-mode t))
 
      (use-package lsp-ui :commands lsp-ui-mode)
      ;; ivy integration
      (use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
+     ;; treemacs integration gives me nice icons so why not
+     (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
    #+end_src
 ** autocompletion
    #+begin_src emacs-lisp
@@ -487,7 +496,6 @@
        (dashboard-set-file-icons t)
        ;; adds agenda 
        (show-week-agenda-p t)
-
        (dashboard-footer-messages '("emags :DDDDDDDD"))
        (initial-buffer-choice (lambda () (get-buffer "*dashboard*"))))
    #+end_src
@@ -563,8 +571,7 @@
    #+end_src
 ** all-the-icons
    #+begin_src emacs-lisp
-     (use-package all-the-icons
-       :defer t)
+     (use-package all-the-icons)
    #+end_src
 *** icons-dired
     #+begin_src emacs-lisp
