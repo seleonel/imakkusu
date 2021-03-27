@@ -261,7 +261,6 @@
    #+begin_src emacs-lisp
      (use-package avy
        :bind
-       ("C-c c" . avy-goto-char)
        ("C-c l" . avy-goto-line)
        ("C-c w" . avy-goto-word-1)
        ("C-c y" . avy-copy-line))
@@ -275,42 +274,41 @@
 	(ivy-use-virtual-buffers t)
 	(enable-recursive-minibuffers t))
     #+end_src
-    Boa função para procurar, mostra as ocorrências num minibuffer 
-**** swiper
+   **** swiper
      #+begin_src emacs-lisp
        (use-package swiper
 	 :after ivy
 	 :bind
-	 ("C-s" . swiper-isearch)
+	 ("C-c p" . swiper-isearch)
 	 ("C-x b" . ivy-switch-buffer))
      #+end_src
 **** Counsel
      #+begin_src emacs-lisp 
-       (use-package counsel
-	 :after ivy
-	 :config
-	 (define-key ivy-minibuffer-map (kbd "TAB") 'ivy-partial)
-	 (define-key counsel-find-file-map (kbd "s-j") #'(lambda ()
-							   (interactive)
-							   (let ((input (ivy--input)))
-							     (ivy-quit-and-run
-							       (counsel-file-jump)))))
-	 :bind
-	 ;; replacing emacs defaults with counsel
-	 ("M-x" . counsel-M-x)
-	 ("C-x C-f" . counsel-find-file)
-	 ("C-h f" . counsel-describe-function)
-	 ("C-h v" . counsel-describe-variable)
-	 ;; imenu provides a nice alternative to imenu
-	 ("C-c m" . counsel-imenu)
-	 ;; file jump is recursive, but kinda slow
-	 ("C-c J" . counsel-file-jump)
-	 ;; good for searching emacs-lisp functions
-	 ("C-c i" . counsel-info-lookup-symbol)
-	 ;; external things
-	 ("C-c p" . counsel-linux-app)
-         ("C-c g" . counsel-git-grep)
-	 ("<f5>" . counsel-compile))
+	      (use-package counsel
+		:after ivy
+		:config
+		(define-key ivy-minibuffer-map (kbd "TAB") 'ivy-partial)
+		(define-key counsel-find-file-map (kbd "s-j") #'(lambda ()
+								  (interactive)
+								  (let ((input (ivy--input)))
+								    (ivy-quit-and-run
+								      (counsel-file-jump)))))
+		:bind
+		;; replacing emacs defaults with counsel
+		("M-x" . counsel-M-x)
+		("C-x C-f" . counsel-find-file)
+		("C-h f" . counsel-describe-function)
+		("C-h v" . counsel-describe-variable)
+		;; imenu provides a nice alternative to imenu
+		("C-c m" . counsel-imenu)
+		;; file jump is recursive, but kinda slow
+		("C-c J" . counsel-file-jump)
+		;; good for searching emacs-lisp functions
+		("C-c i" . counsel-info-lookup-symbol)
+		;; external things
+		("C-c g" . counsel-git-grep)
+		("<f5>" . counsel-compile)
+		("<f9>". counsel-org-capture))
      #+end_src
 ** magit
    #+begin_src emacs-lisp
@@ -355,7 +353,7 @@
 	    :hook
 	    (after-init . global-company-mode)
 	    :bind
-	    ("C-c x" . company-complete))
+	    ("C-c j" . company-complete))
    #+end_src
 *** quickhelp
     #+begin_src emacs-lisp
@@ -505,10 +503,9 @@
 
 ** Fonte
    #+begin_src emacs-lisp
-     (setq default-frame-alist '((font . "Hack 12")))
+     (setq default-frame-alist '((font . "Iosevka 12")))
    #+end_src
-   Força por padrão a fonte Hack, tamanho 12
-
+   
 ** Barra de tarefas
    #+begin_src emacs-lisp
      (tool-bar-mode -1)
@@ -536,11 +533,6 @@
 
 ** TEMA ATUAL
    
-*** Dark 
-    #+begin_src emacs-lisp
-      (use-package dracula-theme
-	:defer t)
-    #+end_src
 *** Tema branco
     #+begin_src emacs-lisp
       (use-package modus-operandi-theme
@@ -703,21 +695,6 @@
 	:hook
 	((TeX-mode LaTeX-mode bibtex-mode) . lsp))
     #+end_src
-** python
-*** flycheck python
-    #+begin_src emacs-lisp
-      (use-package flycheck-pycheckers
-	:after flycheck
-	:hook
-	(flycheck-mode . flycheck-pycheckers-setup))
-    #+end_src
-*** pyenv   
-    #+begin_src emacs-lisp
-      (use-package pyenv-mode
-	:hook
-	(pyenv-mode . python-mode))
-    #+end_src
-    Permite-me trabalhar com ambientes virtuais
 * Org-mode
 ** olivetti mode
    #+begin_src emacs-lisp
@@ -749,19 +726,6 @@
 		       (org-redisplay-inline-images)))))
    #+end_src
    Mostra por padrão as imagens no próprio buffer do org
-** gnuplot
-   #+begin_src emacs-lisp
-     (use-package gnuplot
-       :ensure-system-package gnuplot
-       :defer t)
-     (use-package gnuplot-mode
-       :defer t)
-   #+end_src
-*** gnuplot binding
-    #+begin_src emacs-lisp
-      (local-set-key "M-C-g" 'org-plot/gnuplot) 
-    #+end_src
-    Gnuplot para plotagem de gráficos a partir de tabelas
 ** plantuml
    Programito bom para desenvolver diagramas de classes e fluxogramas.
    #+begin_src emacs-lisp
@@ -851,7 +815,7 @@
        (org-mode . (lambda () (require 'org-download)))
        (dired-mode . org-download-enable))      
    #+end_src
-** hide highlight by default
+** esconder formatação de fonte (negrito, itálico, ttt, etc)
    #+begin_src emacs-lisp
      (setq org-hide-emphasis-markers t)
    #+end_src
