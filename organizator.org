@@ -544,7 +544,9 @@
    #+begin_src emacs-lisp
      (use-package doom-modeline
        :hook
-       (window-setup . doom-modeline-mode)) 
+       (window-setup . doom-modeline-mode)
+       :custom
+       (doom-modeline-icon t)) 
    #+end_src
 ** line numbers
    #+begin_src emacs-lisp
@@ -696,6 +698,10 @@
 	((TeX-mode LaTeX-mode bibtex-mode) . lsp))
     #+end_src
 * Org-mode
+** Tamanho do latex preview
+   #+begin_src emacs-lisp
+     (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.6))
+   #+end_src
 ** olivetti mode
    #+begin_src emacs-lisp
      (use-package olivetti
