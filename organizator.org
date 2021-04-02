@@ -842,4 +842,22 @@
 	   (setq string-to-transform (concat string-to-transform (calc-eval "random(10)"))))
 	 (insert string-to-transform)))
    #+end_src
-
+** Função horrível para enviar screenshot num buffer de mail
+   #+begin_src emacs-lisp
+     (defun mail-screenshot-from-clipboard (string-user)
+       "Attaches an image in which filename's defined by the user.
+     Said image is always saved in /tmp/<filename>.
+     This function depends on xclip existing within the system."
+       (interactive "sPlease type in a filename for the attachment: ")
+       (let* ((filename-to-save (concat "/tmp/" string-user ".png"))
+	      (installed-? (executable-find "xclip"))
+	      (command-to-save (format "xclip -selection clipboard -o > %s" filename-to-save)))
+	 (if installed-?
+	     (progn
+	       (if (zerop (shell-command command-to-save))
+		   (with-current-buffer (current-buffer)
+		     (mail-add-attachment filename-to-save))
+		 (print "Xclip has failed to save the file")))
+	   (print "Need xclip to run!"))))
+   #+end_src
+   
