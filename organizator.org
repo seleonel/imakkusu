@@ -55,7 +55,7 @@
       (use-package gnus-desktop-notify
 	:defer t)
     #+end_src
-*** mail encrypt
+*** COMMENT mail encrypt                                                   
     #+begin_src emacs-lisp
       (setq mm-sign-option 'guided)
       (add-hook 'message-send-hook 'mml-secure-message-sign)
@@ -234,6 +234,9 @@
      (use-package async
        :defer t
        :config
+       (use-package auth-source
+	 :custom
+	 (auth-sources '("~/.authinfo.gpg" "~/.authinfo")))
        (dired-async-mode 1)
        (async-bytecomp-package-mode 1))
    #+end_src
@@ -340,20 +343,17 @@
    #+end_src
 ** autocompletion
    #+begin_src emacs-lisp
-	  (use-package company
-	    :config
-	    (define-key company-active-map (kbd "<return>") nil)
-	    (define-key company-active-map (kbd "RET") nil)
-	    (define-key company-active-map (kbd "<down>") #'company-complete-selection)
-	    :custom
-	    (company-idle-delay 0)
-	    (company-minimum-prefix-length 2)
-	    (company-selection-wrap-around t)
-	    (company-tng-configure-default)
-	    :hook
-	    (after-init . global-company-mode)
-	    :bind
-	    ("C-c j" . company-complete))
+     (use-package company
+       :config
+       (define-key company-active-map (kbd "<return>") nil)
+       (define-key company-active-map (kbd "RET") nil)
+       :custom
+       (company-idle-delay 0)
+       (company-minimum-prefix-length 2)
+       (company-selection-wrap-around t)
+       (company-tng-configure-default)
+       :hook
+       (after-init . global-company-mode))
    #+end_src
 *** quickhelp
     #+begin_src emacs-lisp
@@ -853,11 +853,36 @@
 	      (installed-? (executable-find "xclip"))
 	      (command-to-save (format "xclip -selection clipboard -o > %s" filename-to-save)))
 	 (if installed-?
-	     (progn
-	       (if (zerop (shell-command command-to-save))
+	     (if (zerop (shell-command command-to-save))
 		   (with-current-buffer (current-buffer)
 		     (mail-add-attachment filename-to-save))
-		 (print "Xclip has failed to save the file")))
+		 (print "Xclip has failed to save the file"))
 	   (print "Need xclip to run!"))))
    #+end_src
-   
+** Integração de company com o yasnippet
+   Roubado da [[https://www.emacswiki.org/emacs/CompanyMode][EmacsWiki]].
+   #+begin_src emacs-lisp
+     (defun check-expansion ()
+       (save-excursion
+	 (if (looking-at "\\_>") t
+	   (backward-char 1)
+	   (if (looking-at "\\.") t
+	     (backward-char 1)
+	     (if (looking-at "->") t nil)))))
+
+     (defun do-yas-expand ()
+       (let ((yas/fallback-behavior 'return-nil))
+	 (yas/expand)))
+
+     (defun tab-indent-or-complete ()
+       (interactive)
+       (if (minibufferp)
+	   (minibuffer-complete)
+	 (if (or (not yas/minor-mode)
+		 (null (do-yas-expand)))
+	     (if (check-expansion)
+		 (company-complete-common)
+	       (indent-for-tab-command)))))
+
+     (global-set-key (kbd "M-<tab>") 'tab-indent-or-complete)
+   #+end_src
