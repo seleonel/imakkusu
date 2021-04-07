@@ -60,6 +60,20 @@
       (setq mm-sign-option 'guided)
       (add-hook 'message-send-hook 'mml-secure-message-sign)
     #+end_src
+*** org-msg
+    #+begin_src emacs-lisp
+      (use-package org-msg
+	:defer t
+	:config
+	(org-msg-mode)
+	:custom
+	(org-msg-greeting-fmt "\nOlá %s,\n\n")
+	(org-msg-recipient-names '(("leon_bellini@outlook.com" "Leon Bellini")))
+	(org-msg-greeting-name-limit 2)
+	(org-msg-default-alternatives '(html text))
+	(org-msg-convert citation t)
+	(org-msg-options "html-postamble:nil H:5 num:nil ^:{} toc:nil author:nil email:nil \\n:t"))
+    #+end_src
 ** acentos e caracteres específicos
    #+begin_src emacs-lisp
      (require 'iso-transl)
@@ -476,7 +490,7 @@
    #+end_src
 
 * Configurações visuais
-** pagina inicial em si
+** pagina inicial 
    #+begin_src emacs-lisp
      (use-package dashboard
        :init
@@ -619,12 +633,6 @@
 	:defer t)
     #+end_src
 ** C e C++
-*** c-headers 
-    #+begin_src emacs-lisp
-      (defun c-open-header-in-place ()
-	(local-set-key (kbd "C-c h") 'ff-find-other-file))
-      (add-hook 'c-initialization-hook 'c-open-header-in-place)
-    #+end_src
 *** LSP server
     #+begin_src emacs-lisp
       (use-package ccls
@@ -640,15 +648,6 @@
 	:config
 	(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode)))
     #+end_src
-*** JS2 mode
-    #+begin_src emacs-lisp
-      (use-package js2-mode
-	:defer t
-	:config
-	(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
-	(add-to-list 'auto-mode-alist '("\\.jsx?\\'" . js2-jsx-mode))
-	(add-to-list 'interpreter-mode-alist '("node" . js2-jsx-mode)))
-    #+end_src
 *** htmlize
     #+begin_src emacs-lisp
       (use-package htmlize
@@ -660,7 +659,7 @@
 	:defer t)
     #+end_src
     servidor web "minimalista"
-*** skewer mode
+*** impatient mode
     #+begin_src emacs-lisp
       (use-package impatient-mode
 	:defer t)
@@ -687,7 +686,6 @@
 	(TeX-mode .
 		  (lambda ()
 		    (setq TeX-command-extra-options "-shell-escape"))))
-
     #+end_src 
     Para edição aprimorada de documentos TEX
 *** LSP
@@ -722,7 +720,8 @@
 ** Inline Images
    #+begin_src emacs-lisp
      (setq org-display-inline-images t)
-     (setq org-redisplay-inline-images t) 
+     (setq org-redisplay-inline-images t)
+     (setq org-startup-with-latex-preview t)
      (setq org-startup-with-inline-images t)
      (setq org-image-actual-width 600)
      (with-eval-after-load 'org
@@ -809,6 +808,14 @@
 					   ("color" . "PaleVioletRed1"))))
    #+end_src
    Bom pra brainstorming
+** listings
+   #+begin_src emacs-lisp
+     (require 'ox-latex)
+     (setq org-latex-listings t)
+     (add-to-list 'org-latex-packages-alist '("" "listings"))
+     (add-to-list 'org-latex-packages-alist '("" "color"))
+   #+end_src
+   Listings por padrão
 ** org-download
    #+begin_src emacs-lisp
      (use-package org-download
