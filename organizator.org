@@ -1,5 +1,10 @@
 #+title: Imakkusu configs, electric boogaloo
 * Customs do emacs
+** Column indicator mode
+   #+begin_src emacs-lisp
+(setq fill-column 80)
+(add-hook 'prog-mode-hook #'display-fill-column-indicator-mode)
+   #+end_src
 ** Aviso de arquivo pesado
    #+begin_src emacs-lisp
      (setq large-file-warning-threshold nil)
@@ -241,7 +246,7 @@
        (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
        :hook
        (nov-mode . (lambda () (face-remap-add-relative 'variable-pitch :family "FreeSerif"
-						       :height 1.5))))
+						       :height 1.2))))
    #+end_src
 ** Processos assíncronos
    #+begin_src emacs-lisp
@@ -423,15 +428,6 @@
        (smart-tabs-advice js2-indent-line js2-basic-offset))
    #+end_src
    esse código copiei de um anão
-** define-word
-   #+begin_src emacs-lisp
-     (use-package define-word
-       :bind
-       ("C-c d" . define-word)
-       ("C-c u" . define-word-at-point))
-   #+end_src
-   Bom para procurar significado de palavras.
-
 ** undo-tree
    #+begin_src emacs-lisp
      (use-package undo-tree
@@ -439,14 +435,6 @@
        :init
        (global-undo-tree-mode))
    #+end_src
-** column enforce mode
-   #+begin_src emacs-lisp
-     (use-package column-enforce-mode
-       :hook
-       ((prog-mode text-mode) . column-enforce-mode))
-   #+end_src
-   Enforça a regra dos 80(?) caracteres em uma linha, ou pelo menos
-   só mostra um limite
 ** Rainbow
 *** Rainbow-delimiters
     #+begin_src emacs-lisp
@@ -774,6 +762,10 @@
 					  (?- . ?◆))))
    #+end_src
    Tae um bom nome.
+** prevent from indentation
+   #+begin_src emacs-lisp
+      (setq org-src-preserve-indentation t)
+   #+end_src
 ** org-roam
    #+begin_src emacs-lisp
      (use-package org-roam
