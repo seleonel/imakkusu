@@ -1,9 +1,8 @@
 #+title: Imakkusu configs, electric boogaloo
 * Customs do emacs
-** Column indicator mode
+** Auto-fill
    #+begin_src emacs-lisp
-(setq fill-column 80)
-(add-hook 'prog-mode-hook #'display-fill-column-indicator-mode)
+(add-hook 'text-mode-hook 'turn-on-auto-fill)
    #+end_src
 ** Aviso de arquivo pesado
    #+begin_src emacs-lisp
@@ -24,10 +23,14 @@
 				  (electric-pair-mode)
 				  (show-paren-mode)))
    #+end_src
+** regras de indentacao
+   #+begin_src emacs-lisp
+(add-hook 'prog-mode-hook #'electric-indent-local-mode)
+   #+end_src
 ** e-mail
 *** GNUs
     #+begin_src emacs-lisp
-      (setq gnus-init-file "~/.config/emacs/gnus/gnus.el")
+      (setq gnus-init-file "gnus/gnus.el")
       ;; Mail and username defined directly here
       (setq user-mail-address "leon_bellini@outlook.com")
       (setq user-full-name "Leon Ferreira Bellini")
@@ -68,8 +71,7 @@
 *** org-msg
     #+begin_src emacs-lisp
       (use-package org-msg
-	:defer t
-	:config
+	:init
 	(org-msg-mode)
 	:custom
 	(org-msg-greeting-fmt "\nOlá %s,\n\n")
@@ -485,8 +487,8 @@
        (dashboard-setup-startup-hook)
        :custom
        (dashboard-banner-logo-title "BEM VINDO AO MARAVILHOSO IMAKKUSU")
-       (dashboard-startup-banner (concat (getenv "XDG_CONFIG_HOME") "/emacs/img/kicchiri.png"))
-       (dashboard-center-content t)
+       (dashboard-startup-banner (concat user-emacs-directory "img/kicchiri.png"))
+       (dashboard-center-content t) 
        (dashboard-show-shortcuts nil)
        (dashboard-items '((recents . 20)
 			  (bookmarks . 5)
@@ -516,8 +518,8 @@
 
 ** mostrar linhazitas
    #+begin_src emacs-lisp
-     (line-number-mode 1)
-     (column-number-mode 1)
+     (line-number-mode)
+     (column-number-mode)
    #+end_src
 
 ** Barra de menu
@@ -552,7 +554,7 @@
    #+end_src
 ** line numbers
    #+begin_src emacs-lisp
-     (add-hook 'prog-mode-hook #'(lambda () (display-line-numbers-mode)))
+     (add-hook 'prog-mode-hook #'display-line-numbers-mode)
    #+end_src
 ** Barra de scroll(?)
    #+begin_src emacs-lisp
@@ -578,6 +580,11 @@
 	:hook
 	(after-init . all-the-icons-ivy-setup))
     #+end_src
+** Column indicator mode
+   #+begin_src emacs-lisp
+(setq-default fill-column 80)
+(add-hook 'prog-mode-hook #'display-fill-column-indicator-mode)
+   #+end_src
 * Modos para linguagens de programação e markdown
 ** common lisp
    #+begin_src emacs-lisp
@@ -762,6 +769,10 @@
 					  (?- . ?◆))))
    #+end_src
    Tae um bom nome.
+** Visibilidade
+   #+begin_src emacs-lisp
+(setq org-startup-folded 'overview)
+   #+end_src
 ** prevent from indentation
    #+begin_src emacs-lisp
       (setq org-src-preserve-indentation t)
