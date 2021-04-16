@@ -568,18 +568,24 @@
    #+begin_src emacs-lisp
      (use-package all-the-icons)
    #+end_src
-*** icons-dired
+*** ivy-rich
     #+begin_src emacs-lisp
-      (use-package all-the-icons-dired
-	:hook
-	(dired-mode . all-the-icons-dired-mode))
+(use-package ivy-rich
+  :after all-the-icons-ivy-rich
+  :init
+  (ivy-rich-mode 1)
+  :config
+  (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
+  :custom
+  (ivy-rich-path-style 'abbrev))
     #+end_src
-*** all-the-icons-ivy
-    #+begin_src emacs-lisp
-      (use-package all-the-icons-ivy
-	:hook
-	(after-init . all-the-icons-ivy-setup))
-    #+end_src
+***** all the icons ivy
+      #+begin_src emacs-lisp
+(use-package all-the-icons-ivy-rich
+  :after (ivy counsel swiper)
+  :defer t
+  :init (all-the-icons-ivy-rich-mode 1))
+      #+end_src
 ** Column indicator mode
    #+begin_src emacs-lisp
 (setq-default fill-column 80)
