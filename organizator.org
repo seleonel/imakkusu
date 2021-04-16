@@ -1,5 +1,9 @@
 #+title: Imakkusu configs, electric boogaloo
 * Customs do emacs
+** Auto-fill
+   #+begin_src emacs-lisp
+(add-hook 'text-mode-hook 'turn-on-auto-fill)
+   #+end_src
 ** Aviso de arquivo pesado
    #+begin_src emacs-lisp
      (setq large-file-warning-threshold nil)
@@ -19,10 +23,14 @@
 				  (electric-pair-mode)
 				  (show-paren-mode)))
    #+end_src
+** regras de indentacao
+   #+begin_src emacs-lisp
+(add-hook 'prog-mode-hook #'electric-indent-local-mode)
+   #+end_src
 ** e-mail
 *** GNUs
     #+begin_src emacs-lisp
-      (setq gnus-init-file "~/.config/emacs/gnus/gnus.el")
+      (setq gnus-init-file "gnus/gnus.el")
       ;; Mail and username defined directly here
       (setq user-mail-address "leon_bellini@outlook.com")
       (setq user-full-name "Leon Ferreira Bellini")
@@ -59,6 +67,19 @@
     #+begin_src emacs-lisp
       (setq mm-sign-option 'guided)
       (add-hook 'message-send-hook 'mml-secure-message-sign)
+    #+end_src
+*** org-msg
+    #+begin_src emacs-lisp
+      (use-package org-msg
+	:init
+	(org-msg-mode)
+	:custom
+	(org-msg-greeting-fmt "\nOlá %s,\n\n")
+	(org-msg-recipient-names '(("leon_bellini@outlook.com" "Leon Bellini")))
+	(org-msg-greeting-name-limit 2)
+	(org-msg-default-alternatives '(html text))
+	(org-msg-convert citation t)
+	(org-msg-options "html-postamble:nil H:5 num:nil ^:{} toc:nil author:nil email:nil \\n:t"))
     #+end_src
 ** acentos e caracteres específicos
    #+begin_src emacs-lisp
@@ -227,7 +248,7 @@
        (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
        :hook
        (nov-mode . (lambda () (face-remap-add-relative 'variable-pitch :family "FreeSerif"
-						       :height 1.5))))
+						       :height 1.2))))
    #+end_src
 ** Processos assíncronos
    #+begin_src emacs-lisp
@@ -409,15 +430,6 @@
        (smart-tabs-advice js2-indent-line js2-basic-offset))
    #+end_src
    esse código copiei de um anão
-** define-word
-   #+begin_src emacs-lisp
-     (use-package define-word
-       :bind
-       ("C-c d" . define-word)
-       ("C-c u" . define-word-at-point))
-   #+end_src
-   Bom para procurar significado de palavras.
-
 ** undo-tree
    #+begin_src emacs-lisp
      (use-package undo-tree
@@ -425,14 +437,6 @@
        :init
        (global-undo-tree-mode))
    #+end_src
-** column enforce mode
-   #+begin_src emacs-lisp
-     (use-package column-enforce-mode
-       :hook
-       ((prog-mode text-mode) . column-enforce-mode))
-   #+end_src
-   Enforça a regra dos 80(?) caracteres em uma linha, ou pelo menos
-   só mostra um limite
 ** Rainbow
 *** Rainbow-delimiters
     #+begin_src emacs-lisp
@@ -476,15 +480,15 @@
    #+end_src
 
 * Configurações visuais
-** pagina inicial em si
+** pagina inicial 
    #+begin_src emacs-lisp
      (use-package dashboard
        :init
        (dashboard-setup-startup-hook)
        :custom
        (dashboard-banner-logo-title "BEM VINDO AO MARAVILHOSO IMAKKUSU")
-       (dashboard-startup-banner (concat (getenv "XDG_CONFIG_HOME") "/emacs/img/kicchiri.png"))
-       (dashboard-center-content t)
+       (dashboard-startup-banner (concat user-emacs-directory "img/kicchiri.png"))
+       (dashboard-center-content t) 
        (dashboard-show-shortcuts nil)
        (dashboard-items '((recents . 20)
 			  (bookmarks . 5)
@@ -514,8 +518,8 @@
 
 ** mostrar linhazitas
    #+begin_src emacs-lisp
-     (line-number-mode 1)
-     (column-number-mode 1)
+     (line-number-mode)
+     (column-number-mode)
    #+end_src
 
 ** Barra de menu
@@ -550,7 +554,7 @@
    #+end_src
 ** line numbers
    #+begin_src emacs-lisp
-     (add-hook 'prog-mode-hook #'(lambda () (display-line-numbers-mode)))
+     (add-hook 'prog-mode-hook #'display-line-numbers-mode)
    #+end_src
 ** Barra de scroll(?)
    #+begin_src emacs-lisp
@@ -576,6 +580,11 @@
 	:hook
 	(after-init . all-the-icons-ivy-setup))
     #+end_src
+** Column indicator mode
+   #+begin_src emacs-lisp
+(setq-default fill-column 80)
+(add-hook 'prog-mode-hook #'display-fill-column-indicator-mode)
+   #+end_src
 * Modos para linguagens de programação e markdown
 ** common lisp
    #+begin_src emacs-lisp
@@ -622,12 +631,6 @@
 	:defer t)
     #+end_src
 ** C e C++
-*** c-headers 
-    #+begin_src emacs-lisp
-      (defun c-open-header-in-place ()
-	(local-set-key (kbd "C-c h") 'ff-find-other-file))
-      (add-hook 'c-initialization-hook 'c-open-header-in-place)
-    #+end_src
 *** LSP server
     #+begin_src emacs-lisp
       (use-package ccls
@@ -643,15 +646,6 @@
 	:config
 	(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode)))
     #+end_src
-*** JS2 mode
-    #+begin_src emacs-lisp
-      (use-package js2-mode
-	:defer t
-	:config
-	(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
-	(add-to-list 'auto-mode-alist '("\\.jsx?\\'" . js2-jsx-mode))
-	(add-to-list 'interpreter-mode-alist '("node" . js2-jsx-mode)))
-    #+end_src
 *** htmlize
     #+begin_src emacs-lisp
       (use-package htmlize
@@ -663,7 +657,7 @@
 	:defer t)
     #+end_src
     servidor web "minimalista"
-*** skewer mode
+*** impatient mode
     #+begin_src emacs-lisp
       (use-package impatient-mode
 	:defer t)
@@ -690,7 +684,6 @@
 	(TeX-mode .
 		  (lambda ()
 		    (setq TeX-command-extra-options "-shell-escape"))))
-
     #+end_src 
     Para edição aprimorada de documentos TEX
 *** LSP
@@ -725,7 +718,8 @@
 ** Inline Images
    #+begin_src emacs-lisp
      (setq org-display-inline-images t)
-     (setq org-redisplay-inline-images t) 
+     (setq org-redisplay-inline-images t)
+     (setq org-startup-with-latex-preview t)
      (setq org-startup-with-inline-images t)
      (setq org-image-actual-width 600)
      (with-eval-after-load 'org
@@ -778,6 +772,14 @@
 					  (?- . ?◆))))
    #+end_src
    Tae um bom nome.
+** Visibilidade
+   #+begin_src emacs-lisp
+(setq org-startup-folded 'overview)
+   #+end_src
+** prevent from indentation
+   #+begin_src emacs-lisp
+      (setq org-src-preserve-indentation t)
+   #+end_src
 ** org-roam
    #+begin_src emacs-lisp
      (use-package org-roam
@@ -812,6 +814,14 @@
 					   ("color" . "PaleVioletRed1"))))
    #+end_src
    Bom pra brainstorming
+** listings
+   #+begin_src emacs-lisp
+     (require 'ox-latex)
+     (setq org-latex-listings t)
+     (add-to-list 'org-latex-packages-alist '("" "listings"))
+     (add-to-list 'org-latex-packages-alist '("" "color"))
+   #+end_src
+   Listings por padrão
 ** org-download
    #+begin_src emacs-lisp
      (use-package org-download

@@ -2,6 +2,13 @@
 ;;  Uses straight.el + use-package by default to deal with all
 ;; packages listed in organizator.el
 
+;; stops package from loading itself+some other packages
+(setq package-enable-at-startup nil)
+;; default org file to get loaded
+(setq org-config-file (concat user-emacs-directory "organizator.org"))
+;; gnus directory
+(setq gnus-user-config (concat user-emacs-directory "gnus/gnus"))
+
 (defvar bootstrap-version)
 (let ((bootstrap-file
        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
@@ -26,4 +33,4 @@
 ;; mail and rss
 (straight-use-package 'gnus)
 ;; org configs load
-(org-babel-load-file (expand-file-name (concat (getenv "XDG_CONFIG_HOME") "/emacs/organizator.org")))
+(org-babel-load-file org-config-file)
