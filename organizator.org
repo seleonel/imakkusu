@@ -96,8 +96,15 @@
 
 (with-eval-after-load 'dired
   (require 'dired-x)
-  (setq dired-guess-shell-alist-user '(("\\.\\(:?mp4\\|mkv\\|webm\\)\\'" "mpv ? &")
-				       ("\\.exe\\'" "wine ? &"))))
+  (setq dired-guess-shell-alist-user `((,(rx "." (or "mp4"
+						     "mp3"
+						     "mkv"
+						     "webm"
+						     "flac"
+						     "gif")) "mpv ? &")
+				       (,(rx "." (or "docx" "doc" "xlsx")) "libreoffice ? &")
+				       (,(rx ".html") "chromium ? &")
+				       (,(rx ".exe") "wine ? &"))))
    #+end_src
 *** dired-gnus
     #+begin_src emacs-lisp
@@ -143,23 +150,22 @@
    Aspell me parece mais efetivo que ispell.
 *** flyspell
     #+begin_src emacs-lisp
-      (dolist (hook '(text-mode-hook))
-	(add-hook hook (lambda () (flyspell-mode 1))))
-      (dolist (hook '(change-log-mode-hook log-edit-mode-hook))
-	(add-hook hook (lambda () (flyspell-mode -1))))
-      (setq flyspell-issue-message-flag nil)
-      (setq ispell-list-command "--list")
-      ;; tudo copiado da wiki
-      (global-set-key (kbd "<f8>") 'ispell-word)
-      (global-set-key (kbd "C-S-<f8>") 'flyspell-mode)
-      (global-set-key (kbd "C-M-<f8>") 'flyspell-buffer)
-      (global-set-key (kbd "C-<f8>") 'flyspell-check-previous-highlighted-word)
-      (defun flyspell-check-next-highlighted-word ()
-	"Custom function to spell check next highlighted word"
-	(interactive)
-	(flyspell-goto-next-error)
-	(ispell-word))
-      (global-set-key (kbd "M-<f8>") 'flyspell-check-next-highlighted-word)
+(add-hook 'text-mode-hook 'flyspell-mode)
+(dolist (hook '(change-log-mode-hook log-edit-mode-hook))
+  (add-hook hook (lambda () (flyspell-mode -1))))
+(setq flyspell-issue-message-flag nil)
+(setq ispell-list-command "--list")
+;; tudo copiado da wiki
+(global-set-key (kbd "<f8>") 'ispell-word)
+(global-set-key (kbd "C-S-<f8>") 'flyspell-mode)
+(global-set-key (kbd "C-M-<f8>") 'flyspell-buffer)
+(global-set-key (kbd "C-<f8>") 'flyspell-check-previous-highlighted-word)
+(defun flyspell-check-next-highlighted-word ()
+  "Custom function to spell check next highlighted word"
+  (interactive)
+  (flyspell-goto-next-error)
+  (ispell-word))
+(global-set-key (kbd "M-<f8>") 'flyspell-check-next-highlighted-word)
     #+end_src
 ** Forçar UTF-8
    #+begin_src emacs-lisp
@@ -265,7 +271,7 @@
      (use-package projectile
        :init
        (projectile-mode 1)
-       :bind
+       :bind-keymap
        ("C-c f" . projectile-command-map))
    #+end_src
 ** *Which key*
@@ -289,7 +295,9 @@
 	(ivy-mode 1)
 	:custom
 	(ivy-use-virtual-buffers t)
-	(enable-recursive-minibuffers t))
+	(enable-recursive-minibuffers t)
+	:bind-keymap
+	("<tab>" . ivy-partial))
     #+end_src
    **** swiper
      #+begin_src emacs-lisp
@@ -304,7 +312,6 @@
 	      (use-package counsel
 		:after ivy
 		:config
-		(define-key ivy-minibuffer-map (kbd "TAB") 'ivy-partial)
 		(define-key counsel-find-file-map (kbd "s-j") #'(lambda ()
 								  (interactive)
 								  (let ((input (ivy--input)))
@@ -555,7 +562,7 @@
    #+end_src
 ** Pretty symbols
    #+begin_src emacs-lisp
-     (global-prettify-symbols-mode t)
+     (global-prettify-symbols-mode)
    #+end_src
 ** all-the-icons
    #+begin_src emacs-lisp
@@ -820,15 +827,19 @@
    Listings por padrão
 ** org-download
    #+begin_src emacs-lisp
-     (use-package org-download
-       :custom
-       (org-download-method 'directory)
-       (org-download-image-dir "~/Pictures/org/")
-       (org-download-heading-lvl nil)
-       (org-download-screenshot-method 'xclip)
-       :hook
-       (org-mode . (lambda () (require 'org-download)))
-       (dired-mode . org-download-enable))      
+(use-package org-download
+  :custom
+  (org-download-method 'directory)
+  (org-download-image-dir "~/Pictures/org/")
+  (org-download-heading-lvl nil)
+  (org-download-screenshot-method 'xclip)
+  :hook
+  (org-mode . (lambda ()
+		(require 'org-download)
+		(local-set-key (kbd "C-c d") 'org-download-clipboard)))
+  (dired-mode . org-download-enable))
+
+
    #+end_src
 ** esconder formatação de fonte (negrito, itálico, ttt, etc)
    #+begin_src emacs-lisp
