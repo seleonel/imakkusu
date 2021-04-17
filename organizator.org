@@ -89,15 +89,15 @@
    e acentos. 
 ** dired
    #+begin_src emacs-lisp
-     (setq dired-listing-switches "-alh")
-     (setq image-dired-thumb-margin 5)
-     (setq dired-dwin-target t)
-     (add-hook 'dired-mode-hook #'(lambda () (dired-hide-details-mode t)))
-     (setq dired-dwim-target t)
-     (with-eval-after-load 'dired
-       (require 'dired-x)
-       (setq dired-guess-shell-alist-user '(("\\.\\(:?mp4\\|mkv\\|webm\\)\\'" "mpv ? &")
-					    ("\\.exe\\'" "wine ? &"))))
+(setq dired-listing-switches "-alh")
+(setq image-dired-thumb-margin 5)
+(add-hook 'dired-mode-hook 'dired-hide-details-mode)
+(setq dired-dwim-target t)
+
+(with-eval-after-load 'dired
+  (require 'dired-x)
+  (setq dired-guess-shell-alist-user '(("\\.\\(:?mp4\\|mkv\\|webm\\)\\'" "mpv ? &")
+				       ("\\.exe\\'" "wine ? &"))))
    #+end_src
 *** dired-gnus
     #+begin_src emacs-lisp
@@ -134,7 +134,7 @@
    #+end_src
 ** Mover de acordo com camelCase
    #+begin_src emacs-lisp
-     (global-subword-mode 1)
+     (global-subword-mode)
    #+end_src
 ** aspell 
    #+begin_src emacs-lisp
@@ -171,12 +171,7 @@
    #+end_src
 ** emacs daemon
    #+begin_src emacs-lisp
-     ;; define function to shutdown emacs server instance
-     (defun matar-server ()
-       "Save buffers, Quit, and Shutdown (kill) server"
-       (interactive)
-       (save-some-buffers)
-       (kill-emacs))
+(defalias 'matar-server 'save-buffers-kill-emacs)
    #+end_src
    Roubado da wiki, esta funcao mata o daemon e pede para salvar os buffers
 ** resize melhor
@@ -201,12 +196,10 @@
    #+end_src
 ** Eshell agora oficial
    #+begin_src emacs-lisp
-     (defun eshell-janela-abaixo ()
-       (interactive)
-       (call-interactively 'split-window-below)
-       (call-interactively 'other-window)
-       (call-interactively 'eshell))
-     (global-set-key (kbd "C-c t") 'eshell-janela-abaixo)
+(defun eshell-janela-abaixo ()
+  (interactive)
+  (mapc #'call-interactively '(split-window-below other-window eshell)))
+(global-set-key (kbd "C-c t") 'eshell-janela-abaixo)
    #+end_src
    Eshell é muito bom para ser ignorado
 ** Re-builder
@@ -499,7 +492,7 @@
        ;; adds agenda 
        (show-week-agenda-p t)
        (dashboard-footer-messages '("emags :DDDDDDDD"))
-       (initial-buffer-choice (lambda () (get-buffer "*dashboard*"))))
+       (initial-buffer-choice (get-buffer "*dashboard*")))
    #+end_src
 
 
@@ -530,7 +523,7 @@
 
 ** Highlight de linha
    #+begin_src emacs-lisp
-     (global-hl-line-mode t)
+     (global-hl-line-mode)
    #+end_src
 
    *LINHAS CHAMAM MAIS ATENÇÃO AGR*
@@ -613,7 +606,7 @@
    #+begin_src emacs-lisp
      (use-package lispy
        :hook
-       ((emacs-lisp-mode lisp-mode) . (lambda () (lispy-mode 1))))
+       ((emacs-lisp-mode lisp-mode) . lispy-mode))
 
      ;; lispy on eval expression
      (defun conditionally-enable-lispy ()
@@ -765,7 +758,7 @@
      (use-package org-superstar
        :defer t
        :hook
-       (org-mode . (lambda () (org-superstar-mode 1)))
+       (org-mode . org-superstar-mode)
        :custom
        (org-hide-leading-stars nil)
        (org-superstar-leading-bullet ?\s)
