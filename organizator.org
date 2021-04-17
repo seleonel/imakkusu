@@ -792,7 +792,7 @@
 		   (("C-c n l" . org-roam)
 		    ("C-c n f" . org-roam-find-file)
 		    ("C-c n g" . org-roam-graph)
-		    ("C-c n d" . org-roam-dailies-date))
+		    ("C-c n d" . org-roam-dailies-find-date))
 		   :map org-mode-map
 		   (("C-c n i" . org-roam-insert)))
        :init
@@ -832,7 +832,7 @@
        (org-download-method 'directory)
        (org-download-image-dir "~/Pictures/org/")
        (org-download-heading-lvl nil)
-       (org-download-screenshot-method "xclip")
+       (org-download-screenshot-method 'xclip)
        :hook
        (org-mode . (lambda () (require 'org-download)))
        (dired-mode . org-download-enable))      
