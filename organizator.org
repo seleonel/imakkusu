@@ -89,15 +89,22 @@
    e acentos. 
 ** dired
    #+begin_src emacs-lisp
-     (setq dired-listing-switches "-alh")
-     (setq image-dired-thumb-margin 5)
-     (setq dired-dwin-target t)
-     (add-hook 'dired-mode-hook #'(lambda () (dired-hide-details-mode t)))
-     (setq dired-dwim-target t)
-     (with-eval-after-load 'dired
-       (require 'dired-x)
-       (setq dired-guess-shell-alist-user '(("\\.\\(:?mp4\\|mkv\\|webm\\)\\'" "mpv ? &")
-					    ("\\.exe\\'" "wine ? &"))))
+(setq dired-listing-switches "-alh")
+(setq image-dired-thumb-margin 5)
+(add-hook 'dired-mode-hook 'dired-hide-details-mode)
+(setq dired-dwim-target t)
+
+(with-eval-after-load 'dired
+  (require 'dired-x)
+  (setq dired-guess-shell-alist-user `((,(rx "." (or "mp4"
+						     "mp3"
+						     "mkv"
+						     "webm"
+						     "flac"
+						     "gif")) "mpv ? &")
+				       (,(rx "." (or "docx" "doc" "xlsx")) "libreoffice ? &")
+				       (,(rx ".html") "chromium ? &")
+				       (,(rx ".exe") "wine ? &"))))
    #+end_src
 *** dired-gnus
     #+begin_src emacs-lisp
@@ -134,7 +141,7 @@
    #+end_src
 ** Mover de acordo com camelCase
    #+begin_src emacs-lisp
-     (global-subword-mode 1)
+     (global-subword-mode)
    #+end_src
 ** aspell 
    #+begin_src emacs-lisp
@@ -143,23 +150,22 @@
    Aspell me parece mais efetivo que ispell.
 *** flyspell
     #+begin_src emacs-lisp
-      (dolist (hook '(text-mode-hook))
-	(add-hook hook (lambda () (flyspell-mode 1))))
-      (dolist (hook '(change-log-mode-hook log-edit-mode-hook))
-	(add-hook hook (lambda () (flyspell-mode -1))))
-      (setq flyspell-issue-message-flag nil)
-      (setq ispell-list-command "--list")
-      ;; tudo copiado da wiki
-      (global-set-key (kbd "<f8>") 'ispell-word)
-      (global-set-key (kbd "C-S-<f8>") 'flyspell-mode)
-      (global-set-key (kbd "C-M-<f8>") 'flyspell-buffer)
-      (global-set-key (kbd "C-<f8>") 'flyspell-check-previous-highlighted-word)
-      (defun flyspell-check-next-highlighted-word ()
-	"Custom function to spell check next highlighted word"
-	(interactive)
-	(flyspell-goto-next-error)
-	(ispell-word))
-      (global-set-key (kbd "M-<f8>") 'flyspell-check-next-highlighted-word)
+(add-hook 'text-mode-hook 'flyspell-mode)
+(dolist (hook '(change-log-mode-hook log-edit-mode-hook))
+  (add-hook hook (lambda () (flyspell-mode -1))))
+(setq flyspell-issue-message-flag nil)
+(setq ispell-list-command "--list")
+;; tudo copiado da wiki
+(global-set-key (kbd "<f8>") 'ispell-word)
+(global-set-key (kbd "C-S-<f8>") 'flyspell-mode)
+(global-set-key (kbd "C-M-<f8>") 'flyspell-buffer)
+(global-set-key (kbd "C-<f8>") 'flyspell-check-previous-highlighted-word)
+(defun flyspell-check-next-highlighted-word ()
+  "Custom function to spell check next highlighted word"
+  (interactive)
+  (flyspell-goto-next-error)
+  (ispell-word))
+(global-set-key (kbd "M-<f8>") 'flyspell-check-next-highlighted-word)
     #+end_src
 ** Forçar UTF-8
    #+begin_src emacs-lisp
@@ -171,12 +177,7 @@
    #+end_src
 ** emacs daemon
    #+begin_src emacs-lisp
-     ;; define function to shutdown emacs server instance
-     (defun matar-server ()
-       "Save buffers, Quit, and Shutdown (kill) server"
-       (interactive)
-       (save-some-buffers)
-       (kill-emacs))
+(defalias 'matar-server 'save-buffers-kill-emacs)
    #+end_src
    Roubado da wiki, esta funcao mata o daemon e pede para salvar os buffers
 ** resize melhor
@@ -201,12 +202,10 @@
    #+end_src
 ** Eshell agora oficial
    #+begin_src emacs-lisp
-     (defun eshell-janela-abaixo ()
-       (interactive)
-       (call-interactively 'split-window-below)
-       (call-interactively 'other-window)
-       (call-interactively 'eshell))
-     (global-set-key (kbd "C-c t") 'eshell-janela-abaixo)
+(defun eshell-janela-abaixo ()
+  (interactive)
+  (mapc #'call-interactively '(split-window-below other-window eshell)))
+(global-set-key (kbd "C-c t") 'eshell-janela-abaixo)
    #+end_src
    Eshell é muito bom para ser ignorado
 ** Re-builder
@@ -272,7 +271,7 @@
      (use-package projectile
        :init
        (projectile-mode 1)
-       :bind
+       :bind-keymap
        ("C-c f" . projectile-command-map))
    #+end_src
 ** *Which key*
@@ -296,7 +295,9 @@
 	(ivy-mode 1)
 	:custom
 	(ivy-use-virtual-buffers t)
-	(enable-recursive-minibuffers t))
+	(enable-recursive-minibuffers t)
+	:bind-keymap
+	("<tab>" . ivy-partial))
     #+end_src
    **** swiper
      #+begin_src emacs-lisp
@@ -311,7 +312,6 @@
 	      (use-package counsel
 		:after ivy
 		:config
-		(define-key ivy-minibuffer-map (kbd "TAB") 'ivy-partial)
 		(define-key counsel-find-file-map (kbd "s-j") #'(lambda ()
 								  (interactive)
 								  (let ((input (ivy--input)))
@@ -499,7 +499,7 @@
        ;; adds agenda 
        (show-week-agenda-p t)
        (dashboard-footer-messages '("emags :DDDDDDDD"))
-       (initial-buffer-choice (lambda () (get-buffer "*dashboard*"))))
+       (initial-buffer-choice (get-buffer "*dashboard*")))
    #+end_src
 
 
@@ -530,7 +530,7 @@
 
 ** Highlight de linha
    #+begin_src emacs-lisp
-     (global-hl-line-mode t)
+     (global-hl-line-mode)
    #+end_src
 
    *LINHAS CHAMAM MAIS ATENÇÃO AGR*
@@ -562,24 +562,30 @@
    #+end_src
 ** Pretty symbols
    #+begin_src emacs-lisp
-     (global-prettify-symbols-mode t)
+     (global-prettify-symbols-mode)
    #+end_src
 ** all-the-icons
    #+begin_src emacs-lisp
      (use-package all-the-icons)
    #+end_src
-*** icons-dired
+*** ivy-rich
     #+begin_src emacs-lisp
-      (use-package all-the-icons-dired
-	:hook
-	(dired-mode . all-the-icons-dired-mode))
+(use-package ivy-rich
+  :after all-the-icons-ivy-rich
+  :init
+  (ivy-rich-mode 1)
+  :config
+  (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
+  :custom
+  (ivy-rich-path-style 'abbrev))
     #+end_src
-*** all-the-icons-ivy
-    #+begin_src emacs-lisp
-      (use-package all-the-icons-ivy
-	:hook
-	(after-init . all-the-icons-ivy-setup))
-    #+end_src
+***** all the icons ivy
+      #+begin_src emacs-lisp
+(use-package all-the-icons-ivy-rich
+  :after (ivy counsel swiper)
+  :defer t
+  :init (all-the-icons-ivy-rich-mode 1))
+      #+end_src
 ** Column indicator mode
    #+begin_src emacs-lisp
 (setq-default fill-column 80)
@@ -610,7 +616,7 @@
    #+begin_src emacs-lisp
      (use-package lispy
        :hook
-       ((emacs-lisp-mode lisp-mode) . (lambda () (lispy-mode 1))))
+       ((emacs-lisp-mode lisp-mode) . lispy-mode))
 
      ;; lispy on eval expression
      (defun conditionally-enable-lispy ()
@@ -762,7 +768,7 @@
      (use-package org-superstar
        :defer t
        :hook
-       (org-mode . (lambda () (org-superstar-mode 1)))
+       (org-mode . org-superstar-mode)
        :custom
        (org-hide-leading-stars nil)
        (org-superstar-leading-bullet ?\s)
@@ -789,7 +795,7 @@
 		   (("C-c n l" . org-roam)
 		    ("C-c n f" . org-roam-find-file)
 		    ("C-c n g" . org-roam-graph)
-		    ("C-c n d" . org-roam-dailies-date))
+		    ("C-c n d" . org-roam-dailies-find-date))
 		   :map org-mode-map
 		   (("C-c n i" . org-roam-insert)))
        :init
@@ -824,15 +830,19 @@
    Listings por padrão
 ** org-download
    #+begin_src emacs-lisp
-     (use-package org-download
-       :custom
-       (org-download-method 'directory)
-       (org-download-image-dir "~/Pictures/org/")
-       (org-download-heading-lvl nil)
-       (org-download-screenshot-method "xclip")
-       :hook
-       (org-mode . (lambda () (require 'org-download)))
-       (dired-mode . org-download-enable))      
+(use-package org-download
+  :custom
+  (org-download-method 'directory)
+  (org-download-image-dir "~/Pictures/org/")
+  (org-download-heading-lvl nil)
+  (org-download-screenshot-method 'xclip)
+  :hook
+  (org-mode . (lambda ()
+		(require 'org-download)
+		(local-set-key (kbd "C-c d") 'org-download-clipboard)))
+  (dired-mode . org-download-enable))
+
+
    #+end_src
 ** esconder formatação de fonte (negrito, itálico, ttt, etc)
    #+begin_src emacs-lisp
