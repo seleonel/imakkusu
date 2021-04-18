@@ -295,9 +295,7 @@
 	(ivy-mode 1)
 	:custom
 	(ivy-use-virtual-buffers t)
-	(enable-recursive-minibuffers t)
-	:bind-keymap
-	("<tab>" . ivy-partial))
+	(enable-recursive-minibuffers t))
     #+end_src
    **** swiper
      #+begin_src emacs-lisp
@@ -362,6 +360,21 @@
      ;; treemacs integration gives me nice icons so why not
      (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
    #+end_src
+** Debugging (DAP-mode)
+   #+begin_src emacs-lisp
+(use-package dap-mode
+  :ensure-system-package lldb
+  :custom
+  (dap-auto-configure-features '(sessions locals control tooltip)))
+   #+end_src
+*** python debugging
+    #+begin_src emacs-lisp
+(add-hook 'python-mode-hook #'(lambda () (require 'dap-python)))
+    #+end_src
+*** C/C++ debugging
+    #+begin_src emacs-lisp
+(add-hook 'c-mode-hook  #'(lambda () (require 'dap-lldb)))
+    #+end_src
 ** autocompletion
    #+begin_src emacs-lisp
      (use-package company
@@ -478,7 +491,7 @@
        :config
        (global-flycheck-mode t))
    #+end_src
-
+   
 * Configurações visuais
 ** pagina inicial 
    #+begin_src emacs-lisp
@@ -499,7 +512,7 @@
        ;; adds agenda 
        (show-week-agenda-p t)
        (dashboard-footer-messages '("emags :DDDDDDDD"))
-       (initial-buffer-choice (get-buffer "*dashboard*")))
+       (initial-buffer-choice #'(lambda () (get-buffer "*dashboard*"))))
    #+end_src
 
 
