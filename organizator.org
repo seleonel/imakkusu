@@ -1,5 +1,14 @@
 #+title: Imakkusu configs, electric boogaloo
 * Customs do emacs
+** recentf (recent files)
+   #+begin_src emacs-lisp
+(use-package recentf
+  :init
+  (recentf-mode)
+  (run-at-time nil (* 30 60) 'recentf-save-list)
+  :custom
+  (recentf-max-saved-items 50))
+   #+end_src
 ** Auto-fill
    #+begin_src emacs-lisp
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
