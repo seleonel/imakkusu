@@ -36,7 +36,7 @@ Adds in a new key with that value otherwise"
 (use-package dired
   :straight nil
   :custom
-  (dired-listing-switches "-alhg")
+  (dired-listing-switches "-alhg --group-directories")
   (image-dired-thumb-margin 5)
   (dired-dwim-target t)
   :hook
