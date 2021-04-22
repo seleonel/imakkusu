@@ -28,23 +28,6 @@
 (add-hook 'prog-mode-hook #'electric-indent-local-mode)
    #+end_src
 ** e-mail
-*** GNUs
-    #+begin_src emacs-lisp
-(use-package gnus
-  :custom
-  (gnus-init-file "gnus/gnus.el")
-  ;; Mail and username defined directly here
-  (user-mail-address "leon_bellini@outlook.com")
-  (user-full-name "Leon Ferreira Bellini")
-  (message-signature (concat "Leon F. Bellini\n"
-			     "Estudante de Ciência da Computação no Centro Universitário FEI\n"
-			     "\nGitHub: https://github.com/seleonel\n"))
-  (gnus-secondary-select-methods  '((nntp "news.gwene.org")))
-  (gnus-select-method '(nnimap "outlook"
-			       (nnimap-address "outlook.office365.com")
-			       (nnimap-server-port 993)
-			       (nnimap-stream ssl))))
-    #+end_src
 *** smtpmail
     #+begin_src emacs-lisp
 (use-package smtpmail
