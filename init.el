@@ -125,6 +125,7 @@ Adds in a new key with that value otherwise"
 ;; gnus (mail)
 (use-package gnus
   :custom
+  (gnus-directory "~/Email-and-news/news/" )
   (gnus-init-file "gnus/gnus.el")
   ;; Mail and username defined directly here
   (user-mail-address "leon_bellini@outlook.com")

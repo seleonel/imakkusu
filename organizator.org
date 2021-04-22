@@ -28,6 +28,11 @@
 (add-hook 'prog-mode-hook #'electric-indent-local-mode)
    #+end_src
 ** e-mail
+*** default directories
+**** Default message directory
+     #+begin_src emacs-lisp
+(setq message-directory "~/Email-and-news/mail/")
+     #+end_src
 *** smtpmail
     #+begin_src emacs-lisp
 (use-package smtpmail
