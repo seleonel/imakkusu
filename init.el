@@ -122,5 +122,21 @@ Adds in a new key with that value otherwise"
   (add-to-list 'org-latex-packages-alist '("" "listings"))
   (add-to-list 'org-latex-packages-alist '("" "color")))
 
+;; gnus (mail)
+(use-package gnus
+  :custom
+  (gnus-init-file "gnus/gnus.el")
+  ;; Mail and username defined directly here
+  (user-mail-address "leon_bellini@outlook.com")
+  (user-full-name "Leon Ferreira Bellini")
+  (message-signature (concat "Leon F. Bellini\n"
+			     "Estudante de Ciência da
+ Computação no Centro Universitário FEI\n"
+			     "\nGitHub: https://github.com/seleonel\n"))
+  (gnus-secondary-select-methods  '((nntp "news.gwene.org")))
+  (gnus-select-method '(nnimap "outlook"
+			       (nnimap-address "outlook.office365.com")
+			       (nnimap-server-port 993)
+			       (nnimap-stream ssl))))
 ;; load the rest of the configs
 (org-babel-load-file org-config-file)
