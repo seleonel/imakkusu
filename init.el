@@ -125,8 +125,10 @@ Adds in a new key with that value otherwise"
 ;; gnus (mail)
 (use-package gnus
   :custom
-  (gnus-directory "~/Email-and-news/news/" )
   (gnus-init-file "gnus/gnus.el")
+  (gnus-directory "~/Email-and-news/news/")
+  (gnus-dribble-directory (concat gnus-directory "/dribble/"))
+  (gnus-always-read-dribble-file t)
   ;; Mail and username defined directly here
   (user-mail-address "leon_bellini@outlook.com")
   (user-full-name "Leon Ferreira Bellini")
