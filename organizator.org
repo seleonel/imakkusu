@@ -49,7 +49,8 @@
 *** notify
     #+begin_src emacs-lisp
 (use-package gnus-desktop-notify
-  :defer t)
+  :hook
+  (gnus-before-startup  . gnus-desktop-notify-mode))
     #+end_src
 *** COMMENT mail encrypt                                                   
     #+begin_src emacs-lisp
@@ -199,13 +200,16 @@
 (use-package async
   :defer t
   :config
-  (use-package auth-source
-    :custom
-    (auth-sources '("~/Infos/authinfo.gpg")))
   (dired-async-mode 1)
   (async-bytecomp-package-mode 1))
    #+end_src
    Roubado do witchmacs (novamente)
+** auth-sources
+#+begin_src emacs-lisp
+(use-package auth-source
+  :custom
+  (auth-sources '("~/Infos/authinfo.gpg")))
+#+end_src
 ** page-break-lines
    #+begin_src emacs-lisp
 (use-package page-break-lines
@@ -464,9 +468,8 @@
 
 ** Fonte
    #+begin_src emacs-lisp
-(setq default-frame-alist '((font . "Iosevka 12")))
+(setq default-frame-alist '((font . "Iosevka Light 12")))
    #+end_src
-   
 ** Barra de tarefas
    #+begin_src emacs-lisp
 (tool-bar-mode -1)

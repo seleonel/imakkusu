@@ -88,7 +88,6 @@ Adds in a new key with that value otherwise"
      (dot . t)
      (lisp . t)
      (shell . t)))
-  :config
   ;; image produced by the latex preview output is now bigger
   (plist-change org-format-latex-options :scale 1.4)
   :custom
@@ -122,10 +121,10 @@ Adds in a new key with that value otherwise"
   (add-to-list 'org-latex-packages-alist '("" "listings"))
   (add-to-list 'org-latex-packages-alist '("" "color")))
 
+
 ;; gnus (mail)
 (use-package gnus
   :custom
-  (gnus-init-file "gnus/gnus.el")
   (gnus-directory "~/Email-and-news/news/")
   (gnus-dribble-directory (concat gnus-directory "/dribble/"))
   (gnus-always-read-dribble-file t)
@@ -140,6 +139,16 @@ Adds in a new key with that value otherwise"
   (gnus-select-method '(nnimap "outlook"
 			       (nnimap-address "outlook.office365.com")
 			       (nnimap-server-port 993)
-			       (nnimap-stream ssl))))
+			       (nnimap-stream ssl)))
+  (gnus-asyncronous t)
+  :hook
+  (gnus-group-mode . gnus-topic-mode)
+  (gnus-startup . (lambda ()
+		 (gnus-demon-init)
+		 (gnus-demon-add-scanmail)
+		 (gnus-demon-add-handler 'gnus-demon-scan-news 5 5)
+		 (defadvice gnus-demon-scan-news (around gnus-demon-timeout activate)
+		   "Timeout for Gnus."
+		   (with-timeout (120 (message "Gnus timed out.")) ad-do-it)))))
 ;; load the rest of the configs
 (org-babel-load-file org-config-file)
