@@ -466,10 +466,42 @@
 
    *Garanta que a imagem existe pls*
 
-** Fonte
-   #+begin_src emacs-lisp
-(setq default-frame-alist '((font . "Iosevka Light 12")))
-   #+end_src
+** Font
+   This [[https://www.youtube.com/watch?v=Oiu3LFK_rX8][video from Prot]] inspired me to actually change the default values for
+   fonts present this config file, although most of these changes are only going
+   to affect org buffers and such.
+   
+*** Main function
+    #+begin_src emacs-lisp
+(defun set-fonts ()
+  "Sets the font families for some of the faces.
+Said faces can assume the following properties:
+
+'default : Default font used through the whole emacs 'ecosystem'
+
+'fixed-pitch : This one is used mainly in programming modes and
+src blocks in org mode
+
+'variable-pitch : Used best with variable-pitch-mode, it
+'''contextually''' gets its size changed (like when used in an
+org heading, for example)"
+  (interactive)
+  (mapc #'(lambda (font-alist)
+	    (set-face-attribute (car font-alist) nil :font (cdr font-alist)))
+	'((default . "Iosevka Light-12")
+	  (fixed-pitch . "Iosevka Fixed Light-12")
+	  (variable-pitch . "Noto Sans-11"))))
+    #+end_src
+    
+*** Setting faces on daemon
+    #+begin_src emacs-lisp
+;; sets a hook if daemon mode is 'on', also sets fonts regardless if emacs's
+;; running on terminal or not. Afaik it doesn't matter if the fonts are set
+;; while on term
+(if (daemonp)
+    (add-hook 'server-after-make-frame-hook 'set-fonts)
+  (set-fonts))
+    #+end_src
 ** Barra de tarefas
    #+begin_src emacs-lisp
 (tool-bar-mode -1)
