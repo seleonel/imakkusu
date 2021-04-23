@@ -51,3 +51,8 @@ org_files/
 transient/
 anaconda-mode/
 eshell/
+straight/
+.dap-breakpoints
+org-roam.db
+nov-places
+.lsp-session-v1
