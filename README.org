@@ -12,7 +12,7 @@ créditos a ele: [[https://www.youtube.com/channel/UCDEtZ7AKmwS0_GNJog01D2g/feed
      - pyls (python)
      - texlab (latex)
      - ccls (C/C++)
-   - ttf-iosevka (fonte)
+   - ttc-iosevka  & ibm-plex (fontes)
    - plantuml.jar (elaboração de diagramas)
    - pacotes latex
      - listings (export de *src blocks*)
@@ -32,7 +32,8 @@ sudo pacman --noconfirm -S emacs \
     ccls \
     aspell-pt \
     aspell-en \
-    gnupg
+    gnupg \
+    ttf-ibm-plex
 
     #+end_src
 
