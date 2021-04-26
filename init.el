@@ -109,6 +109,10 @@ Adds in a new key with that value otherwise"
 			(nil :tag . "candidate")))
   :hook
   (org-mode . org-toggle-pretty-entities)
+  (org-mode . variable-pitch-mode)
+  (org-mode . (lambda ()
+		(when (bound-and-true-p auto-fill-mode)
+		  (auto-fill-mode 0))))
   (org-mode . (lambda ()
 		(when org-inline-image-overlays
 		  (org-redisplay-inline-images)))))
