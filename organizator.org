@@ -259,6 +259,7 @@ HTML, criação de tabelas e devo ter esquecido de algo. *Pretty neat*
   :hook
   (org-mode . org-toggle-pretty-entities)
   (org-mode . variable-pitch-mode)
+  (org-mode . visual-line-mode)
   (org-mode . (lambda () (require 'ox-latex)))
   (org-mode . (lambda ()
 		(when org-inline-image-overlays
@@ -1285,7 +1286,6 @@ nativo no Emacs e o servidor =lsp= "completa" essa integração.
   :defer t
   :straight auctex
   :hook
-  (LaTeX-mode . visual-line-mode)
   (LaTeX-mode . flyspell-mode)
   (LaTeX-mode . LaTeX-math-mode)
   (LaTeX-mode . turn-on-reftex)
