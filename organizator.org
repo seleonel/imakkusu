@@ -1,40 +1,321 @@
-#+title: Imakkusu configs, electric boogaloo
-* Customs do emacs
-** Auto-fill
-   #+begin_src emacs-lisp
-(add-hook 'text-mode-hook 'turn-on-auto-fill)
-   #+end_src
-** Aviso de arquivo pesado
-   #+begin_src emacs-lisp
-(setq large-file-warning-threshold nil)
-   #+end_src
-   Eu vivo no perigo
-** Disable no maldito cursor piscante
-   #+begin_src emacs-lisp
-(blink-cursor-mode 0)
-   #+end_src
-** Morte ao C-z
-   #+begin_src emacs-lisp
-(define-key global-map (kbd "C-z") 'undo)
-   #+end_src
-** destacar e completar parenteses
-   #+begin_src emacs-lisp
-(add-hook 'prog-mode-hook '(lambda ()
-			     (electric-pair-mode)
-			     (show-paren-mode)))
-   #+end_src
-** regras de indentacao
-   #+begin_src emacs-lisp
-(add-hook 'prog-mode-hook #'electric-indent-local-mode)
-   #+end_src
-** e-mail
-*** default directories
-**** Default message directory
-     #+begin_src emacs-lisp
+#+TITLE: Configs e pacotes em geral de meu Emacs/My config files for GNU/Emacs (27+)
+#+property: header-args :comments org :tangle init.el 
+
+Descobri boa parte destes pacotes através dos vídeos do *Uncle Dave*, então,
+créditos a ele: [[https://www.youtube.com/channel/UCDEtZ7AKmwS0_GNJog01D2g/feed][Link para o canal]]. Créditos também a [[https://www.youtube.com/channel/UC0uTPqBCFIpZxlz_Lv1tk_g][Protesilaos Stavrou]] por
+seus ótimos tutoriais introdutórios para certos pacotes considerados "nicho".
+
+* Dependências
+
+Todas as configurações foram testadas (e utilizadas) em sistemas
+GNU/Linux. Algumas das dependências externas seriam:
+
+- SBCL (implementação de common lisp, modificar =lisp-inferior-process=)
+- lsp (language server protocol)
+  - pyls (python)
+  - texlab (latex)
+  - ccls (C/C++)
+- ttc-iosevka  & ibm-plex (fontes)
+- plantuml.jar (elaboração de diagramas)
+- pacotes latex
+  - listings (export de *src blocks*)
+- aspell (dicionários e checker)
+  - aspell-pt
+  - aspell-en
+- GnuPG
+
+** comando para arch-likes
+
+*** Repositórios oficiais
+
+#+begin_src sh :tangle no
+sudo pacman --noconfirm -S emacs \
+    sbcl \
+    python-language-server \
+    texlab \
+    ccls \
+    aspell-pt \
+    aspell-en \
+    gnupg \
+    ttf-ibm-plex
+#+end_src
+
+*** AUR
+
+#+begin_src sh :tangle no
+function iosevka_install 
+{
+    git clone https://aur.archlinux.org/ttf-iosevka.git
+    cd ttf-iosevka
+    makepkg -sic 
+}
+
+iosevka_install
+#+end_src
+
+* Keybindings
+
+** Emacs
+
+- =C-z= Undo
+- =C-x C-b= ibuffer
+- =C-c t= eshell
+- Flyspell
+  - =<f8>= ispell-word
+  - =C-S-<f8>= flyspell-mode
+  - =C-M-<f8>= flyspell-buffer
+  - =C-<f8>= flyspell-check-previous-highlighted-word
+  - =M-<f8>= flyspell-check-next-highlighted-word
+- comandos de janela
+  - =s-C-<left>= shrink-window-horizontally
+  - =s-C-<right>= enlarge-window-horizontally
+  - =s-C-<down>= shrink-window
+  - =s-C-<up>= enlarge-window
+
+** Pacotes
+
+- =C-c f= Projectile map
+- Avy/ivy/counsel/swiper
+  - =C-c l=  avy-goto-line
+  - =C-c w=  avy-goto-word-1
+  - =C-c y=  avy-copy-line
+  - =C-c p=  swiper-isearch
+  - =C-x b=  ivy-switch-buffer
+  - =M-x=  counsel-M-x
+  - =C-x C-f=  counsel-find-file
+  - =C-h f=  counsel-describe-function
+  - =C-h v=  counsel-describe-variable
+  - =C-c m=  counsel-imenu
+  - =C-c J=  counsel-file-jump
+  - =C-c i=  counsel-info-lookup-symbol
+  - =C-c g=  counsel-git-grep
+  - =<f5>=  counsel-compile
+  - =<f9>= counsel-org-capture
+- =C-x g= Magit
+- =C-c [= lsp-keymap
+- =M-y= browse-kill-ring
+- =C-c e= er/expand-region
+- =C-c q= mc/mark-next-like-this
+- =C-c a= mc/mark-all-like-this
+- =C-c s= sudo-edit
+- =C-x o= ace-window
+- =C-c n= org-roam-map
+
+* Customs do Emacs
+
+Emacs tem umas boas funcionalidades já integradas. Estas, ocasionalmente
+apresentam valores por /default/  não muito interessantes para uso em
+computadores mais modernos. 
+
+** Desativar package.el
+
+Gerenciador de pacotes padrão do Emacs. Como *straight.el* é o utilizado para
+este propósito no momento, não queremos conflitos.  
+
+#+begin_src emacs-lisp
+(setq package-enable-at-startup nil)
+#+end_src
+
+** Straight.el
+
+Gerenciador de pacotes mais interessante por utilizar-se do Melpa como base,
+mas com um adicional. *Straight* faz o /pull/ direto dos repositórios dos
+programadores do github/gitlab. Necessário realizar um processo de
+/bootstrapping/ ao menos na primeira vez.
+
+#+begin_src emacs-lisp
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+
+(setq straight-use-package-by-default t)
+(straight-use-package 'use-package)  	; nosso "assistente" de configuração
+(straight-use-package 'use-package-ensure-system-package)
+#+end_src
+
+** plist macro randômico
+
+Inútil? Só montei esse macro para me economizar tecladas.
+
+#+begin_src emacs-lisp
+(defmacro plist-change (plist key new-item)
+  "Changes the property of a plist's value given a key.
+Adds in a new key with that value otherwise"
+  `(setq ,plist (plist-put ,plist ,key ,new-item)))
+#+end_src
+
+** Dired
+
+Ou *directory editor*, meu principal meio de navegação pelo sistema de arquivos
+de sistemas GNU/Linux.
+
+#+begin_src emacs-lisp
+(use-package dired
+  :straight nil
+  :custom
+  (dired-listing-switches "-alhg --group-directories")
+  (image-dired-thumb-margin 5)
+  (dired-dwim-target t)
+  :hook
+  (dired-mode . dired-hide-details-mode))
+#+end_src
+
+*** Dired-x
+
+Extensão para o =dired=, permite que eu associe extensões a certas ações para
+serem executadas (=mpv= para vídeos, =wine= para executáveis do /windows/,
+=libreoffice= para documentos do /office/, etc.).
+
+#+begin_src emacs-lisp
+(use-package dired-x
+  :straight nil
+  :after dired
+  :custom
+  (dired-guess-shell-alist-user `((,(rx "." (or "mp4"
+						"mp3"
+						"mkv"
+						"webm"
+						"flac"
+						"gif")) "mpv ? &")
+				  (,(rx "." (or "docx" "doc" "xlsx")) "libreoffice ? &")
+				  (,(rx ".html") "chromium ? &")
+				  (,(rx ".exe") "wine ? &"))))
+#+end_src
+
+** Recentf
+
+Mantém os *x* arquivos recentes em um arquivo em disco. Relevante ao se
+utilizar de algumas funções do =avy=.
+
+#+begin_src emacs-lisp
+(use-package recentf
+  :init
+  (recentf-mode)
+  (run-at-time nil (* 30 60) 'recentf-save-list)
+  :custom
+  (recentf-max-saved-items 50))
+#+end_src
+
+** Flyspell
+
+Corretor /built-in/ com alguns padrões sãos, mas nem todos.
+
+#+begin_src emacs-lisp
+(use-package flyspell
+  :straight nil
+  :custom
+  (ispell-program-name "aspell")
+  (ispell-list-command "--list")
+  (flyspell-issue-message-flag nil)
+  :bind
+  ("<f8>" . ispell-word)
+  :hook
+  (text-mode . flyspell-mode))
+#+end_src
+
+** Org-mode
+
+Poderoso modo com sua própria linguagem de marcação perfeita para prática de
+programação letrada, anotações, registro em diário, exportação para LaTeX e
+HTML, criação de tabelas e devo ter esquecido de algo. *Pretty neat*
+
+#+begin_src emacs-lisp
+(use-package org
+  :config
+  (org-babel-do-load-languages 
+   'org-babel-load-languages 
+   '((plantuml . t)
+     (python . t)
+     (dot . t)
+     (lisp . t)
+     (shell . t)))
+  ;; listings colorido 
+  (add-to-list 'org-latex-packages-alist '("" "listings"))
+  (add-to-list 'org-latex-packages-alist '("" "color"))
+  ;; escala da resolução do preview do latex
+  (plist-change org-format-latex-options :scale 1.4)
+  :custom
+  ;; para formatação dos src na exportação
+  (org-latex-listings t)
+  (org-hide-emphasis-markers t)
+  ;; resultado ruim, apagar depois
+  (org-src-preserve-indentation t)
+  (org-startup-folded t)
+  (org-startup-with-latex-preview t) 
+  (org-startup-with-inline-images t)
+  (org-image-actual-width 600)
+  (org-src-window-setup 'split-window-below)
+  (org-refile-targets '((nil :maxlevel . 4)
+			(nil :tag . "candidate")))
+  :hook
+  (org-mode . org-toggle-pretty-entities)
+  (org-mode . variable-pitch-mode)
+  (org-mode . (lambda () (require 'ox-latex)))
+  (org-mode . (lambda ()
+		(when org-inline-image-overlays
+		  (org-redisplay-inline-images)))))
+#+end_src
+
+** Gnus
+
+Cliente de *e-mail* e leitor de BBS e RSS feed. 
+
+#+begin_src emacs-lisp
+(use-package gnus
+  :custom
+  (gnus-directory "~/Email-and-news/news/")
+  (gnus-dribble-directory (concat gnus-directory "/dribble/"))
+  (gnus-always-read-dribble-file t)
+  ;; Mail and username defined directly here
+  (user-mail-address "leon_bellini@outlook.com")
+  (user-full-name "Leon Ferreira Bellini")
+  (message-signature (concat "Leon F. Bellini\n"
+			     "Estudante de Ciência da
+ Computação no Centro Universitário FEI\n"
+			     "\nGitHub: https://github.com/seleonel\n"))
+  (gnus-secondary-select-methods  '((nntp "news.gwene.org")))
+  (gnus-select-method '(nnimap "outlook"
+			       (nnimap-address "outlook.office365.com")
+			       (nnimap-server-port 993)
+			       (nnimap-stream ssl)))
+  (gnus-asyncronous t)
+  :hook
+  (gnus-group-mode . gnus-topic-mode)
+  (gnus-startup . (lambda ()
+		 (gnus-demon-init)
+		 (gnus-demon-add-scanmail)
+		 (gnus-demon-add-handler 'gnus-demon-scan-news 5 5)
+		 (defadvice gnus-demon-scan-news (around gnus-demon-timeout activate)
+		   "Timeout for Gnus."
+		   (with-timeout (120 (message "Gnus timed out.")) ad-do-it)))))
+#+end_src
+
+*** Extras de E-mail
+
+Alguns pacotes necessários para um melhor "ambiente" para trabalho com
+*e-mails*.
+
+**** Diretório padrão
+#+begin_src emacs-lisp
 (setq message-directory "~/Email-and-news/mail/")
-     #+end_src
-*** smtpmail
-    #+begin_src emacs-lisp
+#+end_src
+
+**** smtpmail
+
+Protocolo =smtp= é responsável pela conexão e definição de como realizar tal
+conexão com servidores =smtp=. =smtpmail= é um pacote útil para realizar o
+envio de mensagens *externamente* ao sistema.
+
+#+begin_src emacs-lisp
 (use-package smtpmail
   :custom
   (message-send-mail-function 'smtpmail-send-it)
@@ -43,22 +324,24 @@
   (smtpmail-default-smtp-server "smtp.office365.com")
   (smtpmail-smtp-server "smtp.office365.com")
   (smtpmail-smtp-service 587))
-;; todas as informações necessárias carregadas do ~/.authfile.gpg
-    #+end_src
-    cliente de email bem simples
-*** notify
-    #+begin_src emacs-lisp
+#+end_src
+
+**** notify
+
+Notificações no /desktop/ para as mensagens/RSS que chegam. 
+
+#+begin_src emacs-lisp
 (use-package gnus-desktop-notify
   :hook
   (gnus-before-startup  . gnus-desktop-notify-mode))
-    #+end_src
-*** COMMENT mail encrypt                                                   
-    #+begin_src emacs-lisp
-(setq mm-sign-option 'guided)
-(add-hook 'message-send-hook 'mml-secure-message-sign)
-    #+end_src
-*** org-msg
-    #+begin_src emacs-lisp
+#+end_src
+
+**** org-msg
+
+Formatação de *e-mails* no formato HTTP. Pode gerar resultados bem
+agradáveis, apesar de também formar mensagens mais pesadas. 
+
+#+begin_src emacs-lisp
 (use-package org-msg
   :init
   (org-msg-mode)
@@ -69,16 +352,14 @@
   (org-msg-default-alternatives '(html text))
   (org-msg-convert citation t)
   (org-msg-options "html-postamble:nil H:5 num:nil ^:{} toc:nil author:nil email:nil \\n:t"))
-    #+end_src
-** acentos e caracteres específicos
-   #+begin_src emacs-lisp
-(require 'iso-transl)
-   #+end_src
-   Para a inserção de combinação de caracteres
-   e acentos. 
+#+end_src
+
 *** dired-gnus
-    #+begin_src emacs-lisp
-(autoload 'gnus-dired "gnus-dired" "dired integration with gnus" t)
+
+Creio que tenha roubado essa função do Prot.
+
+#+begin_src emacs-lisp
+(require 'gnus-dired)
 (defun gnus-dired-mail-buffers ()
   "Return a list of active message buffers."
   (let (buffers)
@@ -90,102 +371,223 @@
 	  (push (buffer-name buffer) buffers))))
     (nreverse buffers)))
 (add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode)
-    #+end_src
+#+end_src
+
+** fill-column
+
+Limite de caracteres por linha. Este será assegurado se =auto-fill-mode= ou
+=visual-line-mode= estiverem ativos.
+
+#+begin_src emacs-lisp
+(setq-default fill-column 80)
+#+end_src
+
+** Auto-fill
+
+Também conhecido como *hard-wrap*. =auto-fill= modifica o arquivo ao criar uma
+nova linha a cada *x* caracteres numa linha (dependente do valor de
+=fill-column=).
+
+#+begin_src emacs-lisp
+(add-hook 'text-mode-hook (lambda ()
+			    (unless (eq major-mode 'org-mode)
+			      (auto-fill-mode))))
+#+end_src
+
+** Aviso de arquivo pesado
+
+Útil em conjunto com operações através do TRAMP (SSH e SFTP).
+
+#+begin_src emacs-lisp
+(setq large-file-warning-threshold nil)
+#+end_src
+
+** Desativar o maldito cursor piscante
+
+#+begin_src emacs-lisp
+(blink-cursor-mode 0)
+#+end_src
+
+** Morte ao C-z
+
+=C-z= minimiza o Emacs. Tais comandos não funcionam bem em gerenciadores de
+janela por *tiling*. 
+
+#+begin_src emacs-lisp
+(define-key global-map (kbd "C-z") 'undo)
+#+end_src
+
+** Destacar parênteses
+
+#+begin_src emacs-lisp
+(add-hook 'prog-mode-hook #'show-paren-mode)
+#+end_src
+
+** Completar parênteses
+
+#+begin_src emacs-lisp
+(add-hook 'prog-mode-hook #'electric-pair-mode)
+#+end_src
+
+** Indentação automática
+
+#+begin_src emacs-lisp
+(add-hook 'prog-mode-hook #'electric-indent-local-mode)
+#+end_src
+
+** acentos e caracteres específicos
+
+Para a inserção de combinação de caracteres e acentos.
+
+#+begin_src emacs-lisp
+(require 'iso-transl)
+#+end_src
+
 ** Yes or No por Y or N
-   #+begin_src emacs-lisp
+
+Não acho que alguém goste de escrever "Yes" por inteiro. Apenas "y" necessário.
+
+#+begin_src emacs-lisp
 (defalias 'yes-or-no-p 'y-or-n-p)
-   #+end_src
-   Não acho que alguém goste de escrever
-   "Yes" por inteiro.
-** enabling the current screen buffer (ibuffer)
-   #+begin_src emacs-lisp
+#+end_src
+
+** Ibuffer
+
+Também pode ser invocado ao se utilizar da combinação =C-c C-o= num minibuffer
+do =counsel-switch-buffer=.
+
+#+begin_src emacs-lisp
 (global-set-key (kbd "C-x C-b") 'ibuffer)
-   #+end_src
+#+end_src
+
 ** autosave e backups
-   Configs roubadas de um anão 2.0
-   #+begin_src emacs-lisp
+
+Configs roubadas de um anão 2.0
+
+#+begin_src emacs-lisp
 (setq-default backup-directory-alist
 	      '(("." . "~/.cache/emacs/backups/")))
 (add-to-list 'auto-save-file-name-transforms
 	     `(".*" "~/.cache/emacs/autosave/\\1" t) 'append)
-   #+end_src
+#+end_src
+
 ** Mover de acordo com camelCase
-   #+begin_src emacs-lisp
+
+Ocasionalmente irritante. Talvez limitar para prog-mode apenas.
+
+#+begin_src emacs-lisp
 (global-subword-mode)
-   #+end_src
+#+end_src
+
 ** Forçar UTF-8
-   #+begin_src emacs-lisp
+
+#+begin_src emacs-lisp
 (prefer-coding-system 'utf-8)
 (set-default-coding-systems 'utf-8)
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 (set-language-environment 'utf-8)
-   #+end_src
-** emacs daemon
-   #+begin_src emacs-lisp
+#+end_src
+
+** Nome mais curto para matar o nosso belo Emacs
+
+#+begin_src emacs-lisp
 (defalias 'matar-server 'save-buffers-kill-emacs)
-   #+end_src
-   Roubado da wiki, esta funcao mata o daemon e pede para salvar os buffers
-** resize melhor
-   #+begin_src emacs-lisp
+#+end_src
+
+** Resize melhor
+
+Roubado do witchmacs. Praise Marisa. 
+#+begin_src emacs-lisp
 (global-set-key (kbd "s-C-<left>") 'shrink-window-horizontally)
 (global-set-key (kbd "s-C-<right>") 'enlarge-window-horizontally)
 (global-set-key (kbd "s-C-<down>") 'shrink-window)
 (global-set-key (kbd "s-C-<up>") 'enlarge-window)
-   #+end_src
-   Roubado do witchmacs. Praise Marisa
-** salvar clipboard antes de kill
-   #+begin_src emacs-lisp
+#+end_src
+
+** Salvar clipboard antes de kill
+
+Clipboard do *X* server. 
+
+#+begin_src emacs-lisp
 (setq save-interprogram-paste-before-kill t)
-   #+end_src
-   Isso deveria ser *default*.
+#+end_src
 
 ** gdb
-   #+begin_src emacs-lisp
+
+Copiado de [[https://tuhdo.github.io/c-ide.html][Tuhdo]]
+
+#+begin_src emacs-lisp
 (setq gdb-many-windows t
       gdb-show-main t)
-;; copiado de https://tuhdo.github.io/c-ide.html
-   #+end_src
+#+end_src
+
 ** Eshell agora oficial
-   #+begin_src emacs-lisp
+
+Melhor =shell= por também interpretar =emacs-lisp=. Não suporta redirecionamento
+reverso =<= e tem seus próprios programas para realizar algumas tarefas.
+
+Todos os =shells= não funcionam bem com programas =ncurses=.
+
+#+begin_src emacs-lisp
 (defun eshell-janela-abaixo ()
   (interactive)
   (mapc #'call-interactively '(split-window-below other-window eshell)))
 (global-set-key (kbd "C-c t") 'eshell-janela-abaixo)
-   #+end_src
-   Eshell é muito bom para ser ignorado
+#+end_src
+
 ** Re-builder
-   #+begin_src emacs-lisp
+
+Não utiliza tantas barras para caracteres especiais
+#+begin_src emacs-lisp
 (setq reb-re-syntax 'string)
-   #+end_src
-   Não utiliza tantos backlashes para escaping.
+#+end_src
+
 * Modos para uso em geral
+
+Pacotes para os mais diversos usos. Alguns desses estão presentes por serem
+dependências ou terem sido utilizados no passado.
+
 ** HTTP requests
-   #+begin_src emacs-lisp
+
+#+begin_src emacs-lisp
 (use-package request
   :defer t)
-   #+end_src
+#+end_src
+
 ** volume
-   #+begin_src emacs-lisp
+
+Controle de volume padrão do sistema.
+
+#+begin_src emacs-lisp
 (use-package volume
   :defer t)
-   #+end_src
-   Controle de volume pelo emacs, combina bem com
-   bongo. 
+#+end_src
+
 ** tablist
-   #+begin_src emacs-lisp
+
+#+begin_src emacs-lisp
 (use-package tablist
   :defer t)
-   #+end_src
+#+end_src
+
 ** pdf-tools
-   #+begin_src emacs-lisp
+
+Melhor que o =doc-view=  para pdf. Um tanto quanto pesado. 
+
+#+begin_src emacs-lisp
 (use-package pdf-tools
   :defer t
   :init
   (pdf-loader-install))
-   #+end_src
+#+end_src
+
 ** nov.el
-   #+begin_src emacs-lisp
+
+Leitor de formato =epub=. Tentei utilizar uma fonte com serifa, mas sem obter
+resultados agradáveis.
+
+#+begin_src emacs-lisp
 (use-package nov
   :custom
   (nov-text-width 80)
@@ -194,68 +596,106 @@
   :hook
   (nov-mode . (lambda () (face-remap-add-relative 'variable-pitch :family "FreeSerif"
 						  :height 1.2))))
-   #+end_src
+#+end_src
+
 ** Processos assíncronos
-   #+begin_src emacs-lisp
+
+Roubado do witchmacs (novamente). Torna padrão a chamada assíncrona de
+processos =M-S-&= em alguns casos pré definidos (dired e compilação).
+
+#+begin_src emacs-lisp
 (use-package async
   :defer t
   :config
   (dired-async-mode 1)
   (async-bytecomp-package-mode 1))
-   #+end_src
-   Roubado do witchmacs (novamente)
+#+end_src
+
 ** auth-sources
+
+Define as fontes para verificação de credenciais (authinfo.gpg). 
+
 #+begin_src emacs-lisp
 (use-package auth-source
   :custom
   (auth-sources '("~/Infos/authinfo.gpg")))
 #+end_src
+
 ** page-break-lines
-   #+begin_src emacs-lisp
+
+#+begin_src emacs-lisp
 (use-package page-break-lines
   :defer t)
-   #+end_src
+#+end_src
+
 ** projectile
-   #+begin_src emacs-lisp
+
+Pacote para trabalho com inúmeros projetos/integração com um único
+projeto. Também dependência do dashboard.
+
+#+begin_src emacs-lisp
 (use-package projectile
   :init
   (projectile-mode 1)
   :bind-keymap
   ("C-c f" . projectile-command-map))
-   #+end_src
+#+end_src
+
 ** *Which key*
-   #+begin_src emacs-lisp
+
+Realiza a função do =C-h= quando este é utilizado após um prefixo. Demonstra os
+possíveis comandos a partir de uma combinação. 
+
+#+begin_src emacs-lisp
 (use-package which-key
   :hook
   (after-init .  which-key-mode))
-   #+end_src
-** avy
-   #+begin_src emacs-lisp
-(use-package avy
-  :bind
-  ("C-c l" . avy-goto-line)
-  ("C-c w" . avy-goto-word-1)
-  ("C-c y" . avy-copy-line))
-   #+end_src
-*** ivy
-    #+begin_src emacs-lisp
+#+end_src
+
+** ivy
+
+Pacote para auto-completar comandos, funções, símbolos e tudo
+mais. Semelhante ao =ido=, =helm= e =icomplete=. É integrado através do =counsel= no
+Emacs para realizar algumas funções.
+
+#+begin_src emacs-lisp
 (use-package ivy
   :config
   (ivy-mode 1)
   :custom
   (ivy-use-virtual-buffers t)
   (enable-recursive-minibuffers t))
-    #+end_src
-    **** swiper
-    #+begin_src emacs-lisp
+#+end_src
+
+
+** avy
+
+#+begin_src emacs-lisp
+(use-package avy
+  :bind
+  ("C-c l" . avy-goto-line)
+  ("C-c w" . avy-goto-word-1)
+  ("C-c y" . avy-copy-line))
+#+end_src
+
+*** swiper
+
+Busca num arquivo. Mais lento que =isearch=, mas ainda assim útil para
+visualização e combinação com =occur= (=C-c C-o=).
+
+#+begin_src emacs-lisp
 (use-package swiper
   :after ivy
   :bind
   ("C-c p" . swiper-isearch)
   ("C-x b" . ivy-switch-buffer))
-    #+end_src
+#+end_src
+
 **** Counsel
-     #+begin_src emacs-lisp 
+
+Realiza a integração do ivy com as funções presentes no Emacs.
+
+#+begin_src emacs-lisp
 (use-package counsel
   :after ivy
   :config
@@ -280,18 +720,37 @@
   ("C-c g" . counsel-git-grep)
   ("<f5>" . counsel-compile)
   ("<f9>". counsel-org-capture))
-     #+end_src
+#+end_src
+
 ** magit
-   #+begin_src emacs-lisp
+
+Simples e eficaz. O melhor /front-end/ (porcelana?) para =git=. 
+
+#+begin_src emacs-lisp
 (use-package magit
   :bind
   ("C-x g" . magit-status))
-   #+end_src
+#+end_src
+
 ** LSP-mode
-   #+begin_src emacs-lisp
+
+Protocolo =LSP= (language server protocol) permite a integração de editores de
+texto com servidores de linguagem que possam realizar algumas funções
+avançadas de IDE (completar código, gerar /tags/ e referências, reformatar
+código, etc.). De forma resumida, o processamento mais pesado é passado para
+um processo filho/externo, permitindo que o Emacs possa "focar" em apenas
+editar o texto da melhor forma possível. =lsp-mode= permite a utilização deste
+protocolo.
+
+Nota: =eglot= é outra opção muito famosa. Pretendo instalar e testar algum
+dia. 
+
+#+begin_src emacs-lisp
 (use-package lsp-mode
-  :ensure-system-package (pyls . python-language-server)
-  :init (setq lsp-keymap-prefix "C-c ]")
+  :ensure-system-package
+  (pyls . python-language-server)
+  :init
+  (setq lsp-keymap-prefix "C-c ]")
   :hook (((python-mode js2-mode) . lsp)
 	 (lsp-mode . lsp-enable-which-key-integration))
   :commands lsp
@@ -299,32 +758,40 @@
   ;; shows breadcrumb line and change its default layout
   (lsp-headerline-breadcrumb-mode t)
   (lsp-headerline-breadcrumb-segments '(project file symbols))
-
   ;; shows all possible code actions available
   (lsp-modeline-code-actions-mode t))
-
 (use-package lsp-ui :commands lsp-ui-mode)
 ;; ivy integration
 (use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
 ;; treemacs integration gives me nice icons so why not
 (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
-   #+end_src
+#+end_src
+
 ** Debugging (DAP-mode)
-   #+begin_src emacs-lisp
+
+Trazido pelo mesmo povo do =lsp-mode=, oferece uma interface legal para fazer
+/debugging/ em algumas linguagens.
+
+#+begin_src emacs-lisp
 (use-package dap-mode
   :custom
   (dap-auto-configure-features '(sessions locals control tooltip)))
-   #+end_src
+#+end_src
+
 *** python debugging
-    #+begin_src emacs-lisp
+
+Por enquanto só utilizo para *Python* (GUD é bom o suficiente para C/C++).
+
+#+begin_src emacs-lisp
 (add-hook 'python-mode-hook #'(lambda () (require 'dap-python)))
-    #+end_src
-*** C/C++ debugging
-    #+begin_src emacs-lisp
-(add-hook 'c-mode-hook  #'(lambda () (require 'dap-lldb)))
-    #+end_src
-** autocompletion
-   #+begin_src emacs-lisp
+#+end_src
+
+** Company
+
+Providencia uma lista de possíveis resultados para completar uma
+palavra/lexema. 
+
+#+begin_src emacs-lisp
 (use-package company
   :config
   (define-key company-active-map (kbd "<return>") nil)
@@ -336,51 +803,77 @@
   (company-tng-configure-default)
   :hook
   (after-init . global-company-mode))
-   #+end_src
-*** quickhelp
-    #+begin_src emacs-lisp
+#+end_src
+
+*** Company quickhelp
+
+/Pop-up/ com a documentação de um símbolo.
+
+#+begin_src emacs-lisp
 (use-package company-quickhelp
   :custom
   (company-quickhelp-delay 1.5)
   :hook
   (prog-mode . company-quickhelp-mode))
-    #+end_src
-    Mostra documentação automaticamente.
-** browse kill ring
-   #+begin_src emacs-lisp
+#+end_src
+
+** Browse kill ring
+
+Visualização do =kill-ring= (todos os /kills/ e /yanks/).
+
+#+begin_src emacs-lisp
 (use-package browse-kill-ring
   :bind
-  ("M-y" . 'browse-kill-ring))
-   #+end_src
-** expand region
-   #+begin_src emacs-lisp
+  ("M-y" . browse-kill-ring))
+#+end_src
+
+** Expand region
+
+Cria uma região ao entorno de um símbolo.
+
+#+begin_src emacs-lisp
 (use-package expand-region
   :bind
   ("C-c e" . er/expand-region))
-   #+end_src
+#+end_src
+
 ** multiple cursors
-   #+begin_src emacs-lisp
+
+- =C-c q= : próximo símbolo igual ao da região
+- =C-c a= : *todos* os símbolos iguais
+
+#+begin_src emacs-lisp
 (use-package multiple-cursors
   :bind
   ("C-c q" . 'mc/mark-next-like-this)
   ("C-c a" . 'mc/mark-all-like-this))
-   #+end_src
-   Pacote pra múltiplos cursores.
+#+end_src
+
 ** sudo-edit
-   #+begin_src emacs-lisp
+
+Edição de um arquivo como superusuário. Utiliza-se do TRAMP.
+
+#+begin_src emacs-lisp
 (use-package sudo-edit
   :bind
   ("C-c s" . sudo-edit))
-   #+end_src
+#+end_src
+
 ** transpose-frame
-   #+begin_src emacs-lisp
+
+Troca as janelas de lugar. Também oferece =flop-frame= para inverter as janelas
+na horizontal e =flip-frame= na vertical. 
+
+#+begin_src emacs-lisp
 (use-package transpose-frame
   :defer t)
-   #+end_src
-   Pacote para /management/ de janelas
+#+end_src
 
 ** smart tabs
-   #+begin_src emacs-lisp
+
+Força =tab= para indentação e espaço para alinhamento.
+
+#+begin_src emacs-lisp
 (use-package smart-tabs-mode
   :defer t
   :config
@@ -389,40 +882,58 @@
      (latex-indent-region . 4)))
   (smart-tabs-insinuate 'c 'c++ 'java 'latex)
   (smart-tabs-advice js2-indent-line js2-basic-offset))
-   #+end_src
-   esse código copiei de um anão
-** undo-tree
-   #+begin_src emacs-lisp
+#+end_src
+
+** Undo-tree
+
+Visualização de seus *undos* em forma de árvore. Buga com múltiplas deleções. 
+
+#+begin_src emacs-lisp
 (use-package undo-tree
   :defer t
   :init
   (global-undo-tree-mode))
-   #+end_src
+#+end_src
+
 ** Rainbow
-*** Rainbow-delimiters
-    #+begin_src emacs-lisp
+
+Para parênteses, colchetes e chaves coloridas. Auxilia na programação.
+
+#+begin_src emacs-lisp
 (use-package rainbow-delimiters
   :hook
   (prog-mode . rainbow-delimiters-mode))
-    #+end_src
-*** Rainbow mode
-    #+begin_src emacs-lisp
+#+end_src
+
+=rainbow-mode= por sua vez mostra os códigos de cor hexadecimais em suas
+respectivas cores.
+
+#+begin_src emacs-lisp
 (use-package rainbow-mode
   :hook
   (prog-mode . rainbow-mode))
-    #+end_src
-    Códigos de cor *hexadecimais* ficam coloridos yay
+#+end_src
+
 ** Ace window
-   #+begin_src emacs-lisp
+
+Substitui =other-window= ao permitir mais de uma troca.
+
+#+begin_src emacs-lisp
 (use-package ace-window
   :custom
   (aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
   (aw-background nil)
   :bind
   ([remap other-window] .  ace-window))
-   #+end_src
+#+end_src
+
 ** bongo
-   #+begin_src emacs-lisp
+
+Player de música. Melhor que =ncmpcpp=. Depende de =mpv= e/ou outro backend capaz
+de reproduzir áudio e que esteja listado com dependência no repositório
+deles. 
+
+#+begin_src emacs-lisp
 (use-package bongo
   :defer t
   :custom
@@ -431,18 +942,29 @@
   (bongo-display-playback-mode-indicator t)
   (bongo-display-inline-playback-progress t)
   (bongo-enabled-backends '(mpv vlc)))
-   #+end_src
+#+end_src
+
 ** flycheck
-   #+begin_src emacs-lisp
+
+Checagem de sintaxe de inúmeras linguagens de programação. Substitui o
+=flymake=.
+
+#+begin_src emacs-lisp
 (use-package flycheck
   :defer t
   :config
   (global-flycheck-mode t))
-   #+end_src
-   
+#+end_src
+
 * Configurações visuais
-** pagina inicial 
-   #+begin_src emacs-lisp
+
+Estilo, fontes e cores.
+
+** Página inicial
+
+Uma página inicial *apropriada*.
+
+#+begin_src emacs-lisp
 (use-package dashboard
   :init
   (dashboard-setup-startup-hook)
@@ -461,19 +983,23 @@
   (show-week-agenda-p t)
   (dashboard-footer-messages '("emags :DDDDDDDD"))
   (initial-buffer-choice #'(lambda () (get-buffer "*dashboard*"))))
-   #+end_src
+#+end_src
 
+** Fontes
 
-   *Garanta que a imagem existe pls*
+Vídeo do Prot me inspirou a dividir por entre as fontes a serem utilizadas
+por todo o sistema. 
 
-** Font
-   This [[https://www.youtube.com/watch?v=Oiu3LFK_rX8][video from Prot]] inspired me to actually change the default values for
-   fonts present this config file, although most of these changes are only going
-   to affect org buffers and such.
-   
-*** Main function
-    #+begin_src emacs-lisp
-(defun set-fonts ()
+#+begin_src emacs-lisp
+(setq my-font-list '((default . "Iosevka Light-12")
+		     (fixed-pitch . "Iosevka Fixed Light-12")
+		     (variable-pitch . "IBM Plex Sans-11")))
+#+end_src
+
+*** Função principal para definir todas as fontes
+
+#+begin_src emacs-lisp
+(defun set-fonts (typeface-list)
   "Sets the font families for some of the faces.
 Said faces can assume the following properties:
 
@@ -485,83 +1011,110 @@ src blocks in org mode
 'variable-pitch : Used best with variable-pitch-mode, it
 '''contextually''' gets its size changed (like when used in an
 org heading, for example)"
-  (interactive)
   (mapc #'(lambda (font-alist)
 	    (set-face-attribute (car font-alist) nil :font (cdr font-alist)))
-	'((default . "Iosevka Light-12")
-	  (fixed-pitch . "Iosevka Fixed Light-12")
-	  (variable-pitch . "Noto Sans-11"))))
-    #+end_src
-    
-*** Setting faces on daemon
-    #+begin_src emacs-lisp
+	typeface-list))
+#+end_src
+
+*** Definindo as fontes no servidor
+
+Como o servidor *não cria um frame inicialmente*. Temos que atrasar a
+definição das fontes para o momento em que um frame é criado. 
+
+#+begin_src emacs-lisp
 ;; sets a hook if daemon mode is 'on', also sets fonts regardless if emacs's
 ;; running on terminal or not. Afaik it doesn't matter if the fonts are set
 ;; while on term
 (if (daemonp)
-    (add-hook 'server-after-make-frame-hook 'set-fonts)
-  (set-fonts))
-    #+end_src
-** Barra de tarefas
-   #+begin_src emacs-lisp
-(tool-bar-mode -1)
-   #+end_src
-   Remove *toda* a barra de tarefas
+    (add-hook 'server-after-make-frame-hook #'(lambda () (set-fonts my-font-list)))
+  (set-fonts my-font-list))
+#+end_src
 
-** mostrar linhazitas
-   #+begin_src emacs-lisp
+** Retirar a barra de tarefas
+
+#+begin_src emacs-lisp
+(tool-bar-mode -1)
+#+end_src
+
+** Contador de linha e coluna
+
+#+begin_src emacs-lisp
 (line-number-mode)
 (column-number-mode)
-   #+end_src
+#+end_src
 
-** Barra de menu
-   #+begin_src emacs-lisp
+** Retirando a barra de menu
+
+#+begin_src emacs-lisp
 (menu-bar-mode -1)
-   #+end_src
-   Menu é inútil e toma espaço
+#+end_src
 
 ** Highlight de linha
-   #+begin_src emacs-lisp
+
+Destaca a linha atual onde o cursor se posiciona.
+
+#+begin_src emacs-lisp
 (global-hl-line-mode)
-   #+end_src
+#+end_src
 
-   *LINHAS CHAMAM MAIS ATENÇÃO AGR*
+** Tema atual
 
-** TEMA ATUAL
-   
-*** Tema branco
-    #+begin_src emacs-lisp
-(use-package modus-operandi-theme
-  :defer t
-  :init
-  (load-theme 'modus-operandi t)) 
-    #+end_src
-** modeline
-   #+begin_src emacs-lisp
+- Branco e padrão: =modus-operandi=
+- High contrast: =modus-vivendi=
+
+  #+begin_src emacs-lisp
+  (use-package modus-operandi-theme
+    :defer t
+    :init
+    (load-theme 'modus-operandi t)) 
+  #+end_src
+
+** Modeline
+
+Modeline do =doom-emacs=, simples e mínima.
+
+#+begin_src emacs-lisp
 (use-package doom-modeline
   :hook
   (window-setup . doom-modeline-mode)
   :custom
   (doom-modeline-icon t)) 
-   #+end_src
-** line numbers
-   #+begin_src emacs-lisp
+#+end_src
+
+** Número de linhas
+
+#+begin_src emacs-lisp
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
-   #+end_src
-** Barra de scroll(?)
-   #+begin_src emacs-lisp
+#+end_src
+
+** Barra de scroll
+
+#+begin_src emacs-lisp
 (scroll-bar-mode -1)
-   #+end_src
+#+end_src
+
 ** Pretty symbols
-   #+begin_src emacs-lisp
+
+Símbolos com representação em *unicode*, como lambda serão substituídos por
+tal código/caractere.
+
+#+begin_src emacs-lisp
 (global-prettify-symbols-mode)
-   #+end_src
+#+end_src
+
 ** all-the-icons
-   #+begin_src emacs-lisp
+
+Ícones utilizados por uma grande quantidade de pacotes.
+
+#+begin_src emacs-lisp
 (use-package all-the-icons)
-   #+end_src
-*** ivy-rich
-    #+begin_src emacs-lisp
+#+end_src
+
+** ivy-rich
+
+Providencia melhor documentação (e ícones) no espaço em branco deixado pelo *ivy*. 
+
+#+begin_src emacs-lisp
 (use-package ivy-rich
   :after all-the-icons-ivy-rich
   :init
@@ -570,22 +1123,37 @@ org heading, for example)"
   (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
   :custom
   (ivy-rich-path-style 'abbrev))
-    #+end_src
+#+end_src
+
 ***** all the icons ivy
-      #+begin_src emacs-lisp
+
+#+begin_src emacs-lisp
 (use-package all-the-icons-ivy-rich
   :after (ivy counsel swiper)
   :defer t
   :init (all-the-icons-ivy-rich-mode 1))
-      #+end_src
+#+end_src
+
 ** Column indicator mode
-   #+begin_src emacs-lisp
-(setq-default fill-column 80)
+
+Linha posicionada à direita do buffer para sinalizar o "limite". Útil em
+conjunto com alguns linters como Python+pylint que chegam a ser irritantes
+com o estouro do "limite" de caracteres.
+
+#+begin_src emacs-lisp
 (add-hook 'prog-mode-hook #'display-fill-column-indicator-mode)
-   #+end_src
+#+end_src
+
 * Modos para linguagens de programação e markdown
-** common lisp
-   #+begin_src emacs-lisp
+
+Todas as boas linguagens estão aqui. 
+
+** Common Lisp
+
+Por muitos anos, Slime foi vendido como a melhor forma de integrar com
+CL. Alguns recomendam fortemente =sly=.
+
+#+begin_src emacs-lisp
 ;; common lisp implementation that I've chosen
 (setq inferior-lisp-program "sbcl")
 
@@ -597,15 +1165,22 @@ org heading, for example)"
   :custom
   (slime-repl-history-file
    (concat (getenv "XDG_CACHE_HOME") "/slime-history.eld")))
-   #+end_src
-*** slime-company
-    #+begin_src emacs-lisp
+#+end_src
+
+*** Slime-company
+
+#+begin_src emacs-lisp
 (use-package slime-company
   :defer t
   :after (slime company))
-    #+end_src
+#+end_src
+
 ** lispy
-   #+begin_src emacs-lisp
+
+Programação modal quando em uma lista. Também é ativado no buffer de eval
+=M-S-:=.
+
+#+begin_src emacs-lisp
 (use-package lispy
   :hook
   ((emacs-lisp-mode lisp-mode) . lispy-mode))
@@ -615,55 +1190,97 @@ org heading, for example)"
   (when (eq this-command 'eval-expression)
     (lispy-mode 1)))
 (add-hook 'minibuffer-setup-hook 'conditionally-enable-lispy)
-   #+end_src
+#+end_src
+
 ** Yasnippet
-   #+begin_src emacs-lisp
+
+Snippets/templates de algumas linguagens. Ao apertar =<TAB>= o abbrev
+expande-se para a /template/ definida, ex, em =c-mode=:
+
+#+begin_example
+   main<TAB> =>
+   int main(int argc, char *argv[])
+   {
+  
+   return 0;
+  }
+#+end_example
+
+Função útil: =yas-describe-tables= detalha todos os *abbrevs*. 
+
+#+begin_src emacs-lisp
 (use-package yasnippet
   :hook
   (prog-mode . yas-minor-mode))
-   #+end_src
+#+end_src
+
 *** Yasnippet snippets
-    #+begin_src emacs-lisp
+
+Snippets pré-definidos.
+
+#+begin_src emacs-lisp
 (use-package yasnippet-snippets
   :after yasnippet
   :defer t)
-    #+end_src
+#+end_src
+
 ** C e C++
-*** LSP server
-    #+begin_src emacs-lisp
+
+Apenas o servidor =lsp= é necessário. =gud= oferece uma boa interface para
+debugging. 
+
+#+begin_src emacs-lisp
 (use-package ccls
   :ensure-system-package ccls
   :hook
   ((c-mode c++-mode) . (lambda () (require 'ccls) (lsp))))
-    #+end_src
+#+end_src
+
 ** Pacotinhos pra mobile/web
+
+Eu ouvi *sites*?
+
 *** web-mode
-    #+begin_src emacs-lisp
+
+#+begin_src emacs-lisp
 (use-package web-mode
   :defer t
   :config
   (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode)))
-    #+end_src
+#+end_src
+
 *** htmlize
-    #+begin_src emacs-lisp
+
+#+begin_src emacs-lisp
 (use-package htmlize
   :defer t)
-    #+end_src
+#+end_src
+
 *** simple-httpd
-    #+begin_src emacs-lisp
+
+#+begin_src emacs-lisp
 (use-package simple-httpd
   :defer t)
-    #+end_src
-    servidor web "minimalista"
+#+end_src
+
+
 *** impatient mode
-    #+begin_src emacs-lisp
+
+Interpretador de forms de html/css/js, também tem um REPL.
+
+#+begin_src emacs-lisp
 (use-package impatient-mode
   :defer t)
-    #+end_src
-    Interpretador de forms de html/css/js, também tem um repl
-** latex
+#+end_src
+
+** LaTeX
+
+A linguagem de /markdown/ que todo mundo ama e odeia. Também tem bom suporte
+nativo no Emacs e o servidor =lsp= "completa" essa integração.
+
 *** auctex
-    #+begin_src emacs-lisp
+
+#+begin_src emacs-lisp
 (use-package tex
   :defer t
   :straight auctex
@@ -682,27 +1299,36 @@ org heading, for example)"
   (TeX-mode .
 	    (lambda ()
 	      (setq TeX-command-extra-options "-shell-escape"))))
-    #+end_src 
-    Para edição aprimorada de documentos TEX
+#+end_src
+
 *** LSP
-    #+begin_src emacs-lisp
+
+#+begin_src emacs-lisp
 (use-package lsp-latex
   :ensure-system-package texlab
   :hook
   ((TeX-mode LaTeX-mode bibtex-mode) . lsp))
-    #+end_src
+#+end_src
+
 ** Org-mode
+Pacotes extras que se utilizam do *PODER* do =org= ou apenas se integram a ele.
+
 *** olivetti mode
-    #+begin_src emacs-lisp
+
+Escrita de texto em foco.
+
+#+begin_src emacs-lisp
 (use-package olivetti
   :defer t
   :custom
   (olivetti-body-width 80))
-    #+end_src
-    Melhor para a escrita de documentos. 
+#+end_src
+
 *** plantuml
-    Programito bom para desenvolver diagramas de classes e fluxogramas.
-    #+begin_src emacs-lisp
+
+Diagramas de UML2. Lento e com um péssimo modo oferecido.
+
+#+begin_src emacs-lisp
 (setq jar-path (expand-file-name
 		(concat
 		 (getenv "XDG_DATA_HOME") "/plantuml/plantuml.jar")))
@@ -712,9 +1338,13 @@ org heading, for example)"
   (plantuml-jar-path jar-path)
   (org-plantuml-jar-path jar-path)
   (plantuml-default-exec-mode 'jar))
-    #+end_src
+#+end_src
+
 *** org-superstar
-    #+begin_src emacs-lisp
+
+Asteriscos de cada heading agora são bullets. 
+
+#+begin_src emacs-lisp
 (use-package org-superstar
   :defer t
   :hook
@@ -726,10 +1356,14 @@ org heading, for example)"
   (org-superstar-item-bullet-alist '((?* . ?►)
 				     (?+ . ?◐)
 				     (?- . ?◆))))
-    #+end_src
-    Tae um bom nome.
+#+end_src
+
 *** org-roam
-    #+begin_src emacs-lisp
+
+Método Zettel para criação de pequenas e sucintas notas. Bom pra
+brainstorming.
+
+#+begin_src emacs-lisp
 (use-package org-roam
   :hook
   (after-init . org-roam-mode)
@@ -760,10 +1394,14 @@ org heading, for example)"
   (org-roam-graph-extra-config '(("rankdir" . "BT")))
   (org-roam-graph-edge-extra-config '(("dir" . "none")
 				      ("color" . "PaleVioletRed1"))))
-    #+end_src
-    Bom pra brainstorming
+#+end_src
+
 *** org-download
-    #+begin_src emacs-lisp
+
+=org-download= salva e insere as imagens que baixa/retira da área de cópia num
+buffer de org.
+
+#+begin_src emacs-lisp
 (use-package org-download
   :custom
   (org-download-method 'directory)
@@ -775,18 +1413,23 @@ org heading, for example)"
 		(require 'org-download)
 		(local-set-key (kbd "C-c d") 'org-download-clipboard)))
   (dired-mode . org-download-enable))
+#+end_src
 
-
-    #+end_src
 *** moderncv
-    #+begin_src emacs-lisp
+
+Elaboração de currículos simples.
+
+#+begin_src emacs-lisp
 (use-package ox-moderncv
   :straight (:host gitlab :repo "Titan-C/org-cv")
   :init (require 'ox-moderncv))
-    #+end_src
+#+end_src
+
 * *Minhas* funções (algumas roubadas)
+
 ** numeros aleatorios num dado range
-   #+begin_src emacs-lisp
+   
+#+begin_src emacs-lisp 
 (defun numero-random (user-input)
   "Gera um numero com a quantidade de digitos especificada pelo user."
   (interactive "s Insira a quantidade de dígitos: ")
@@ -794,9 +1437,10 @@ org heading, for example)"
     (dotimes (i (string-to-number user-input))
       (setq string-to-transform (concat string-to-transform (calc-eval "random(10)"))))
     (insert string-to-transform)))
-   #+end_src
+#+end_src
 ** Função horrível para enviar screenshot num buffer de mail
-   #+begin_src emacs-lisp
+
+#+begin_src emacs-lisp
 (defun mail-screenshot-from-clipboard (string-user)
   "Attaches an image in which filename's defined by the user.
      Said image is always saved in /tmp/<filename>.
@@ -811,10 +1455,12 @@ org heading, for example)"
 	      (mail-add-attachment filename-to-save))
 	  (print "Xclip has failed to save the file"))
       (print "Need xclip to run!"))))
-   #+end_src
+#+end_src
+
 ** Integração de company com o yasnippet
-   Roubado da [[https://www.emacswiki.org/emacs/CompanyMode][EmacsWiki]].
-   #+begin_src emacs-lisp
+
+Roubado da [[https://www.emacswiki.org/emacs/CompanyMode][EmacsWiki]].
+#+begin_src emacs-lisp
 (defun check-expansion ()
   (save-excursion
     (if (looking-at "\\_>") t
@@ -838,4 +1484,4 @@ org heading, for example)"
 	  (indent-for-tab-command)))))
 
 (global-set-key (kbd "M-<tab>") 'tab-indent-or-complete)
-   #+end_src
+#+end_src
