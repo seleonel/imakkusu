@@ -861,16 +861,6 @@ Cria uma região ao entorno de um símbolo.
   ("C-c a" . 'mc/mark-all-like-this))
 #+end_src
 
-** sudo-edit
-
-Edição de um arquivo como superusuário. Utiliza-se do TRAMP.
-
-#+begin_src emacs-lisp
-(use-package sudo-edit
-  :bind
-  ("C-c s" . sudo-edit))
-#+end_src
-
 ** transpose-frame
 
 Troca as janelas de lugar. Também oferece =flop-frame= para inverter as janelas
