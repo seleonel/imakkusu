@@ -243,6 +243,8 @@ HTML, criação de tabelas e devo ter esquecido de algo. *Pretty neat*
   (add-to-list 'org-latex-packages-alist '("" "color"))
   ;; escala da resolução do preview do latex
   (plist-change org-format-latex-options :scale 1.4)
+  :bind
+  ("C-c s" . org-store-link)
   :custom
   ;; para formatação dos src na exportação
   (org-latex-listings t)
@@ -256,6 +258,21 @@ HTML, criação de tabelas e devo ter esquecido de algo. *Pretty neat*
   (org-src-window-setup 'split-window-below)
   (org-refile-targets '((nil :maxlevel . 4)
 			(nil :tag . "candidate")))
+  (org-special-ctrl-k t)	       ; permite-me apagar uma árvore com C-k
+  (org-startup-align-all-tables t)     ; realinha todas as tabelas apos abertura
+  (org-directory "~/Documents/org")
+  (org-capture-templates '(("g" "Guitar training" entry
+			    (file+headline "training_guitar.org" "Progress")
+			    (file "~/Documents/org/guitemplate"))
+			   ("b" "Bookmarks" entry
+			    (file+headline "bookmarks.org" "Important links")
+			    "* %^{Link's description} \nLink: %a")
+			   ("c" "Interesting code" entry
+			    (file+headline "snippets.org" "Some nice code snippets")
+			    "* %^{SRC block's description}\n\n%?\n#+BEGIN_SRC %^{Language}\n%i\n#+END_SRC")
+			   ("r" "Random notes" entry
+			    (file+headline "notes.org" "Random")
+			    "* %^{Descriptive title for the note} \n\n%i%?")))
   :hook
   (org-mode . org-toggle-pretty-entities)
   (org-mode . variable-pitch-mode)
