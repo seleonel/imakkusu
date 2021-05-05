@@ -244,6 +244,7 @@ HTML, criação de tabelas e devo ter esquecido de algo. *Pretty neat*
   ;; escala da resolução do preview do latex
   (plist-change org-format-latex-options :scale 1.4)
   :bind
+  ("C-c c". org-capture)    
   ("C-c s" . org-store-link)
   :custom
   ;; para formatação dos src na exportação
@@ -747,8 +748,7 @@ Realiza a integração do ivy com as funções presentes no Emacs.
   ("C-c i" . counsel-info-lookup-symbol)
   ;; external things
   ("C-c g" . counsel-git-grep)
-  ("<f5>" . counsel-compile)
-  ("<f9>". counsel-org-capture))
+  ("<f5>" . counsel-compile))
 #+end_src
 
 ** magit
@@ -1329,7 +1329,8 @@ nativo no Emacs e o servidor =lsp= "completa" essa integração.
 #+end_src
 
 ** Org-mode
-Pacotes extras que se utilizam do *PODER* do =org= ou apenas se integram a ele.
+
+   Pacotes extras que se utilizam do *PODER* do =org= ou apenas se integram a ele.
 
 *** olivetti mode
 
@@ -1396,11 +1397,17 @@ brainstorming.
   (autoload 'org-roam-protocol "org-roam-protocol"
     "org roam's way of dealing with external input"
     t)
+  :config
+  (add-to-list 'org-roam-capture-templates '("t" "Tagged" plain (function org-roam--capture-get-point)
+					     "%?"
+					     :file-name "%<%Y%m%d%H%M%S>-${slug}"
+					     :head "#+title: ${title}\n#+roam_tags:%? \n#+roam_key: %a"
+					     :unarrowed t))
   :custom
   (org-roam-directory (concat (getenv "HOME") "/Estudo/arquivos-org/"))
   (org-roam-index-file "./index.org")
-  ;; graphing options
   (org-roam-completion-system 'ivy)
+  ;; graphing options
   (org-roam-graph-viewer "/usr/bin/firefox-esr")
   (org-roam-graph-node-extra-config '(
 				      ("shape" . "oval")
