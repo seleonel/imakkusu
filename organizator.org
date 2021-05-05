@@ -45,7 +45,7 @@ sudo pacman --noconfirm -S emacs \
 #+begin_src sh :tangle no
 function iosevka_install 
 {
-    git clone https://aur.archlinux.org/ttf-iosevka.git
+    git clone https://aur.archlinux.org/ttc-iosevka.git
     cd ttf-iosevka
     makepkg -sic 
 }
@@ -243,6 +243,7 @@ HTML, criação de tabelas e devo ter esquecido de algo. *Pretty neat*
   (add-to-list 'org-latex-packages-alist '("" "color"))
   ;; escala da resolução do preview do latex
   (plist-change org-format-latex-options :scale 1.4)
+  (add-to-list 'org-agenda-files (concat org-directory "agenda.org"))
   :bind
   ("C-c c". org-capture)    
   ("C-c s" . org-store-link)
@@ -261,7 +262,7 @@ HTML, criação de tabelas e devo ter esquecido de algo. *Pretty neat*
 			(nil :tag . "candidate")))
   (org-special-ctrl-k t)	       ; permite-me apagar uma árvore com C-k
   (org-startup-align-all-tables t)     ; realinha todas as tabelas apos abertura
-  (org-directory "~/Documents/org")
+  (org-directory "~/Documents/org/")
   (org-capture-templates '(("g" "Guitar training" entry
 			    (file+headline "training_guitar.org" "Progress")
 			    (file "~/Documents/org/guitemplate"))
@@ -273,7 +274,10 @@ HTML, criação de tabelas e devo ter esquecido de algo. *Pretty neat*
 			    "* %^{SRC block's description}\n\n%?\n#+BEGIN_SRC %^{Language}\n%i\n#+END_SRC")
 			   ("r" "Random notes" entry
 			    (file+headline "notes.org" "Random")
-			    "* %^{Descriptive title for the note} \n\n%i%?")))
+			    "* %^{Descriptive title for the note} \n\n%i%?")
+			   ("a" "Agenda entry" entry
+			    (file+headline "agenda.org" "Events")
+			    "* TODO %^{What kind of event?} %^G\n%^{Select|SCHEDULED:|DEADLINE:} %^T\nDescription: %?" :empty-lines 1)))
   :hook
   (org-mode . org-toggle-pretty-entities)
   (org-mode . variable-pitch-mode)
