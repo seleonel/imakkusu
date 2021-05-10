@@ -280,6 +280,7 @@ HTML, criação de tabelas e devo ter esquecido de algo. *Pretty neat*
 			    "* TODO %^{What kind of event?} %^G\n%^{Select|SCHEDULED:|DEADLINE:} %^T\nDescription: %?" :empty-lines 1)))
   :hook
   (org-mode . org-toggle-pretty-entities)
+  (org-mode . org-indent-mode)
   (org-mode . variable-pitch-mode)
   (org-mode . visual-line-mode)
   (org-mode . (lambda () (require 'ox-latex)))
@@ -455,7 +456,8 @@ janela por *tiling*.
 ** Indentação automática
 
 #+begin_src emacs-lisp
-(add-hook 'prog-mode-hook #'electric-indent-local-mode)
+(add-hook 'prog-mode-hook #'(lambda () (unless (bound-and-true-p lsp-mode)
+				    (electric-indent-local-mode))))
 #+end_src
 
 ** acentos e caracteres específicos
