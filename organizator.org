@@ -444,7 +444,14 @@ janela por *tiling*.
 ** Destacar parênteses
 
 #+begin_src emacs-lisp
-(add-hook 'prog-mode-hook #'show-paren-mode)
+(use-package show-paren
+  :straight nil
+  :custom
+  (show-paren-style 'expression)
+  :hook
+  (prog-mode . show-paren-mode)
+  :custom-face
+  (show-paren-match-expression ((t (:inherit modus-themes-special-cold)))))
 #+end_src
 
 ** Completar parênteses
