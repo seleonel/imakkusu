@@ -237,6 +237,7 @@ HTML, criação de tabelas e devo ter esquecido de algo. *Pretty neat*
      (python . t)
      (dot . t)
      (lisp . t)
+     (scheme . t)
      (shell . t)))
   ;; listings colorido 
   (add-to-list 'org-latex-packages-alist '("" "listings"))
@@ -1206,6 +1207,28 @@ CL. Alguns recomendam fortemente =sly=.
   :defer t
   :after (slime company))
 #+end_src
+
+** Scheme
+
+*Chibi* é minimo e compacto, apenas necessitando build no momento (pelo menos no Arch). Modificando =scheme-program-name= permite-me executar programas em scheme através da função =run-scheme=. 
+
+#+begin_src emacs-lisp
+(setq scheme-program-name "chibi-scheme")
+#+end_src
+
+Pode ser obtido do AUR (já instalando em /usr/bin por padrão).
+
+#+begin_src sh :tangle no
+function chibi_install {
+    git clone https://aur.archlinux.org/chibi-scheme.git
+    cd chibi-scheme
+    makepkg -sic
+}
+
+chibi_install
+#+end_src
+
+Como alternativa, há também o [[https://github.com/ashinn/chibi-scheme][repositório do chibi no github]].
 
 ** lispy
 
