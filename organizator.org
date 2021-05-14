@@ -1214,6 +1214,15 @@ CL. Alguns recomendam fortemente =sly=.
 
 #+begin_src emacs-lisp
 (setq scheme-program-name "chibi-scheme")
+
+;; run-scheme por padrão utiliza a janela atual,
+;; este advice já cria uma nova ANTES do comando
+(defun before-scheme-window (&optional cmd)
+  (split-window-below)
+  (call-interactively 'other-window))
+
+;; Then always run it before run-scheme is called
+(advice-add 'run-scheme :before #'before-scheme-window)
 #+end_src
 
 Pode ser obtido do AUR (já instalando em /usr/bin por padrão).
@@ -1230,6 +1239,17 @@ chibi_install
 
 Como alternativa, há também o [[https://github.com/ashinn/chibi-scheme][repositório do chibi no github]].
 
+*** Geiser e Guile
+
+Gostaria de manter alguma consistência, mas isso não está sendo possível com o =geiser-chibi=. Para execução de scheme em src blocks do org, utilizarei-me do
+guile (presente na maioria das distros) + geiser (integração com scheme externo)
+
+#+begin_src emacs-lisp
+(use-package geiser-guile
+  :custom
+  (geiser-default-implementation 'guile))
+#+end_src
+
 ** lispy
 
 Programação modal quando em uma lista. Também é ativado no buffer de eval
@@ -1238,7 +1258,7 @@ Programação modal quando em uma lista. Também é ativado no buffer de eval
 #+begin_src emacs-lisp
 (use-package lispy
   :hook
-  ((emacs-lisp-mode lisp-mode) . lispy-mode))
+  ((scheme-mode emacs-lisp-mode lisp-mode) . lispy-mode))
 
 ;; lispy on eval expression
 (defun conditionally-enable-lispy ()
