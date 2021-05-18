@@ -46,7 +46,7 @@ sudo pacman --noconfirm -S emacs \
 function iosevka_install 
 {
     git clone https://aur.archlinux.org/ttc-iosevka.git
-    cd ttf-iosevka
+    cd ttc-iosevka
     makepkg -sic 
 }
 
@@ -59,6 +59,7 @@ iosevka_install
 
 - =C-z= Undo
 - =C-x C-b= ibuffer
+- =C-c m= imenu 
 - =C-c t= eshell
 - Flyspell
   - =<f8>= ispell-word
@@ -71,26 +72,13 @@ iosevka_install
   - =s-C-<right>= enlarge-window-horizontally
   - =s-C-<down>= shrink-window
   - =s-C-<up>= enlarge-window
+- icomplete
+  - =C-n= icomplete-forward-completions
+  - =C-p= icomplete-backward-completions
 
 ** Pacotes
 
 - =C-c f= Projectile map
-- Avy/ivy/counsel/swiper
-  - =C-c l=  avy-goto-line
-  - =C-c w=  avy-goto-word-1
-  - =C-c y=  avy-copy-line
-  - =C-c p=  swiper-isearch
-  - =C-x b=  ivy-switch-buffer
-  - =M-x=  counsel-M-x
-  - =C-x C-f=  counsel-find-file
-  - =C-h f=  counsel-describe-function
-  - =C-h v=  counsel-describe-variable
-  - =C-c m=  counsel-imenu
-  - =C-c J=  counsel-file-jump
-  - =C-c i=  counsel-info-lookup-symbol
-  - =C-c g=  counsel-git-grep
-  - =<f5>=  counsel-compile
-  - =<f9>= counsel-org-capture
 - =C-x g= Magit
 - =C-c [= lsp-keymap
 - =M-y= browse-kill-ring
@@ -100,6 +88,7 @@ iosevka_install
 - =C-c s= sudo-edit
 - =C-x o= ace-window
 - =C-c n= org-roam-map
+- =M-.= marginalia-cycle
 
 * Customs do Emacs
 
@@ -193,8 +182,7 @@ serem executadas (=mpv= para vídeos, =wine= para executáveis do /windows/,
 
 ** Recentf
 
-Mantém os *x* arquivos recentes em um arquivo em disco. Relevante ao se
-utilizar de algumas funções do =avy=.
+Mantém os *x* arquivos recentes em um arquivo em disco.
 
 #+begin_src emacs-lisp
 (use-package recentf
@@ -249,6 +237,9 @@ HTML, criação de tabelas e devo ter esquecido de algo. *Pretty neat*
   ("C-c c". org-capture)    
   ("C-c s" . org-store-link)
   :custom
+  ;; define o máximo de níveis da árvore de títulos que o imenu
+  ;; procurará
+  (org-imenu-depth 3)
   ;; para formatação dos src na exportação
   (org-latex-listings t)
   (org-hide-emphasis-markers t)
@@ -486,11 +477,44 @@ Não acho que alguém goste de escrever "Yes" por inteiro. Apenas "y" necessári
 
 ** Ibuffer
 
-Também pode ser invocado ao se utilizar da combinação =C-c C-o= num minibuffer
-do =counsel-switch-buffer=.
+Listagem de todos os /buffers/ o qual implementa  alguns comandos já presentes em outros modos como =d= para marcar deleção, =m= para marcar, =o= para abrir em outra janela, etc.
 
 #+begin_src emacs-lisp
 (global-set-key (kbd "C-x C-b") 'ibuffer)
+#+end_src
+
+** Icomplete
+
+Experimentando o  =icomplete= como sistema de completa (?) padrão. Como este já é integrado ao emacs e oferece um bom suporte a /fuzzy/ searching, creio que possa já substituir o bom e velho =ivy=.
+
+#+begin_src emacs-lisp
+(use-package icomplete-vertical	; TODO : emacs 28 terá icomplete-vertical por padrão (pacote diferente)
+  :demand t
+  :custom
+  (completion-styles '(flex substring))
+  (icomplete-max-delay-chars 0)
+  (icomplete-compute-delay 0)
+  (completion-ignore-case t)
+  (read-file-name-completion-ignore-case t)
+  (read-buffer-completion-ignore-case t)
+  :config
+  (icomplete-mode)
+  (icomplete-vertical-mode)
+  :bind
+  (:map icomplete-minibuffer-map
+	("C-n" . icomplete-forward-completions)
+	("C-p" . icomplete-backward-completions)))
+#+end_src
+
+** imenu
+
+Bom para achar rapidamente definições de funções/capítulos (em modos para edição de texto) em /buffers/. 
+
+#+begin_src emacs-lisp
+(use-package imenu
+  :straight nil
+  :bind
+  ("C-c m" . imenu))
 #+end_src
 
 ** autosave e backups
@@ -580,6 +604,19 @@ Não utiliza tantas barras para caracteres especiais
 
 Pacotes para os mais diversos usos. Alguns desses estão presentes por serem
 dependências ou terem sido utilizados no passado.
+
+** Marginalia
+
+Oferece documentação em /minibuffers/, porém integrado às APIs oferecidas pelo emacs.
+
+#+begin_src emacs-lisp
+(use-package marginalia
+  :bind
+  (:map minibuffer-local-map
+	("M-." . marginalia-cycle))
+  :init
+  (marginalia-mode))
+#+end_src
 
 ** HTTP requests
 
@@ -697,74 +734,6 @@ possíveis comandos a partir de uma combinação.
   (after-init .  which-key-mode))
 #+end_src
 
-** ivy
-
-Pacote para auto-completar comandos, funções, símbolos e tudo
-mais. Semelhante ao =ido=, =helm= e =icomplete=. É integrado através do =counsel= no
-Emacs para realizar algumas funções.
-
-#+begin_src emacs-lisp
-(use-package ivy
-  :config
-  (ivy-mode 1)
-  :custom
-  (ivy-use-virtual-buffers t)
-  (enable-recursive-minibuffers t))
-#+end_src
-
-** avy
-
-#+begin_src emacs-lisp
-(use-package avy
-  :bind
-  ("C-c l" . avy-goto-line)
-  ("C-c w" . avy-goto-word-1)
-  ("C-c y" . avy-copy-line))
-#+end_src
-
-*** swiper
-
-Busca num arquivo. Mais lento que =isearch=, mas ainda assim útil para
-visualização e combinação com =occur= (=C-c C-o=).
-
-#+begin_src emacs-lisp
-(use-package swiper
-  :after ivy
-  :bind
-  ("C-c p" . swiper-isearch)
-  ("C-x b" . ivy-switch-buffer))
-#+end_src
-
-**** Counsel
-
-Realiza a integração do ivy com as funções presentes no Emacs.
-
-#+begin_src emacs-lisp
-(use-package counsel
-  :after ivy
-  :config
-  (define-key counsel-find-file-map (kbd "s-j") #'(lambda ()
-						    (interactive)
-						    (let ((input (ivy--input)))
-						      (ivy-quit-and-run
-							(counsel-file-jump)))))
-  :bind
-  ;; replacing emacs defaults with counsel
-  ("M-x" . counsel-M-x)
-  ("C-x C-f" . counsel-find-file)
-  ("C-h f" . counsel-describe-function)
-  ("C-h v" . counsel-describe-variable)
-  ;; imenu provides a nice alternative to imenu
-  ("C-c m" . counsel-imenu)
-  ;; file jump is recursive, but kinda slow
-  ("C-c J" . counsel-file-jump)
-  ;; good for searching emacs-lisp functions
-  ("C-c i" . counsel-info-lookup-symbol)
-  ;; external things
-  ("C-c g" . counsel-git-grep)
-  ("<f5>" . counsel-compile))
-#+end_src
-
 ** magit
 
 Simples e eficaz. O melhor /front-end/ (porcelana?) para =git=. 
@@ -804,8 +773,6 @@ dia.
   ;; shows all possible code actions available
   (lsp-modeline-code-actions-mode t))
 (use-package lsp-ui :commands lsp-ui-mode)
-;; ivy integration
-(use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
 ;; treemacs integration gives me nice icons so why not
 (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
 #+end_src
@@ -840,8 +807,8 @@ palavra/lexema.
   (define-key company-active-map (kbd "<return>") nil)
   (define-key company-active-map (kbd "RET") nil)
   :custom
-  (company-idle-delay 0)
-  (company-minimum-prefix-length 2)
+  (company-idle-delay 2)
+  (company-minimum-prefix-length 3)
   (company-selection-wrap-around t)
   (company-tng-configure-default)
   :hook
@@ -855,7 +822,7 @@ palavra/lexema.
 #+begin_src emacs-lisp
 (use-package company-quickhelp
   :custom
-  (company-quickhelp-delay 1.5)
+  (company-quickhelp-delay 2)
   :hook
   (prog-mode . company-quickhelp-mode))
 #+end_src
@@ -1141,30 +1108,6 @@ tal código/caractere.
 
 #+begin_src emacs-lisp
 (use-package all-the-icons)
-#+end_src
-
-** ivy-rich
-
-Providencia melhor documentação (e ícones) no espaço em branco deixado pelo *ivy*. 
-
-#+begin_src emacs-lisp
-(use-package ivy-rich
-  :after all-the-icons-ivy-rich
-  :init
-  (ivy-rich-mode 1)
-  :config
-  (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
-  :custom
-  (ivy-rich-path-style 'abbrev))
-#+end_src
-
-***** all the icons ivy
-
-#+begin_src emacs-lisp
-(use-package all-the-icons-ivy-rich
-  :after (ivy counsel swiper)
-  :defer t
-  :init (all-the-icons-ivy-rich-mode 1))
 #+end_src
 
 ** Column indicator mode
@@ -1462,7 +1405,7 @@ brainstorming.
   :custom
   (org-roam-directory (concat (getenv "HOME") "/Estudo/arquivos-org/"))
   (org-roam-index-file "./index.org")
-  (org-roam-completion-system 'ivy)
+  (org-roam-completion-system 'default)
   ;; graphing options
   (org-roam-graph-viewer "/usr/bin/firefox-esr")
   (org-roam-graph-node-extra-config '(
