@@ -278,7 +278,7 @@ HTML, criação de tabelas e devo ter esquecido de algo. *Pretty neat*
 			    "* %^{Descriptive title for the note} \n\n%i%?")
 			   ("a" "Agenda entry" entry
 			    (file+headline "agenda.org" "Events")
-			    "* TODO %^{What kind of event?} %^G\n%^{Select|SCHEDULED:|DEADLINE:} %^T\nDescription: %?" :empty-lines 1)))
+			    "* TODO %^{What kind of event?} %^G\n%^{Select|SCHEDULED|DEADLINE|Regular stamp}: %^T\nDescription: %?" :empty-lines 1)))
   :hook
   (org-mode . org-toggle-pretty-entities)
   (org-mode . org-indent-mode)
