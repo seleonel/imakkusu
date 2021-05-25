@@ -128,7 +128,6 @@ programadores do github/gitlab. Necessário realizar um processo de
 
 (setq straight-use-package-by-default t)
 (straight-use-package 'use-package)  	; nosso "assistente" de configuração
-(straight-use-package 'use-package-ensure-system-package)
 #+end_src
 
 ** plist macro randômico
@@ -759,8 +758,6 @@ dia.
 
 #+begin_src emacs-lisp
 (use-package lsp-mode
-  :ensure-system-package
-  (pyls . python-language-server)
   :init
   (setq lsp-keymap-prefix "C-c ]")
   :hook (((python-mode js2-mode) . lsp)
@@ -1249,7 +1246,6 @@ debugging.
 
 #+begin_src emacs-lisp
 (use-package ccls
-  :ensure-system-package ccls
   :hook
   ((c-mode c++-mode) . (lambda () (require 'ccls) (lsp))))
 #+end_src
@@ -1322,7 +1318,6 @@ nativo no Emacs e o servidor =lsp= "completa" essa integração.
 
 #+begin_src emacs-lisp
 (use-package lsp-latex
-  :ensure-system-package texlab
   :hook
   ((TeX-mode LaTeX-mode bibtex-mode) . lsp))
 #+end_src
