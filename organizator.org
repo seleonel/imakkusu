@@ -85,7 +85,6 @@ iosevka_install
 - =C-c e= er/expand-region
 - =C-c q= mc/mark-next-like-this
 - =C-c a= mc/mark-all-like-this
-- =C-c s= sudo-edit
 - =C-x o= ace-window
 - =C-c n= org-roam-map
 - =M-.= marginalia-cycle
@@ -226,9 +225,6 @@ HTML, criação de tabelas e devo ter esquecido de algo. *Pretty neat*
      (lisp . t)
      (scheme . t)
      (shell . t)))
-  ;; listings colorido 
-  (add-to-list 'org-latex-packages-alist '("" "listings"))
-  (add-to-list 'org-latex-packages-alist '("" "color"))
   ;; escala da resolução do preview do latex
   (plist-change org-format-latex-options :scale 1.4)
   (add-to-list 'org-agenda-files (concat org-directory "agenda.org"))
@@ -240,7 +236,6 @@ HTML, criação de tabelas e devo ter esquecido de algo. *Pretty neat*
   ;; procurará
   (org-imenu-depth 3)
   ;; para formatação dos src na exportação
-  (org-latex-listings t)
   (org-hide-emphasis-markers t)
   ;; resultado ruim, apagar depois
   (org-src-preserve-indentation t)
@@ -274,10 +269,24 @@ HTML, criação de tabelas e devo ter esquecido de algo. *Pretty neat*
   (org-mode . org-indent-mode)
   (org-mode . variable-pitch-mode)
   (org-mode . visual-line-mode)
-  (org-mode . (lambda () (require 'ox-latex)))
   (org-mode . (lambda ()
 		(when org-inline-image-overlays
 		  (org-redisplay-inline-images)))))
+#+end_src
+
+*** ox-latex
+
+Listings e colorização para blocos de código.
+
+#+begin_src emacs-lisp
+(use-package ox-latex
+  :straight nil
+  :custom
+  (org-latex-listings t)
+  :config
+  ;; listings colorido 
+  (add-to-list 'org-latex-packages-alist '("" "listings"))
+  (add-to-list 'org-latex-packages-alist '("" "color")))
 #+end_src
 
 ** Gnus
@@ -320,6 +329,7 @@ Alguns pacotes necessários para um melhor "ambiente" para trabalho com
 *e-mails*.
 
 **** Diretório padrão
+
 #+begin_src emacs-lisp
 (setq message-directory "~/Email-and-news/mail/")
 #+end_src
@@ -615,13 +625,6 @@ Oferece documentação em /minibuffers/, porém integrado às APIs oferecidas pe
 	("M-." . marginalia-cycle))
   :init
   (marginalia-mode))
-#+end_src
-
-** HTTP requests
-
-#+begin_src emacs-lisp
-(use-package request
-  :defer t)
 #+end_src
 
 ** volume
