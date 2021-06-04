@@ -13,7 +13,7 @@ GNU/Linux. Algumas das dependências externas seriam:
 - SBCL (implementação de common lisp, modificar =lisp-inferior-process=)
 - lsp (language server protocol)
   - pyls (python)
-  - texlab (latex)
+  - digestif (latex) (externo)
   - ccls (C/C++)
 - ttc-iosevka  & ibm-plex (fontes)
 - plantuml.jar (elaboração de diagramas)
@@ -31,8 +31,7 @@ GNU/Linux. Algumas das dependências externas seriam:
 #+begin_src sh :tangle no
 sudo pacman --noconfirm -S emacs \
     sbcl \
-    python-language-server \
-    texlab \
+    python-lsp-server \
     ccls \
     aspell-pt \
     aspell-en \
@@ -50,7 +49,14 @@ function iosevka_install
     makepkg -sic 
 }
 
-iosevka_install
+function digestif_install
+{
+    git clone https://aur.archlinux.org/digestif.git
+    cd digestif
+    makepkg -sic
+}
+
+iosevka_install ; digestif_install
 #+end_src
 
 * Keybindings
@@ -83,7 +89,6 @@ iosevka_install
 
 - =C-c f= Projectile map
 - =C-x g= Magit
-- =C-c [= lsp-keymap
 - =M-y= browse-kill-ring
 - =C-c e= er/expand-region
 - =C-c q= mc/mark-next-like-this
@@ -298,6 +303,7 @@ Cliente de *e-mail* e leitor de BBS e RSS feed.
 
 #+begin_src emacs-lisp
 (use-package gnus
+  :defer t
   :custom
   (gnus-directory "~/Email-and-news/news/")
   (gnus-dribble-directory (concat gnus-directory "/dribble/"))
@@ -467,8 +473,7 @@ janela por *tiling*.
 ** Indentação automática
 
 #+begin_src emacs-lisp
-(add-hook 'prog-mode-hook #'(lambda () (unless (bound-and-true-p lsp-mode)
-				    (electric-indent-local-mode))))
+(add-hook 'prog-mode-hook #'electric-indent-local-mode)
 #+end_src
 
 ** acentos e caracteres específicos
@@ -611,7 +616,6 @@ Todos os =shells= não funcionam bem com programas =ncurses=.
 
 #+begin_src emacs-lisp
 (use-package flymake
-  :straight nil
   :hook
   (prog-mode . flymake-mode)
   :bind
@@ -651,13 +655,6 @@ Controle de volume padrão do sistema.
 
 #+begin_src emacs-lisp
 (use-package volume
-  :defer t)
-#+end_src
-
-** tablist
-
-#+begin_src emacs-lisp
-(use-package tablist
   :defer t)
 #+end_src
 
@@ -723,13 +720,6 @@ Define as fontes para verificação de credenciais (authinfo.gpg).
   (auth-sources '("~/Infos/authinfo.gpg")))
 #+end_src
 
-** page-break-lines
-
-#+begin_src emacs-lisp
-(use-package page-break-lines
-  :defer t)
-#+end_src
-
 ** projectile
 
 Pacote para trabalho com inúmeros projetos/integração com um único
@@ -762,56 +752,6 @@ Simples e eficaz. O melhor /front-end/ (porcelana?) para =git=.
 (use-package magit
   :bind
   ("C-x g" . magit-status))
-#+end_src
-
-** LSP-mode
-
-Protocolo =LSP= (language server protocol) permite a integração de editores de
-texto com servidores de linguagem que possam realizar algumas funções
-avançadas de IDE (completar código, gerar /tags/ e referências, reformatar
-código, etc.). De forma resumida, o processamento mais pesado é passado para
-um processo filho/externo, permitindo que o Emacs possa "focar" em apenas
-editar o texto da melhor forma possível. =lsp-mode= permite a utilização deste
-protocolo.
-
-Nota: =eglot= é outra opção muito famosa. Pretendo instalar e testar algum
-dia. 
-
-#+begin_src emacs-lisp
-(use-package lsp-mode
-  :init
-  (setq lsp-keymap-prefix "C-c ]")
-  :hook (((python-mode js2-mode) . lsp)
-	 (lsp-mode . lsp-enable-which-key-integration))
-  :commands lsp
-  :custom
-  ;; shows breadcrumb line and change its default layout
-  (lsp-headerline-breadcrumb-mode t)
-  (lsp-headerline-breadcrumb-segments '(project file symbols))
-  ;; shows all possible code actions available
-  (lsp-modeline-code-actions-mode t))
-(use-package lsp-ui :commands lsp-ui-mode)
-;; treemacs integration gives me nice icons so why not
-(use-package lsp-treemacs :commands lsp-treemacs-errors-list)
-#+end_src
-
-** Debugging (DAP-mode)
-
-Trazido pelo mesmo povo do =lsp-mode=, oferece uma interface legal para fazer
-/debugging/ em algumas linguagens.
-
-#+begin_src emacs-lisp
-(use-package dap-mode
-  :custom
-  (dap-auto-configure-features '(sessions locals control tooltip)))
-#+end_src
-
-*** python debugging
-
-Por enquanto só utilizo para *Python* (GUD é bom o suficiente para C/C++).
-
-#+begin_src emacs-lisp
-(add-hook 'python-mode-hook #'(lambda () (require 'dap-python)))
 #+end_src
 
 ** Company
@@ -1128,7 +1068,23 @@ com o estouro do "limite" de caracteres.
 
 * Modos para linguagens de programação e markdown
 
-Todas as boas linguagens estão aqui. 
+Pacotes para edição e programação de algumas linguagens específicas (ou conjuntos delas), além de um modo de comunicação com servidores baseados no protocolo =lsp=. No momento, estarei usando =eglot= para este propósito.
+
+** Eglot
+
+Semelhante ao =lsp-mode=, porém, este se diz ser mais leve (não duvido), além de ser menos *bugado*. =Eglot= permite essa conexão com inúmeros servidores *lsp*, permitindo que o *emacs* aja como uma IDE, além de delegar o trabalho de correção, análise semântica e /tagging/ para estes servidores
+
+#+begin_src emacs-lisp
+(use-package eglot
+  :bind
+  (:map eglot-mode-map
+	("C-c d" . eldoc)
+	("C-c k" . eglot-format)
+	("C-c r" . eglot-rename)
+	("C-c ]" . eglot-code-actions))
+  :hook
+  ((python-mode c-mode TeX-mode LaTeX-mode bibtex-mode) . eglot-ensure))
+#+end_src
 
 ** Common Lisp
 
@@ -1241,17 +1197,6 @@ Snippets pré-definidos.
   :defer t)
 #+end_src
 
-** C e C++
-
-Apenas o servidor =lsp= é necessário. =gud= oferece uma boa interface para
-debugging. 
-
-#+begin_src emacs-lisp
-(use-package ccls
-  :hook
-  ((c-mode c++-mode) . (lambda () (require 'ccls) (lsp))))
-#+end_src
-
 ** Pacotinhos pra mobile/web
 
 Eu ouvi *sites*?
@@ -1292,7 +1237,7 @@ Interpretador de forms de html/css/js, também tem um REPL.
 ** LaTeX
 
 A linguagem de /markdown/ que todo mundo ama e odeia. Também tem bom suporte
-nativo no Emacs e o servidor =lsp= "completa" essa integração.
+nativo no Emacs e o servidor =lsp=  (digestif) "completa" essa integração.
 
 *** auctex
 
@@ -1314,14 +1259,6 @@ nativo no Emacs e o servidor =lsp= "completa" essa integração.
   (TeX-mode .
 	    (lambda ()
 	      (setq TeX-command-extra-options "-shell-escape"))))
-#+end_src
-
-*** LSP
-
-#+begin_src emacs-lisp
-(use-package lsp-latex
-  :hook
-  ((TeX-mode LaTeX-mode bibtex-mode) . lsp))
 #+end_src
 
 ** Org-mode
