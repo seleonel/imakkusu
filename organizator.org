@@ -75,6 +75,9 @@ iosevka_install
 - icomplete
   - =C-n= icomplete-forward-completions
   - =C-p= icomplete-backward-completions
+- flymake
+  - =M-n= flymake-goto-next-error
+  - =M-p= flymake-goto-prev-error
 
 ** Pacotes
 
@@ -602,6 +605,21 @@ Todos os =shells= não funcionam bem com programas =ncurses=.
 (global-set-key (kbd "C-c t") 'eshell-janela-abaixo)
 #+end_src
 
+** Flymake
+
+*Built-in* para erros de sintaxe, tem como alternativa "externa" o /flycheck/ (removido desta configuração).
+
+#+begin_src emacs-lisp
+(use-package flymake
+  :straight nil
+  :hook
+  (prog-mode . flymake-mode)
+  :bind
+  (:map flymake-mode-map
+	("M-n" . flymake-goto-next-error)
+	("M-p" . flymake-goto-prev-error)))
+#+end_src
+
 ** Re-builder
 
 Não utiliza tantas barras para caracteres especiais
@@ -942,18 +960,6 @@ deles.
   (bongo-display-playback-mode-indicator t)
   (bongo-display-inline-playback-progress t)
   (bongo-enabled-backends '(mpv vlc)))
-#+end_src
-
-** flycheck
-
-Checagem de sintaxe de inúmeras linguagens de programação. Substitui o
-=flymake=.
-
-#+begin_src emacs-lisp
-(use-package flycheck
-  :defer t
-  :config
-  (global-flycheck-mode t))
 #+end_src
 
 * Configurações visuais
