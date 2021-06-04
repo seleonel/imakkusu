@@ -88,7 +88,7 @@ iosevka_install
 - =C-c e= er/expand-region
 - =C-c q= mc/mark-next-like-this
 - =C-c a= mc/mark-all-like-this
-- =C-x o= ace-window
+- =C-x o= switch-window
 - =C-c n= org-roam-map
 - =M-.= marginalia-cycle
 
@@ -932,17 +932,17 @@ respectivas cores.
   (prog-mode . rainbow-mode))
 #+end_src
 
-** Ace window
+** Switch window
 
-Substitui =other-window= ao permitir mais de uma troca.
+Substitui =other-window= ao permitir mais de uma troca. Também mais dinâmico que =windmove-.*=
 
 #+begin_src emacs-lisp
-(use-package ace-window
+(use-package switch-window
   :custom
-  (aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
-  (aw-background nil)
+  (switch-window-shortcut-style 'qwerty)
+  (switch-window-minibuffer-shortcut ?m)
   :bind
-  ([remap other-window] .  ace-window))
+  ([remap other-window] .  switch-window))
 #+end_src
 
 ** bongo
@@ -1199,21 +1199,14 @@ guile (presente na maioria das distros) + geiser (integração com scheme extern
   (geiser-default-implementation 'guile))
 #+end_src
 
-** lispy
+** Paredit
 
-Programação modal quando em uma lista. Também é ativado no buffer de eval
-=M-S-:=.
+Utiliza-se de /keybindings/ mais fáceis de lembrar que /lispy/, ao menos para um usuário de emacs.
 
 #+begin_src emacs-lisp
-(use-package lispy
+(use-package paredit
   :hook
-  ((scheme-mode emacs-lisp-mode lisp-mode) . lispy-mode))
-
-;; lispy on eval expression
-(defun conditionally-enable-lispy ()
-  (when (eq this-command 'eval-expression)
-    (lispy-mode 1)))
-(add-hook 'minibuffer-setup-hook 'conditionally-enable-lispy)
+  ((lisp-mode scheme-mode emacs-lisp-mode) . paredit-mode))
 #+end_src
 
 ** Yasnippet
@@ -1466,6 +1459,7 @@ Elaboração de currículos simples.
       (setq string-to-transform (concat string-to-transform (calc-eval "random(10)"))))
     (insert string-to-transform)))
 #+end_src
+
 ** Função horrível para enviar screenshot num buffer de mail
 
 #+begin_src emacs-lisp
