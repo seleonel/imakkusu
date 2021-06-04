@@ -1210,21 +1210,6 @@ Eu ouvi *sites*?
   (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode)))
 #+end_src
 
-*** htmlize
-
-#+begin_src emacs-lisp
-(use-package htmlize
-  :defer t)
-#+end_src
-
-*** simple-httpd
-
-#+begin_src emacs-lisp
-(use-package simple-httpd
-  :defer t)
-#+end_src
-
-
 *** impatient mode
 
 Interpretador de forms de html/css/js, também tem um REPL.
