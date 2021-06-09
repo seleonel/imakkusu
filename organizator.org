@@ -513,7 +513,7 @@ Listagem de todos os /buffers/ o qual implementa  alguns comandos já presentes 
 Experimentando o  =icomplete= como sistema de completa (?) padrão. Como este já é integrado ao emacs e oferece um bom suporte a /fuzzy/ searching, creio que possa já substituir o bom e velho =ivy=.
 
 #+begin_src emacs-lisp
-(use-package icomplete-vertical	; TODO : emacs 28 terá icomplete-vertical por padrão (pacote diferente)
+(use-package icomplete
   :demand t
   :custom
   (completion-styles '(flex substring))
