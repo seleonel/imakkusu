@@ -103,6 +103,14 @@ Emacs tem umas boas funcionalidades já integradas. Estas, ocasionalmente
 apresentam valores por /default/  não muito interessantes para uso em
 computadores mais modernos. 
 
+** preferẽncia por pacotes mais recentes
+
+=load= carrega o primeiro arquivo que vê, Não queremos isso com a compilação nativa
+
+#+begin_src emacs-lisp
+(setq load-prefer-newer t)
+#+end_src
+
 ** Desativar package.el
 
 Gerenciador de pacotes padrão do Emacs. Como *straight.el* é o utilizado para
@@ -765,10 +773,9 @@ palavra/lexema.
   (define-key company-active-map (kbd "<return>") nil)
   (define-key company-active-map (kbd "RET") nil)
   :custom
-  (company-idle-delay 2)
+  (company-idle-delay 0.5)
   (company-minimum-prefix-length 3)
   (company-selection-wrap-around t)
-  (company-tng-configure-default)
   :hook
   (after-init . global-company-mode))
 #+end_src
