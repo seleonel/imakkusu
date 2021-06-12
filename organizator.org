@@ -529,7 +529,8 @@ Experimentando o  =icomplete= como sistema de completa (?) padr√£o. Como este j√
   :bind
   (:map icomplete-minibuffer-map
 	("C-n" . icomplete-forward-completions)
-	("C-p" . icomplete-backward-completions)))
+	("C-p" . icomplete-backward-completions)
+	("C-q" . shift-completions)))
 #+end_src
 
 ** imenu
@@ -1436,4 +1437,18 @@ Roubado da [[https://www.emacswiki.org/emacs/CompanyMode][EmacsWiki]].
 	  (indent-for-tab-command)))))
 
 (global-set-key (kbd "M-<tab>") 'tab-indent-or-complete)
+#+end_src
+** Shift na lista de estilos
+
+#+begin_src emacs-lisp
+(defun shift-completions ()
+  "This functions shifts left the ``completion-styles'' list.
+Some modes like icomplete base off their completions on this list
+in specific, so by shifting it left, we can, then, use whatever
+next style that was defined by the user."
+  (interactive)
+  (let ((tmp (car completion-styles))
+	(current (cadr completion-styles)))
+    (message (format "%s completion style is being used" current))
+    (setq completion-styles (append (cdr completion-styles) (list tmp)))))
 #+end_src
