@@ -151,7 +151,14 @@ Inútil? Só montei esse macro para me economizar tecladas.
 
 #+begin_src emacs-lisp
 (defmacro plist-change (plist key new-item)
-  "Changes the property of a plist's value given a key.
+  "Change the property of a plist's value given a key.
+
+``PLIST'' : symbol that references the property list that will get changed.
+
+``KEY'': key part of the pair
+
+``NEW-ITEM'': value part of the pair
+
 Adds in a new key with that value otherwise"
   `(setq ,plist (plist-put ,plist ,key ,new-item)))
 #+end_src
@@ -948,15 +955,15 @@ por todo o sistema.
 
 #+begin_src emacs-lisp
 (defun set-fonts (typeface-list)
-  "Sets the font families for some of the faces.
+  "Set the font families specified in ``TYPEFACE-LIST'' for different pitches.
 Said faces can assume the following properties:
 
-'default : Default font used through the whole emacs 'ecosystem'
+``default'' : Default font used through the whole Emacs 'ecosystem'
 
-'fixed-pitch : This one is used mainly in programming modes and
+``fixed-pitch'' : This one is used mainly in programming modes and/or
 src blocks in org mode
 
-'variable-pitch : Used best with variable-pitch-mode, it
+``variable-pitch'' : Used best with ``variable-pitch-mode'', it
 '''contextually''' gets its size changed (like when used in an
 org heading, for example)"
   (mapc #'(lambda (font-alist)
@@ -1340,25 +1347,14 @@ Elaboração de currículos simples.
 
 * *Minhas* funções (algumas roubadas)
 
-** numeros aleatorios num dado range
-   
-#+begin_src emacs-lisp 
-(defun numero-random (user-input)
-  "Gera um numero com a quantidade de digitos especificada pelo user."
-  (interactive "s Insira a quantidade de dígitos: ")
-  (let ((string-to-transform ""))
-    (dotimes (i (string-to-number user-input))
-      (setq string-to-transform (concat string-to-transform (calc-eval "random(10)"))))
-    (insert string-to-transform)))
-#+end_src
-
 ** Função horrível para enviar screenshot num buffer de mail
 
 #+begin_src emacs-lisp
 (defun mail-screenshot-from-clipboard (string-user)
-  "Attaches an image in which filename's defined by the user.
-     Said image is always saved in /tmp/<filename>.
-     This function depends on xclip existing within the system."
+  "Attaches an image which filename's defined by the user via ``STRING-USER''.
+Said image is always saved in /tmp/<filename>.
+
+This function depends on xclip existing within the system."
   (interactive "sPlease type in a filename for the attachment: ")
   (let* ((filename-to-save (concat "/tmp/" string-user ".png"))
 	 (installed-? (executable-find "xclip"))
