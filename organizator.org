@@ -65,7 +65,6 @@ iosevka_install ; digestif_install
 
 - =C-z= Undo
 - =C-x C-b= ibuffer
-- =C-c m= imenu 
 - =C-c t= eshell
 - Flyspell
   - =<f8>= ispell-word
@@ -89,13 +88,20 @@ iosevka_install ; digestif_install
 
 - =C-c f= Projectile map
 - =C-x g= Magit
-- =M-y= browse-kill-ring
 - =C-c e= er/expand-region
 - =C-c q= mc/mark-next-like-this
 - =C-c a= mc/mark-all-like-this
 - =C-x o= switch-window
 - =C-c n= org-roam-map
 - =M-.= marginalia-cycle
+- Consult
+  - =C-c m= consult-imenu
+  - =C-x b= e =C-x 4 b= consult-buffer e consult-buffer-other-window (alternativa ao =switch-to-buffer=)
+  - =C-c g= consult-grep
+  - =M-g g= consult-goto-line (alternativa ao =goto-line=)
+  - =C-c o= consult-outline
+  - =C-c x= consult-complex command
+  - =M-y= consult-yank-from-kill-ring (alternativa ao antigo =browse-kill-ring=)
 
 * Customs do Emacs
 
@@ -533,17 +539,6 @@ Experimentando o  =icomplete= como sistema de completa (?) padrão. Como este j�
 	("C-q" . shift-completions)))
 #+end_src
 
-** imenu
-
-Bom para achar rapidamente definições de funções/capítulos (em modos para edição de texto) em /buffers/. 
-
-#+begin_src emacs-lisp
-(use-package imenu
-  :straight nil
-  :bind
-  ("C-c m" . imenu))
-#+end_src
-
 ** autosave e backups
 
 Configs roubadas de um anão 2.0
@@ -645,6 +640,43 @@ Não utiliza tantas barras para caracteres especiais
 
 Pacotes para os mais diversos usos. Alguns desses estão presentes por serem
 dependências ou terem sido utilizados no passado.
+
+** Consult
+
+Oferece inúmeros comandos com utilização em conjunto com o =icomplete= (neste caso, ele também é compatível com outras funções). 
+
+#+begin_src emacs-lisp
+(use-package consult
+  :custom
+  (xref-show-xrefs-function #'consult-xref)
+  (xref-show-definitions-function #'consult-xref)
+  :config
+  (autoload 'projectile-project-root "projectile")
+  (setq consult-project-root-function #'projectile-project-root)
+  :hook
+  (completion-list-mode . consult-preview-at-point-mode)
+  :bind
+  ("C-c m" . consult-imenu)
+  ;; #grep-regexp#filter-string
+  ;; grep-regexp is passed to grep to interpret
+  ;; filter-string benefits from emacs' completion narrowing capabilities
+  ;; you can also pass arguments to grep: #defun -- --invert-match#
+  ("C-c g" . consult-grep)
+  ;; f SPC shows recent files
+  ;; m bookmarks
+  ;; p project
+  ("C-x b" . consult-buffer)
+  ("C-x 4 b" . consult-buffer-other-window)
+  ;; replacement for the old browse-kill-ring
+  ("M-y" . consult-yank-from-kill-ring)
+  ("M-g g" . consult-goto-line)
+  ;; ``consult-outline'' prompts for a pseudo-heading in a file it can be either
+  ;; a function, a comment header or even a "real" outline (I think)
+  ("C-c o" . consult-outline)
+  ;; same function as ``repeat-complex-command'', but it integrates better
+  ;; with the minibuffer
+  ("C-c x" . consult-complex-command))
+#+end_src
 
 ** Marginalia
 
@@ -792,16 +824,6 @@ palavra/lexema.
   (company-quickhelp-delay 2)
   :hook
   (prog-mode . company-quickhelp-mode))
-#+end_src
-
-** Browse kill ring
-
-Visualização do =kill-ring= (todos os /kills/ e /yanks/).
-
-#+begin_src emacs-lisp
-(use-package browse-kill-ring
-  :bind
-  ("M-y" . browse-kill-ring))
 #+end_src
 
 ** Expand region
