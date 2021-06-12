@@ -1102,28 +1102,13 @@ Semelhante ao =lsp-mode=, porém, este se diz ser mais leve (não duvido), além
 ** Common Lisp
 
 Por muitos anos, Slime foi vendido como a melhor forma de integrar com
-CL. Alguns recomendam fortemente =sly=.
+CL, estarei utilizando =sly= para CL, entretanto.
 
 #+begin_src emacs-lisp
-;; common lisp implementation that I've chosen
-(setq inferior-lisp-program "sbcl")
-
-(use-package slime
-  :config
-  (slime-setup '(slime-fancy slime-company))
-  :hook
-  (common-lisp-mode . slime)
-  :custom
-  (slime-repl-history-file
-   (concat (getenv "XDG_CACHE_HOME") "/slime-history.eld")))
-#+end_src
-
-*** Slime-company
-
-#+begin_src emacs-lisp
-(use-package slime-company
+(use-package sly
   :defer t
-  :after (slime company))
+  :custom
+  (inferior-lisp-program "sbcl"))
 #+end_src
 
 ** Scheme
