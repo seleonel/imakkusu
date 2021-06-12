@@ -61,6 +61,8 @@ iosevka_install ; digestif_install
 
 * Keybindings
 
+Algumas das combinações de teclas modificadas neste arquivo. Note que algumas foram remapeadas a partir dos comandos padrões do Emacs. 
+
 ** Emacs
 
 - =C-z= Undo
@@ -96,6 +98,8 @@ iosevka_install ; digestif_install
   - =C-c o= consult-outline
   - =C-c x= consult-complex command
   - =M-y= consult-yank-from-kill-ring (alternativa ao antigo =browse-kill-ring=)
+- company
+  - =M-<TAB>= company-complete    
 
 * Customs do Emacs
 
@@ -103,9 +107,9 @@ Emacs tem umas boas funcionalidades já integradas. Estas, ocasionalmente
 apresentam valores por /default/  não muito interessantes para uso em
 computadores mais modernos. 
 
-** preferẽncia por pacotes mais recentes
+** Preferência por pacotes mais recentes
 
-=load= carrega o primeiro arquivo que vê, Não queremos isso com a compilação nativa
+=load= carrega o primeiro arquivo que vê. Não queremos isso com a compilação nativa
 
 #+begin_src emacs-lisp
 (setq load-prefer-newer t)
@@ -1345,7 +1349,7 @@ Elaboração de currículos simples.
   :init (require 'ox-moderncv))
 #+end_src
 
-* *Minhas* funções (algumas roubadas)
+* *Minhas* funções
 
 ** Função horrível para enviar screenshot num buffer de mail
 
