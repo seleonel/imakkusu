@@ -631,6 +631,20 @@ Não utiliza tantas barras para caracteres especiais
 (setq reb-re-syntax 'string)
 #+end_src
 
+** abbrev
+
+Expansões baseadas num prefixo (yasnippet funciona a partir deles), devem ser definidos explicitamente.
+
+#+begin_src emacs-lisp
+(use-package abbrev
+  :straight nil
+  :hook
+  ((text-mode prog-mode) . abbrev-mode)
+  :custom
+  (abbrev-suggest t)
+  (save-abbrevs 'silently))
+#+end_src
+
 * Modos para uso em geral
 
 Pacotes para os mais diversos usos. Alguns desses estão presentes por serem
