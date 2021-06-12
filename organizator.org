@@ -89,8 +89,6 @@ iosevka_install ; digestif_install
 - =C-c f= Projectile map
 - =C-x g= Magit
 - =C-c e= er/expand-region
-- =C-c q= mc/mark-next-like-this
-- =C-c a= mc/mark-all-like-this
 - =C-x o= switch-window
 - =C-c n= org-roam-map
 - =M-.= marginalia-cycle
@@ -834,18 +832,6 @@ Cria uma região ao entorno de um símbolo.
 (use-package expand-region
   :bind
   ("C-c e" . er/expand-region))
-#+end_src
-
-** multiple cursors
-
-- =C-c q= : próximo símbolo igual ao da região
-- =C-c a= : *todos* os símbolos iguais
-
-#+begin_src emacs-lisp
-(use-package multiple-cursors
-  :bind
-  ("C-c q" . 'mc/mark-next-like-this)
-  ("C-c a" . 'mc/mark-all-like-this))
 #+end_src
 
 ** transpose-frame
