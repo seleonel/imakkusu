@@ -1256,17 +1256,6 @@ Providencia um suporte interessante para referências e documentos em citações
 
    Pacotes extras que se utilizam do *PODER* do =org= ou apenas se integram a ele.
 
-*** olivetti mode
-
-Escrita de texto em foco.
-
-#+begin_src emacs-lisp
-(use-package olivetti
-  :defer t
-  :custom
-  (olivetti-body-width 80))
-#+end_src
-
 *** plantuml
 
 Diagramas de UML2. Lento e com um péssimo modo oferecido.
@@ -1275,8 +1264,9 @@ Diagramas de UML2. Lento e com um péssimo modo oferecido.
 (setq jar-path (expand-file-name
 		(concat
 		 (getenv "XDG_DATA_HOME") "/plantuml/plantuml.jar")))
+
 (use-package plantuml-mode
-  :defer t
+  :commands plantuml-mode
   :custom
   (plantuml-jar-path jar-path)
   (org-plantuml-jar-path jar-path)
@@ -1296,9 +1286,7 @@ Asteriscos de cada heading agora são bullets.
   (org-hide-leading-stars nil)
   (org-superstar-leading-bullet ?\s)
   (org-superstar-prettify-item-bullets t)
-  (org-superstar-item-bullet-alist '((?* . ?►)
-				     (?+ . ?◐)
-				     (?- . ?◆))))
+  (org-superstar-item-bullet-alist '((?* . ?►) (?+ . ?◐) (?- . ?◆))))
 #+end_src
 
 *** org-roam
@@ -1352,26 +1340,16 @@ buffer de org.
 
 #+begin_src emacs-lisp
 (use-package org-download
+  :bind
+  (:map org-mode-map
+	("C-c d" . org-download-clipboard))
   :custom
   (org-download-method 'directory)
   (org-download-image-dir "~/Pictures/org/")
   (org-download-heading-lvl nil)
   (org-download-screenshot-method 'xclip)
   :hook
-  (org-mode . (lambda ()
-		(require 'org-download)
-		(local-set-key (kbd "C-c d") 'org-download-clipboard)))
-  (dired-mode . org-download-enable))
-#+end_src
-
-*** moderncv
-
-Elaboração de currículos simples.
-
-#+begin_src emacs-lisp
-(use-package ox-moderncv
-  :straight (:host gitlab :repo "Titan-C/org-cv")
-  :init (require 'ox-moderncv))
+  ((org-mode dired-mode) . org-download-enable))
 #+end_src
 
 * *Minhas* funções
