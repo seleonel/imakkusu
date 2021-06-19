@@ -1226,26 +1226,30 @@ Interpretador de forms de html/css/js, também tem um REPL.
 A linguagem de /markdown/ que todo mundo ama e odeia. Também tem bom suporte
 nativo no Emacs e o servidor =lsp=  (digestif) "completa" essa integração.
 
-*** auctex
+*** AUCTeX
 
 #+begin_src emacs-lisp
-(use-package tex
-  :defer t
-  :straight auctex
-  :hook
-  (LaTeX-mode . flyspell-mode)
-  (LaTeX-mode . LaTeX-math-mode)
-  (LaTeX-mode . turn-on-reftex)
+(use-package auctex
   :custom
   (TeX-auto-save t)
   (TeX-parse-self t)
   (TeX-master nil)
-  (reftex-plug-into-AUCTeX t)
-  (TeX-PDF-mode t)
+  (TeX-electric-sub-and-superscript t)
   :hook
-  (TeX-mode .
-	    (lambda ()
-	      (setq TeX-command-extra-options "-shell-escape"))))
+  (LaTeX-mode . LaTeX-math-mode))
+#+end_src
+
+*** RefTeX
+
+Providencia um suporte interessante para referências e documentos em citações em documentos *TeX ao permitir acesso facilitado a partes do documento, acesso a =labels= e citações.
+
+#+begin_src emacs-lisp
+(use-package reftex
+  :after auctex
+  :custom
+  (reftex-plug-into-AUCTeX t)
+  :hook
+  (LaTeX-mode . turn-on-reftex))
 #+end_src
 
 ** Org-mode
