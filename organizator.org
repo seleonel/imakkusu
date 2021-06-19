@@ -1069,10 +1069,11 @@ Modeline do =doom-emacs=, simples e mínima.
 ** Pretty symbols
 
 Símbolos com representação em *unicode*, como lambda serão substituídos por
-tal código/caractere.
+tal código/caractere, mas desativados quando o ponteiro localiza-se sobre o símbolo.
 
 #+begin_src emacs-lisp
 (global-prettify-symbols-mode)
+(setq prettify-symbols-unprettify-at-point t)
 #+end_src
 
 ** all-the-icons
