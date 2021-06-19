@@ -5,6 +5,23 @@ Descobri boa parte destes pacotes através dos vídeos do *Uncle Dave*, então,
 créditos a ele: [[https://www.youtube.com/channel/UCDEtZ7AKmwS0_GNJog01D2g/feed][Link para o canal]]. Créditos também a [[https://www.youtube.com/channel/UC0uTPqBCFIpZxlz_Lv1tk_g][Protesilaos Stavrou]] por
 seus ótimos tutoriais introdutórios para certos pacotes considerados "nicho".
 
+* Tangling
+
+Por ser um arquivo primariamente escrito e feito para o =org-mode=, este deve ser "exportado" para um =init.el= apropriado através da função ~org-babel-tangle~ a qual "escreve" todos os blocos de código (menos alguns escritos em /bash/) nele. Uma forma fácil de se realizar isso (durante uma primeira instalação, por exemplo) pode ser através da execução do /script/ presente no diretório raiz do projeto
+
+: ./tangle.sh
+
+O /script/ em si foi modificado a partir do apresentado no *manual do org*, especificamente na parte [[info:org#Batch Execution][org#Batch Execution]]
+
+#+begin_src sh :tangle tangle.sh :tangle-mode (identity #o755) :comments no
+#!/bin/sh
+emacs -Q --batch --eval "
+      (let ((file \"organizator.org\"))
+        (require 'ob-tangle)
+	(with-current-buffer (find-file-noselect file)
+	  (org-babel-tangle)))"
+#+end_src
+
 * Dependências
 
 Todas as configurações foram testadas (e utilizadas) em sistemas
@@ -36,19 +53,13 @@ sudo pacman --noconfirm -S emacs \
     aspell-pt \
     aspell-en \
     gnupg \
-    ttf-ibm-plex
+    ttf-ibm-plex \
+    ttc-iosevka
 #+end_src
 
 *** AUR
 
-#+begin_src sh :tangle no
-function iosevka_install 
-{
-    git clone https://aur.archlinux.org/ttc-iosevka.git
-    cd ttc-iosevka
-    makepkg -sic 
-}
-
+#+begin_src sh :tangle no :dir /tmp
 function digestif_install
 {
     git clone https://aur.archlinux.org/digestif.git
@@ -56,7 +67,7 @@ function digestif_install
     makepkg -sic
 }
 
-iosevka_install ; digestif_install
+digestif_install
 #+end_src
 
 * Keybindings
@@ -244,38 +255,53 @@ HTML, criação de tabelas e devo ter esquecido de algo. *Pretty neat*
 #+begin_src emacs-lisp
 (use-package org
   :config
-  (org-babel-do-load-languages 
-   'org-babel-load-languages 
+  ;; set which languagues are enabled for evaluation
+  (org-babel-do-load-languages
+   'org-babel-load-languages
    '((plantuml . t)
      (python . t)
-     (dot . t)
      (lisp . t)
      (scheme . t)
      (shell . t)))
-  ;; escala da resolução do preview do latex
+  ;; configure the latex previews default size
   (plist-change org-format-latex-options :scale 1.4)
+  ;; default agenda file, setting this variable to a single string didn't work
   (add-to-list 'org-agenda-files (concat org-directory "agenda.org"))
   :bind
-  ("C-c c". org-capture)    
+  ("C-c c". org-capture)
   ("C-c s" . org-store-link)
   :custom
-  ;; define o máximo de níveis da árvore de títulos que o imenu
-  ;; procurará
+  ;; specially useful if the point is at the beggining of a headline, allowing
+  ;; the user to delete the subtree
+  (org-special-ctrl-k t)
+  (org-startup-align-all-tables t)
+  ;; indent-mode turned on for all org files
+  (org-startup-indented t)
+  ;; always show the latex fragments as images
+  (org-startup-with-latex-preview t)
+  ;; sub and superscripts are shown like what you'd see in a wgwys editor also
+  ;; turn on all pretty symbols
+  (org-pretty-entities t)
+  (org-pretty-entities-include-sub-superscripts t)
+  ;; each heading specified by imenu is a tree node this defines how deep imenu
+  ;; can search through it
   (org-imenu-depth 3)
-  ;; para formatação dos src na exportação
-  (org-hide-emphasis-markers t)
-  ;; resultado ruim, apagar depois
+  ;; source code gets aligned with the leftmost column
   (org-src-preserve-indentation t)
+  ;; how to open a window for the src when ``C-c \' '' gets pressed
+  (org-src-window-setup 'split-window-below)
+  ;; start folded at the highest level node-wise
   (org-startup-folded t)
-  (org-startup-with-latex-preview t) 
+  ;; show all inline images at startup. Current buffer still needs refreshing
+  ;; after a new image gets added
   (org-startup-with-inline-images t)
   (org-image-actual-width 600)
-  (org-src-window-setup 'split-window-below)
+  ;; levels 1 through 4 are targets for refiling
   (org-refile-targets '((nil :maxlevel . 4)
 			(nil :tag . "candidate")))
-  (org-special-ctrl-k t)	       ; permite-me apagar uma árvore com C-k
-  (org-startup-align-all-tables t)     ; realinha todas as tabelas apos abertura
+  ;; all files used by capture are stored here
   (org-directory "~/Documents/org/")
+  ;; capture and its templates
   (org-capture-templates '(("g" "Guitar training" entry
 			    (file+headline "training_guitar.org" "Progress")
 			    (file "~/Documents/org/guitemplate"))
@@ -292,13 +318,8 @@ HTML, criação de tabelas e devo ter esquecido de algo. *Pretty neat*
 			    (file+headline "agenda.org" "Events")
 			    "* TODO %^{What kind of event?} %^G\n%^{Select|SCHEDULED|DEADLINE|Regular stamp}: %^T\nDescription: %?" :empty-lines 1)))
   :hook
-  (org-mode . org-toggle-pretty-entities)
-  (org-mode . org-indent-mode)
   (org-mode . variable-pitch-mode)
-  (org-mode . visual-line-mode)
-  (org-mode . (lambda ()
-		(when org-inline-image-overlays
-		  (org-redisplay-inline-images)))))
+  (org-mode . visual-line-mode))
 #+end_src
 
 *** ox-latex
