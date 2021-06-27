@@ -76,6 +76,7 @@ Algumas das combinações de teclas modificadas neste arquivo. Note que algumas 
 
 ** Emacs
 
+- =C-M-<backspace>= delete-indentation
 - =C-z= Undo
 - =C-x C-b= ibuffer
 - =C-c t= eshell
@@ -665,6 +666,16 @@ Expansões baseadas num prefixo (yasnippet funciona a partir deles), devem ser d
   (abbrev-suggest t)
   (save-abbrevs 'silently))
 #+end_src
+
+** delete-indentation
+
+Função útil não apenas na formatação de S-exps, mas também em outras linguagens. Une a linha atual com a anterior, apagando a indentação.
+
+#+begin_src emacs-lisp
+(global-set-key (kbd "C-M-<backspace>") 'delete-indentation)
+#+end_src
+
+Normalmente tem como combinação =M-^=, algo complicado de se fazer num teclado ABNT-2.
 
 * Modos para uso em geral
 
