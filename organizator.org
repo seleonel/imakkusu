@@ -986,16 +986,17 @@ Vídeo do Prot me inspirou a dividir por entre as fontes a serem utilizadas
 por todo o sistema. 
 
 #+begin_src emacs-lisp
-(setq my-font-list '((default . "Iosevka Light-12")
-		     (fixed-pitch . "Iosevka Fixed Light-12")
-		     (variable-pitch . "IBM Plex Sans-11")))
+(defvar contextual-fonts-alist '((default . "Iosevka Light")
+				 (fixed-pitch . "Iosevka Fixed Light")
+				 (variable-pitch . "IBM Plex Sans"))
+  "Define which fonts should be loaded depending on a given face.")
 #+end_src
 
 *** Função principal para definir todas as fontes
 
 #+begin_src emacs-lisp
-(defun set-fonts (typeface-list)
-  "Set the font families specified in ``TYPEFACE-LIST'' for different pitches.
+(defun set-fonts ()
+  "Set the faces specified in ``CONTEXTUAL-FONTS-ALIST'' for different pitches.
 Said faces can assume the following properties:
 
 ``default'' : Default font used through the whole Emacs 'ecosystem'
@@ -1006,9 +1007,15 @@ src blocks in org mode
 ``variable-pitch'' : Used best with ``variable-pitch-mode'', it
 '''contextually''' gets its size changed (like when used in an
 org heading, for example)"
-  (mapc #'(lambda (font-alist)
-	    (set-face-attribute (car font-alist) nil :font (cdr font-alist)))
-	typeface-list))
+  (let ((size-in-pts (if (= 1080 (display-pixel-height))
+			 16
+		       12)))
+    (mapc #'(lambda (fonts-alist)
+	      (set-face-attribute (car fonts-alist)
+				  nil
+				  :font (format "%s-%s" (cdr fonts-alist)
+						size-in-pts)))
+	  contextual-fonts-alist)))
 #+end_src
 
 *** Definindo as fontes no servidor
@@ -1021,8 +1028,8 @@ definição das fontes para o momento em que um frame é criado.
 ;; running on terminal or not. Afaik it doesn't matter if the fonts are set
 ;; while on term
 (if (daemonp)
-    (add-hook 'server-after-make-frame-hook #'(lambda () (set-fonts my-font-list)))
-  (set-fonts my-font-list))
+    (add-hook 'server-after-make-frame-hook #'set-fonts)
+  (set-fonts))
 #+end_src
 
 ** Retirar a barra de tarefas
