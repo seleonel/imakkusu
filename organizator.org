@@ -591,16 +591,6 @@ Ocasionalmente irritante. Talvez limitar para prog-mode apenas.
 (defalias 'matar-server 'save-buffers-kill-emacs)
 #+end_src
 
-** Resize melhor
-
-Roubado do witchmacs. Praise Marisa. 
-#+begin_src emacs-lisp
-(global-set-key (kbd "s-C-<left>") 'shrink-window-horizontally)
-(global-set-key (kbd "s-C-<right>") 'enlarge-window-horizontally)
-(global-set-key (kbd "s-C-<down>") 'shrink-window)
-(global-set-key (kbd "s-C-<up>") 'enlarge-window)
-#+end_src
-
 ** Salvar clipboard antes de kill
 
 Clipboard do *X* server. 
