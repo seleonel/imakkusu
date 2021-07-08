@@ -1303,45 +1303,18 @@ Asteriscos de cada heading agora são bullets.
 *** org-roam
 
 Método Zettel para criação de pequenas e sucintas notas. Bom pra
-brainstorming.
+brainstorming. *Nota*: Migrado para =org-roam= v2.
 
 #+begin_src emacs-lisp
 (use-package org-roam
-  :hook
-  (after-init . org-roam-mode)
-  :bind (:map org-roam-mode-map
-	      (("C-c n l" . org-roam)
-	       ("C-c n f" . org-roam-find-file)
-	       ("C-c n g" . org-roam-graph)
-	       ("C-c n d" . org-roam-dailies-find-date))
-	      :map org-mode-map
-	      (("C-c n i" . org-roam-insert)))
-  :init
-  (autoload 'org-roam-protocol "org-roam-protocol"
-    "org roam's way of dealing with external input"
-    t)
-  :config
-  (add-to-list 'org-roam-capture-templates '("t" "Tagged" plain (function org-roam--capture-get-point)
-					     "%?"
-					     :file-name "%<%Y%m%d%H%M%S>-${slug}"
-					     :head "#+title: ${title}\n#+roam_tags:%? \n#+roam_key: %a"
-					     :unarrowed t))
+  :straight (:branch "v2")
   :custom
-  (org-roam-directory (concat (getenv "HOME") "/Estudo/arquivos-org/"))
-  (org-roam-index-file "./index.org")
-  (org-roam-completion-system 'default)
-  ;; graphing options
-  (org-roam-graph-viewer "/usr/bin/firefox-esr")
-  (org-roam-graph-node-extra-config '(
-				      ("shape" . "oval")
-				      ("style" . "filled")
-				      ("fillcolor" . "PaleVioletRed1")
-				      ("color" . "VioletRed1")
-				      ("fontcolor" . "black")
-				      ("fontname" . "Roboto")))
-  (org-roam-graph-extra-config '(("rankdir" . "BT")))
-  (org-roam-graph-edge-extra-config '(("dir" . "none")
-				      ("color" . "PaleVioletRed1"))))
+  (org-roam-directory "~/Estudo/arquivos-org")
+  :bind
+  ("C-c n l" . org-roam-buffer-toggle)
+  ("C-c n f" . org-roam-node-find)
+  :config
+  (org-roam-setup))
 #+end_src
 
 *** org-download
