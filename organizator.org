@@ -262,6 +262,7 @@ HTML, criação de tabelas e devo ter esquecido de algo. *Pretty neat*
    '((plantuml . t)
      (python . t)
      (lisp . t)
+     (C . t)
      (scheme . t)
      (shell . t)))
   ;; configure the latex previews default size
@@ -575,14 +576,6 @@ Configs roubadas de um anão 2.0
 	      '(("." . "~/.cache/emacs/backups/")))
 (add-to-list 'auto-save-file-name-transforms
 	     `(".*" "~/.cache/emacs/autosave/\\1" t) 'append)
-#+end_src
-
-** Mover de acordo com camelCase
-
-Ocasionalmente irritante. Talvez limitar para prog-mode apenas.
-
-#+begin_src emacs-lisp
-(global-subword-mode)
 #+end_src
 
 ** Nome mais curto para matar o nosso belo Emacs
@@ -1140,7 +1133,7 @@ Semelhante ao =lsp-mode=, porém, este se diz ser mais leve (não duvido), além
 	("C-c r" . eglot-rename)
 	("C-c ]" . eglot-code-actions))
   :hook
-  ((python-mode c-mode TeX-mode LaTeX-mode bibtex-mode) . eglot-ensure))
+  ((python-mode c-mode-common TeX-mode LaTeX-mode bibtex-mode) . eglot-ensure))
 #+end_src
 
 ** Common Lisp
