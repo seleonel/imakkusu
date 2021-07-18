@@ -298,6 +298,10 @@ HTML, criação de tabelas e devo ter esquecido de algo. *Pretty neat*
   ;; after a new image gets added
   (org-startup-with-inline-images t)
   (org-image-actual-width 600)
+  ;; by default babel tries to eval src_blocks with slime,
+  ;; but since sly is our main way to interact with CL
+  ;; we mustchange that eval function
+  (org-babel-lisp-eval-fn 'sly-eval)
   ;; levels 1 through 4 are targets for refiling
   (org-refile-targets '((nil :maxlevel . 4)
 			(nil :tag . "candidate")))
