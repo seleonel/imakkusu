@@ -13,8 +13,7 @@ Por ser um arquivo primariamente escrito e feito para o =org-mode=, este deve se
 
 O /script/ em si foi modificado a partir do apresentado no *manual do org*, especificamente na parte [[info:org#Batch Execution][org#Batch Execution]]
 
-#+begin_src sh :tangle tangle.sh :tangle-mode (identity #o755) :comments no
-#!/bin/sh
+#+begin_src sh :tangle tangle.sh :comments no :shebang "#!/bin/sh"
 emacs -Q --batch --eval "
       (let ((file \"organizator.org\"))
         (require 'ob-tangle)
