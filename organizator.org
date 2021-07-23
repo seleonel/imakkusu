@@ -1057,12 +1057,13 @@ Destaca a linha atual onde o cursor se posiciona.
 - Branco e padrão: =modus-operandi=
 - High contrast: =modus-vivendi=
 
-  #+begin_src emacs-lisp
-  (use-package modus-operandi-theme
-    :defer t
-    :init
-    (load-theme 'modus-operandi t)) 
-  #+end_src
+#+begin_src emacs-lisp
+(use-package modus-themes
+  :init
+  (modus-themes-load-themes)
+  :config
+  (modus-themes-load-operandi))
+#+end_src
 
 ** Modeline
 
