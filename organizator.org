@@ -1298,7 +1298,6 @@ brainstorming. *Nota*: Migrado para =org-roam= v2.
 
 #+begin_src emacs-lisp
 (use-package org-roam
-  :straight (:branch "v2")
   :custom
   (org-roam-directory "~/Estudo/arquivos-org")
   :bind
