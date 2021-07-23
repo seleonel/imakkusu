@@ -718,15 +718,6 @@ Oferece documentação em /minibuffers/, porém integrado às APIs oferecidas pe
   (marginalia-mode))
 #+end_src
 
-** volume
-
-Controle de volume padrão do sistema.
-
-#+begin_src emacs-lisp
-(use-package volume
-  :defer t)
-#+end_src
-
 ** pdf-tools
 
 Melhor que o =doc-view=  para pdf. Um tanto quanto pesado. 
