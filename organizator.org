@@ -995,7 +995,7 @@ src blocks in org mode
 '''contextually''' gets its size changed (like when used in an
 org heading, for example)"
   (let ((size-in-pts (if (= 1080 (display-pixel-height))
-			 16
+			 14
 		       12)))
     (mapc #'(lambda (fonts-alist)
 	      (set-face-attribute (car fonts-alist)
