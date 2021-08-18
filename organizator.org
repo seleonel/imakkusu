@@ -775,16 +775,6 @@ palavra/lexema.
   (prog-mode . company-quickhelp-mode))
 #+end_src
 
-** Expand region
-
-Cria uma região ao entorno de um símbolo.
-
-#+begin_src emacs-lisp
-(use-package expand-region
-  :bind
-  ("C-c e" . er/expand-region))
-#+end_src
-
 ** transpose-frame
 
 Troca as janelas de lugar. Também oferece =flop-frame= para inverter as janelas
