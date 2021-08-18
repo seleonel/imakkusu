@@ -39,6 +39,7 @@ GNU/Linux. Algumas das dependências externas seriam:
   - aspell-pt
   - aspell-en
 - GnuPG
+- notmuch (e-mail)
 
 ** comando para arch-likes
 
@@ -47,6 +48,7 @@ GNU/Linux. Algumas das dependências externas seriam:
 #+begin_src sh :tangle no
 sudo pacman --noconfirm -S emacs \
     sbcl \
+    notmuch \
     python-lsp-server \
     ccls \
     aspell-pt \
@@ -342,53 +344,30 @@ Listings e colorização para blocos de código.
   (add-to-list 'org-latex-packages-alist '("" "color")))
 #+end_src
 
-** Gnus
+** E-mail
 
-Cliente de *e-mail* e leitor de BBS e RSS feed. 
+Algumas configurações devem ser feitas em relação ao diretório de e-mail, bem como customizações relacionadas a diretórios, assinaturas, nomes e senhas. 
 
-#+begin_src emacs-lisp
-(use-package gnus
-  :defer t
-  :custom
-  (gnus-directory "~/Email-and-news/news/")
-  (gnus-dribble-directory (concat gnus-directory "/dribble/"))
-  (gnus-always-read-dribble-file t)
-  ;; Mail and username defined directly here
-  (user-mail-address "leon_bellini@outlook.com")
-  (user-full-name "Leon Ferreira Bellini")
-  (message-signature (concat "Leon F. Bellini\n"
-			     "Estudante de Ciência da
- Computação no Centro Universitário FEI\n"
-			     "\nGitHub: https://github.com/seleonel\n"))
-  (gnus-secondary-select-methods  '((nntp "news.gwene.org")))
-  (gnus-select-method '(nnimap "outlook"
-			       (nnimap-address "outlook.office365.com")
-			       (nnimap-server-port 993)
-			       (nnimap-stream ssl)))
-  (gnus-asyncronous t)
-  :hook
-  (gnus-group-mode . gnus-topic-mode)
-  (gnus-startup . (lambda ()
-		 (gnus-demon-init)
-		 (gnus-demon-add-scanmail)
-		 (gnus-demon-add-handler 'gnus-demon-scan-news 5 5)
-		 (defadvice gnus-demon-scan-news (around gnus-demon-timeout activate)
-		   "Timeout for Gnus."
-		   (with-timeout (120 (message "Gnus timed out.")) ad-do-it)))))
-#+end_src
+*** Informações
 
-*** Extras de E-mail
-
-Alguns pacotes necessários para um melhor "ambiente" para trabalho com
-*e-mails*.
-
-**** Diretório padrão
+Para a definição do endereço de e-mail pelo próprio Emacs. 
 
 #+begin_src emacs-lisp
-(setq message-directory "~/Email-and-news/mail/")
+(setq mail-host-address "outlook.com")
+(setq user-login-name "leon_bellini")
+(setq user-full-name "Leon Ferreira Bellini")
 #+end_src
 
-**** smtpmail
+*** Assinatura
+
+É inserida logo após todas as minhas mensagens. 
+
+#+begin_src emacs-lisp
+(setq mail-signature
+      (format "\n\n-- \n%s - Estudante de Ciência da Computação" user-full-name))
+#+end_src
+
+*** smtpmail
 
 Protocolo =smtp= é responsável pela conexão e definição de como realizar tal
 conexão com servidores =smtp=. =smtpmail= é um pacote útil para realizar o
@@ -398,58 +377,11 @@ envio de mensagens *externamente* ao sistema.
 (use-package smtpmail
   :custom
   (message-send-mail-function 'smtpmail-send-it)
-  (send-mail-functon 'smtpmail-send-it)
+  (send-mail-function 'smtpmail-send-it)
   (smtpmail-stream-type 'starttls)
   (smtpmail-default-smtp-server "smtp.office365.com")
   (smtpmail-smtp-server "smtp.office365.com")
   (smtpmail-smtp-service 587))
-#+end_src
-
-**** notify
-
-Notificações no /desktop/ para as mensagens/RSS que chegam. 
-
-#+begin_src emacs-lisp
-(use-package gnus-desktop-notify
-  :hook
-  (gnus-before-startup  . gnus-desktop-notify-mode))
-#+end_src
-
-**** org-msg
-
-Formatação de *e-mails* no formato HTTP. Pode gerar resultados bem
-agradáveis, apesar de também formar mensagens mais pesadas. 
-
-#+begin_src emacs-lisp
-(use-package org-msg
-  :init
-  (org-msg-mode)
-  :custom
-  (org-msg-greeting-fmt "\nOlá %s,\n\n")
-  (org-msg-recipient-names '(("leon_bellini@outlook.com" "Leon Bellini")))
-  (org-msg-greeting-name-limit 2)
-  (org-msg-default-alternatives '(html text))
-  (org-msg-convert citation t)
-  (org-msg-options "html-postamble:nil H:5 num:nil ^:{} toc:nil author:nil email:nil \\n:t"))
-#+end_src
-
-*** dired-gnus
-
-Creio que tenha roubado essa função do Prot.
-
-#+begin_src emacs-lisp
-(require 'gnus-dired)
-(defun gnus-dired-mail-buffers ()
-  "Return a list of active message buffers."
-  (let (buffers)
-    (save-current-buffer
-      (dolist (buffer (buffer-list t))
-	(set-buffer buffer)
-	(when (and (derived-mode-p 'message-mode)
-		   (null message-sent-message-via))
-	  (push (buffer-name buffer) buffers))))
-    (nreverse buffers)))
-(add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode)
 #+end_src
 
 ** fill-column
@@ -938,6 +870,85 @@ deles.
   (bongo-enabled-backends '(mpv vlc)))
 #+end_src
 
+** notmuch
+
+~notmuch.el~ é um pacote destinado apenas para gerenciamento e, principalmente, /tagging/ de e-mails, dependendo de programas externos (como o próprio notmuch) para realização da busca e download em si destes. ~notmuch~ se provou mais rápido e menos complexo que o ~gnus~ para a utilização diária. 
+
+#+begin_src emacs-lisp
+(use-package notmuch
+  :custom
+  (notmuch-search-oldest-first nil))
+#+end_src
+
+*** Mbsync
+
+Como dito anteriormente, o pacote *depende* de um programa que realize a busca das mensagens por meio de protocolos como IMAP ou POP3. No caso, o programa escolhido foi o ~mbsync~ com a seguinte configuração (tirada da [[https://wiki.archlinux.org/title/Isync][arch wiki]]).
+
+#+begin_src sh :tangle ~/.config/isync/mbsyncrc :mkdirp yes
+IMAPAccount Outlook
+Host outlook.office365.com
+User leon_bellini@outlook.com
+PassCmd "pass mail/Outlook" # I manage my passwords with pass
+# security
+AuthMech LOGIN
+SSLType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+# remote
+IMAPStore Outlook-remote
+Account Outlook
+
+# local 
+MaildirStore Outlook-local
+Subfolders Verbatim
+Path ~/.local/share/Mail/Outlook/
+Inbox ~/.local/share/Mail/Outlook/INBOX/
+
+# channels
+Channel Outlook-inbox
+Far :Outlook-remote:
+Near :Outlook-local:
+Patterns "INBOX"
+
+Channel Outlook-sent
+Far :Outlook-remote:"Sent"
+Near :Outlook-local:enviadas
+Create Near
+
+Group Outlook-group
+Channel Outlook-inbox
+Channel Outlook-sent
+#+end_src
+
+*** Systemd unit e systemd timer
+
+Para que haja um /fetching/ automático, é necessária a criação de uma unidade de usuário com os detalhes quanto ao serviço a ser executado periodicamente.
+
+#+begin_src sh :tangle ~/.config/systemd/user/mbsync.service
+[Unit]
+Description=Email fetching through  mbsync
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/mbsync -c %h/.config/isync/mbsyncrc -Va
+ExecStartPost=/usr/bin/notmuch new 
+#+end_src
+
+E o /timer/ o qual será ativado pelo ~systemd~, definindo o tempo entre as atualizações (a cada 5 minutos, 1 minuto após /boot/).
+
+#+begin_src sh :tangle ~/.config/systemd/user/mbsync.timer
+[Unit]
+Description=Timer that sets the intervals between updates
+
+[Timer]
+OnBootSec=1m
+OnUnitActiveSec=5m
+Unit=mbsync.service
+
+[Install]
+WantedBy=timers.target
+#+end_src
+
 * Configurações visuais
 
 Estilo, fontes e cores.
@@ -1320,39 +1331,3 @@ buffer de org.
   ((org-mode dired-mode) . org-download-enable))
 #+end_src
 
-* *Minhas* funções
-
-** Função horrível para enviar screenshot num buffer de mail
-
-#+begin_src emacs-lisp
-(defun mail-screenshot-from-clipboard (string-user)
-  "Attaches an image which filename's defined by the user via ``STRING-USER''.
-Said image is always saved in /tmp/<filename>.
-
-This function depends on xclip existing within the system."
-  (interactive "sPlease type in a filename for the attachment: ")
-  (let* ((filename-to-save (concat "/tmp/" string-user ".png"))
-	 (installed-? (executable-find "xclip"))
-	 (command-to-save (format "xclip -selection clipboard -o > %s" filename-to-save)))
-    (if installed-?
-	(if (zerop (shell-command command-to-save))
-	    (with-current-buffer (current-buffer)
-	      (mail-add-attachment filename-to-save))
-	  (print "Xclip has failed to save the file"))
-      (print "Need xclip to run!"))))
-#+end_src
-
-** Shift na lista de estilos
-
-#+begin_src emacs-lisp
-(defun shift-completions ()
-  "This functions shifts left the ``completion-styles'' list.
-Some modes like icomplete base off their completions on this list
-in specific, so by shifting it left, we can, then, use whatever
-next style that was defined by the user."
-  (interactive)
-  (let ((tmp (car completion-styles))
-	(current (cadr completion-styles)))
-    (message (format "%s completion style is being used" current))
-    (setq completion-styles (append (cdr completion-styles) (list tmp)))))
-#+end_src
