@@ -1,4 +1,4 @@
-#+TITLE: Configs e pacotes em geral de meu Emacs/My config files for GNU/Emacs (27+)
+#+TITLE: Configs e pacotes em geral de meu Emacs/My config files for GNU/Emacs (28)
 #+property: header-args :comments org :tangle init.el 
 
 Descobri boa parte destes pacotes através dos vídeos do *Uncle Dave*, então,
@@ -78,7 +78,8 @@ Algumas das combinações de teclas modificadas neste arquivo. Note que algumas 
 ** Emacs
 
 - =C-M-<backspace>= delete-indentation
-- =C-z= Undo
+- =C-z= undo
+- =C-c r= undo-redo
 - =C-x C-b= ibuffer
 - =C-c t= eshell
 - Flyspell
@@ -595,6 +596,14 @@ Função útil não apenas na formatação de S-exps, mas também em outras ling
 
 Normalmente tem como combinação =M-^=, algo complicado de se fazer num teclado ABNT-2.
 
+** redo
+
+Desfaz um desfazer.
+
+#+begin_src emacs-lisp
+(global-set-key (kbd "C-c r") 'undo-redo)
+#+end_src
+
 * Modos para uso em geral
 
 Pacotes para os mais diversos usos. Alguns desses estão presentes por serem
@@ -798,17 +807,6 @@ Força =tab= para indentação e espaço para alinhamento.
      (latex-indent-region . 4)))
   (smart-tabs-insinuate 'c 'c++ 'java 'latex)
   (smart-tabs-advice js2-indent-line js2-basic-offset))
-#+end_src
-
-** Undo-tree
-
-Visualização de seus *undos* em forma de árvore. Buga com múltiplas deleções. 
-
-#+begin_src emacs-lisp
-(use-package undo-tree
-  :defer t
-  :init
-  (global-undo-tree-mode))
 #+end_src
 
 ** Rainbow
