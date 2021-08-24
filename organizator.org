@@ -872,7 +872,7 @@ deles.
 
 Como dito anteriormente, o pacote *depende* de um programa que realize a busca das mensagens por meio de protocolos como IMAP ou POP3. No caso, o programa escolhido foi o ~mbsync~ com a seguinte configuração (tirada da [[https://wiki.archlinux.org/title/Isync][arch wiki]]).
 
-#+begin_src sh :tangle ~/.config/isync/mbsyncrc :mkdirp yes
+#+begin_src sh :tangle ~/.config/isync/mbsyncrc :mkdirp yes :comments no
 IMAPAccount Outlook
 Host outlook.office365.com
 User leon_bellini@outlook.com
