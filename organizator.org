@@ -1124,7 +1124,6 @@ Semelhante ao =lsp-mode=, porém, este se diz ser mais leve (não duvido), além
   (:map eglot-mode-map
 	("C-c d" . eldoc)
 	("C-c k" . eglot-format)
-	("C-c r" . eglot-rename)
 	("C-c ]" . eglot-code-actions))
   :hook
   ((python-mode c-mode-common TeX-mode LaTeX-mode bibtex-mode) . eglot-ensure))
