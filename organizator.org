@@ -339,8 +339,12 @@ Listings e colorização para blocos de código.
   :straight nil
   :custom
   (org-latex-listings t)
+  (org-latex-listings-options '(("basicstyle" "\\scriptsize")
+				("showstringspaces" "false")
+				("numberstyle" "\\tiny")
+				("breaklines" "true")
+				("numbers" "left")))
   :config
-  ;; listings colorido 
   (add-to-list 'org-latex-packages-alist '("" "listings"))
   (add-to-list 'org-latex-packages-alist '("" "color")))
 #+end_src
@@ -897,11 +901,13 @@ Channel Outlook-inbox
 Far :Outlook-remote:
 Near :Outlook-local:
 Patterns "INBOX"
+CopyArrivalDate yes
 
 Channel Outlook-sent
 Far :Outlook-remote:"Sent"
 Near :Outlook-local:enviadas
 Create Near
+CopyArrivalDate yes 
 
 Group Outlook-group
 Channel Outlook-inbox
