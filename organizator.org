@@ -365,11 +365,11 @@ Para a definição do endereço de e-mail pelo próprio Emacs.
 
 *** Assinatura
 
-É inserida logo após todas as minhas mensagens. 
+É inserida logo após todas as minhas mensagens.  Aparentemente o prefixo =--= é inserido automaticamente agora. 
 
 #+begin_src emacs-lisp
 (setq mail-signature
-      (format "\n\n-- \n%s - Estudante de Ciência da Computação" user-full-name))
+      (format "%s - Estudante de Ciência da Computação" user-full-name))
 #+end_src
 
 *** smtpmail
