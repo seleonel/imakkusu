@@ -768,12 +768,10 @@ palavra/lexema.
 (use-package company
   :custom
   (company-idle-delay 0.5)
-  (company-minimum-prefix-length 3)
+  (company-minimum-prefix-length 2)
   (company-selection-wrap-around t)
   :hook
-  (after-init . global-company-mode)
-  :bind
-  ([remap completion-at-point] . company-complete))
+  (after-init . global-company-mode))
 #+end_src
 
 *** Company quickhelp
