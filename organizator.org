@@ -1062,18 +1062,6 @@ Destaca a linha atual onde o cursor se posiciona.
   (modus-themes-load-operandi))
 #+end_src
 
-** Modeline
-
-Modeline do =doom-emacs=, simples e mínima.
-
-#+begin_src emacs-lisp
-(use-package doom-modeline
-  :hook
-  (window-setup . doom-modeline-mode)
-  :custom
-  (doom-modeline-icon t)) 
-#+end_src
-
 ** Número de linhas
 
 #+begin_src emacs-lisp
