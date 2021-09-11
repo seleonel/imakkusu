@@ -1294,13 +1294,14 @@ brainstorming. *Nota*: Migrado para =org-roam= v2.
 
 #+begin_src emacs-lisp
 (use-package org-roam
+  :init
+  (org-roam-db-autosync-mode)
   :custom
   (org-roam-directory "~/Estudo/arquivos-org")
+  (org-roam-v2-ack t)
   :bind
   ("C-c n l" . org-roam-buffer-toggle)
-  ("C-c n f" . org-roam-node-find)
-  :config
-  (org-roam-setup))
+  ("C-c n f" . org-roam-node-find))
 #+end_src
 
 *** org-download
