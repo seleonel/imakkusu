@@ -261,8 +261,7 @@ HTML, criação de tabelas e devo ter esquecido de algo. *Pretty neat*
   ;; set which languagues are enabled for evaluation
   (org-babel-do-load-languages
    'org-babel-load-languages
-   '((plantuml . t)
-     (python . t)
+   '((python . t)
      (lisp . t)
      (C . t)
      (scheme . t)
@@ -1262,23 +1261,6 @@ Providencia um suporte interessante para referências e documentos em citações
 ** Org-mode
 
    Pacotes extras que se utilizam do *PODER* do =org= ou apenas se integram a ele.
-
-*** plantuml
-
-Diagramas de UML2. Lento e com um péssimo modo oferecido.
-
-#+begin_src emacs-lisp
-(setq jar-path (expand-file-name
-		(concat
-		 (getenv "XDG_DATA_HOME") "/plantuml/plantuml.jar")))
-
-(use-package plantuml-mode
-  :commands plantuml-mode
-  :custom
-  (plantuml-jar-path jar-path)
-  (org-plantuml-jar-path jar-path)
-  (plantuml-default-exec-mode 'jar))
-#+end_src
 
 *** org-superstar
 
