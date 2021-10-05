@@ -699,8 +699,8 @@ resultados agradáveis.
   :custom
   (nov-text-width t)
   (visual-fill-column-center-text t)
-  :init
-  (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
+  :mode
+  ("\\.epub\\'" . nov-mode)
   :hook
   (nov-mode . visual-line-mode))
 #+end_src
@@ -1218,8 +1218,7 @@ Eu ouvi *sites*?
 #+begin_src emacs-lisp
 (use-package web-mode
   :defer t
-  :config
-  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode)))
+  :mode "\\.html?\\'")
 #+end_src
 
 *** impatient mode
