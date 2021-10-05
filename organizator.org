@@ -273,7 +273,7 @@ HTML, criação de tabelas e devo ter esquecido de algo. *Pretty neat*
   ;; configure the latex previews default size
   (plist-change org-format-latex-options :scale 1.4)
   ;; default agenda file, setting this variable to a single string didn't work
-  (add-to-list 'org-agenda-files (concat org-directory "agenda.org"))
+  (add-to-list 'org-agenda-files (expand-file-name "agenda.org" org-directory))
   :bind
   ("C-c c". org-capture)
   ("C-c s" . org-store-link)
@@ -311,11 +311,11 @@ HTML, criação de tabelas e devo ter esquecido de algo. *Pretty neat*
   (org-refile-targets '((nil :maxlevel . 4)
 			(nil :tag . "candidate")))
   ;; all files used by capture are stored here
-  (org-directory "~/Documents/org/")
+  (org-directory (expand-file-name "Documents/org" "~"))
   ;; capture and its templates
   (org-capture-templates '(("g" "Guitar training" entry
 			    (file+headline "training_guitar.org" "Progress")
-			    (file "~/Documents/org/guitemplate"))
+			    (file (expand-file-name "guitemplate" org-directory)))
 			   ("b" "Bookmarks" entry
 			    (file+headline "bookmarks.org" "Important links")
 			    "* %^{Link's description} \nLink: %a")
@@ -515,10 +515,16 @@ Experimentando o  =icomplete= como sistema de completa (?) padrão. Como este j�
 Configs roubadas de um anão 2.0
 
 #+begin_src emacs-lisp
+;;; Get our cache directory, otherwise throw them all into the tmp dir
+(defvar cache-dir (expand-file-name "emacs" (or (getenv "XDG_CACHE_HOME")
+						temporary-file-directory)))
+
+
 (setq-default backup-directory-alist
-	      '(("." . "~/.cache/emacs/backups/")))
+	      `(("." . ,(expand-file-name "backups" cache-dir))))
+
 (add-to-list 'auto-save-file-name-transforms
-	     `(".*" "~/.cache/emacs/autosave/\\1" t) 'append)
+	     `(".*" ,(concat cache-dir "/autosave/\\1") t) 'append)
 #+end_src
 
 ** Nome mais curto para matar o nosso belo Emacs
@@ -718,16 +724,6 @@ processos =M-S-&= em alguns casos pré definidos (dired e compilação).
   (async-bytecomp-package-mode 1))
 #+end_src
 
-** auth-sources
-
-Define as fontes para verificação de credenciais (authinfo.gpg). 
-
-#+begin_src emacs-lisp
-(use-package auth-source
-  :custom
-  (auth-sources '("~/Infos/authinfo.gpg")))
-#+end_src
-
 ** projectile
 
 Pacote para trabalho com inúmeros projetos/integração com um único
@@ -846,23 +842,6 @@ Substitui =other-window= ao permitir mais de uma troca. Também mais dinâmico q
   ([remap other-window] .  switch-window))
 #+end_src
 
-** bongo
-
-Player de música. Melhor que =ncmpcpp=. Depende de =mpv= e/ou outro backend capaz
-de reproduzir áudio e que esteja listado com dependência no repositório
-deles. 
-
-#+begin_src emacs-lisp
-(use-package bongo
-  :defer t
-  :custom
-  (bongo-default-directory "~/Music")
-  (bongo-insert-whole-directory-trees t)
-  (bongo-display-playback-mode-indicator t)
-  (bongo-display-inline-playback-progress t)
-  (bongo-enabled-backends '(mpv vlc)))
-#+end_src
-
 ** notmuch
 
 ~notmuch.el~ é um pacote destinado apenas para gerenciamento e, principalmente, /tagging/ de e-mails, dependendo de programas externos (como o próprio notmuch) para realização da busca e download em si destes. ~notmuch~ se provou mais rápido e menos complexo que o ~gnus~ para a utilização diária. 
@@ -931,7 +910,7 @@ ExecStartPost=/usr/bin/notmuch new
 
 E o /timer/ o qual será ativado pelo ~systemd~, definindo o tempo entre as atualizações (a cada 5 minutos, 1 minuto após /boot/).
 
-#+begin_src sh :tangle ~/.config/systemd/user/mbsync.timer
+#+begin_src sh :tangle no
 [Unit]
 Description=Timer that sets the intervals between updates
 
@@ -958,16 +937,16 @@ Uma página inicial *apropriada*.
   (dashboard-setup-startup-hook)
   :custom
   (dashboard-banner-logo-title "BEM VINDO AO MARAVILHOSO IMAKKUSU")
-  (dashboard-startup-banner (concat user-emacs-directory "img/kicchiri.png"))
-  (dashboard-center-content t) 
+  (dashboard-startup-banner (expand-file-name "img/kicchiri.png"
+					      user-emacs-directory))
+  (dashboard-center-content t)
   (dashboard-show-shortcuts nil)
   (dashboard-items '((recents . 20)
 		     (bookmarks . 5)
-		     (agenda . 10)
 		     (projects . 5)))
   (dashboard-set-heading-icons t)
   (dashboard-set-file-icons t)
-  ;; adds agenda 
+  ;; adds agenda
   (show-week-agenda-p t)
   (dashboard-footer-messages '("emags :DDDDDDDD"))
   (initial-buffer-choice #'(lambda () (get-buffer "*dashboard*"))))
@@ -1288,11 +1267,11 @@ brainstorming. *Nota*: Migrado para =org-roam= v2.
 
 #+begin_src emacs-lisp
 (use-package org-roam
-  :init
+  :config
+  (setq org-roam-v2-ack t)
   (org-roam-db-autosync-mode)
   :custom
-  (org-roam-directory "~/Estudo/arquivos-org")
-  (org-roam-v2-ack t)
+  (org-roam-directory (expand-file-name "Documents/roam" "~"))
   :bind
   ("C-c n l" . org-roam-buffer-toggle)
   ("C-c n f" . org-roam-node-find))
@@ -1310,8 +1289,6 @@ buffer de org.
 	("C-c d" . org-download-clipboard))
   :custom
   (org-download-method 'directory)
-  (org-download-image-dir "~/Pictures/org/")
-  (org-download-heading-lvl nil)
   (org-download-screenshot-method 'xclip)
   :hook
   ((org-mode dired-mode) . org-download-enable))
