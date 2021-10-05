@@ -527,12 +527,6 @@ Configs roubadas de um anão 2.0
 	     `(".*" ,(concat cache-dir "/autosave/\\1") t) 'append)
 #+end_src
 
-** Nome mais curto para matar o nosso belo Emacs
-
-#+begin_src emacs-lisp
-(defalias 'matar-server 'save-buffers-kill-emacs)
-#+end_src
-
 ** Salvar clipboard antes de kill
 
 Clipboard do *X* server. 
