@@ -79,7 +79,7 @@ Algumas das combinações de teclas modificadas neste arquivo. Note que algumas 
 
 - =C-M-<backspace>= delete-indentation
 - =C-z= undo
-- =C-c r= undo-redo
+- =C-{= undo-redo
 - =C-x C-b= ibuffer
 - =C-c t= eshell
 - Flyspell
@@ -98,7 +98,7 @@ Algumas das combinações de teclas modificadas neste arquivo. Note que algumas 
 
 ** Pacotes
 
-- =C-c f= Projectile map
+- =C-c p= Projectile map
 - =C-x g= Magit
 - =C-c e= er/expand-region
 - =C-x o= switch-window
@@ -114,7 +114,11 @@ Algumas das combinações de teclas modificadas neste arquivo. Note que algumas 
   - =M-y= consult-yank-from-kill-ring (alternativa ao antigo =browse-kill-ring=)
 - company
   - =M-<TAB>= company-complete    
-
+- eglot (enquanto modo ativo)
+  - =C-c r= eglot-rename
+  - =C-c a= eglot-code-actions
+  - =C-c f= eglot-format
+    
 * Customs do Emacs
 
 Emacs tem umas boas funcionalidades já integradas. Estas, ocasionalmente
@@ -604,7 +608,7 @@ Normalmente tem como combinação =M-^=, algo complicado de se fazer num teclado
 Desfaz um desfazer.
 
 #+begin_src emacs-lisp
-(global-set-key (kbd "C-c r") 'undo-redo)
+(global-set-key (kbd "C-{") 'undo-redo)
 #+end_src
 
 * Modos para uso em geral
@@ -734,7 +738,7 @@ projeto. Também dependência do dashboard.
   :init
   (projectile-mode 1)
   :bind-keymap
-  ("C-c f" . projectile-command-map))
+  ("C-c p" . projectile-command-map))
 #+end_src
 
 ** *Which key*
@@ -1134,9 +1138,9 @@ Semelhante ao =lsp-mode=, porém, este se diz ser mais leve (não duvido), além
 (use-package eglot
   :bind
   (:map eglot-mode-map
-	("C-c d" . eldoc)
 	("C-c k" . eglot-format)
-	("C-c ]" . eglot-code-actions))
+	("C-c a" . eglot-code-actions)
+	("C-c r" . eglot-rename))
   :hook
   ((python-mode c-mode-common TeX-mode LaTeX-mode bibtex-mode) . eglot-ensure))
 #+end_src
