@@ -1022,6 +1022,27 @@ definição das fontes para o momento em que um frame é criado.
   (set-fonts))
 #+end_src
 
+** Telephone-line
+
+Visualmente mais simples que a ~doom-modeline~.
+
+#+begin_src emacs-lisp
+(use-package telephone-line
+  :config
+  (telephone-line-mode t)
+  :custom
+  ;; U:**@- buffer-name > file-size > git:master
+  (telephone-line-lhs '((nil . (telephone-line-buffer-segment))
+			(accent . (telephone-line-filesize-segment ))
+			(nil . (telephone-line-vc-segment
+				telephone-line-process-segment))))
+  ;; ELISP/d (nil) < projectile (accent) < misc All (6, 22)
+  (telephone-line-rhs '((nil . (telephone-line-major-mode-segment))
+			(accent . (telephone-line-atom-encoding-segment))
+			(nil . (telephone-line-misc-info-segment
+				telephone-line-position-segment)))))
+#+end_src
+
 ** Retirar a barra de tarefas
 
 #+begin_src emacs-lisp
