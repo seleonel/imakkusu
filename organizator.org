@@ -1318,3 +1318,14 @@ buffer de org.
   ((org-mode dired-mode) . org-download-enable))
 #+end_src
 
+** Markdown-mode
+
+#+begin_src emacs-lisp
+(use-package markdown-mode
+  :mode
+  ("README\\.md\\'" . gfm-mode)
+  ("\\.\\(md\\|markdown\\|mkd\\)\\'" . markdown-mode)
+  :custom
+  (markdown-command "multimarkdown"))
+#+end_src
+
