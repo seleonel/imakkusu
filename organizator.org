@@ -233,7 +233,9 @@ Mantém os *x* arquivos recentes em um arquivo em disco.
   (recentf-mode)
   (run-at-time nil (* 30 60) 'recentf-save-list)
   :custom
-  (recentf-max-saved-items 50))
+  (recentf-max-saved-items 50)
+  (recentf-exclude
+   (list "^\\(~\\|/\\).*/\\(Games\\|Downloads\\|tmp\\|.?cache\\|roam\\|artigos\\)/.*$")))
 #+end_src
 
 ** Flyspell
