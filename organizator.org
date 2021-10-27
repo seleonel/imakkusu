@@ -286,8 +286,6 @@ HTML, criação de tabelas e devo ter esquecido de algo. *Pretty neat*
   (org-startup-align-all-tables t)
   ;; indent-mode turned on for all org files
   (org-startup-indented t)
-  ;; always show the latex fragments as images
-  (org-startup-with-latex-preview t)
   ;; sub and superscripts are shown like what you'd see in a wgwys editor also
   ;; turn on all pretty symbols
   (org-pretty-entities t)
