@@ -444,9 +444,7 @@ janela por *tiling*.
   :custom
   (show-paren-style 'expression)
   :hook
-  (prog-mode . show-paren-mode)
-  :custom-face
-  (show-paren-match-expression ((t (:inherit modus-themes-special-cold)))))
+  (prog-mode . show-paren-mode))
 #+end_src
 
 ** Completar parênteses
@@ -1056,7 +1054,9 @@ Destaca a linha atual onde o cursor se posiciona.
   :init
   (modus-themes-load-themes)
   :config
-  (modus-themes-load-operandi))
+  (modus-themes-load-operandi)
+  :custom-face
+  (show-paren-match-expression ((t (:inherit modus-themes-special-cold)))))
 #+end_src
 
 ** Número de linhas
