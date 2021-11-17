@@ -330,7 +330,10 @@ HTML, criação de tabelas e devo ter esquecido de algo. *Pretty neat*
 			    "* TODO %^{What kind of event?} %^G\n%^{Select|SCHEDULED|DEADLINE|Regular stamp}: %^T\nDescription: %?" :empty-lines 1)))
   :hook
   (org-mode . variable-pitch-mode)
-  (org-mode . visual-line-mode))
+  (org-mode . visual-line-mode)
+  :custom-face
+  (org-table ((t (:inherit 'fixed-pitch))))
+  (org-block ((t (:inherit 'fixed-pitch)))))
 #+end_src
 
 *** ox-latex
@@ -1218,7 +1221,8 @@ nativo no Emacs e o servidor =lsp=  (digestif) "completa" essa integração.
   (TeX-master nil)
   (TeX-electric-sub-and-superscript t)
   :hook
-  (LaTeX-mode . LaTeX-math-mode))
+  (LaTeX-mode . LaTeX-math-mode)
+  (TeX-after-compilation-finished-functions . TeX-revert-document-buffer))
 #+end_src
 
 *** RefTeX
