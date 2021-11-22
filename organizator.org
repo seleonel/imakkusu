@@ -223,6 +223,15 @@ serem executadas (=mpv= para vídeos, =wine= para executáveis do /windows/,
 				  (,(rx ".exe") "wine ? &"))))
 #+end_src
 
+** Reativar comandos
+
+Alguns comandos vêm *desativados* por padrão, alguns deles eu considero bem úteis. 
+
+#+begin_src emacs-lisp
+(put 'narrow-to-region 'disabled nil) 	
+(put 'dired-find-alternate-file 'disabled nil)
+#+end_src
+
 ** Recentf
 
 Mantém os *x* arquivos recentes em um arquivo em disco.
