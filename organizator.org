@@ -622,6 +622,16 @@ Desfaz um desfazer.
 (global-set-key (kbd "C-{") 'undo-redo)
 #+end_src
 
+** Comportamento do tab
+
+Completar com ~capf~ com a tecla tab e circular por entre os candidatos caso
+hajam 3 destes. 
+
+#+begin_src emacs-lisp
+(setq tab-always-indent 'complete)
+(setq completion-cycle-threshold 3)
+#+end_src
+
 * Modos para uso em geral
 
 Pacotes para os mais diversos usos. Alguns desses estão presentes por serem
