@@ -5,6 +5,7 @@ Descobri boa parte destes pacotes através dos vídeos do *Uncle Dave*, então,
 créditos a ele: [[https://www.youtube.com/channel/UCDEtZ7AKmwS0_GNJog01D2g/feed][Link para o canal]]. Créditos também a [[https://www.youtube.com/channel/UC0uTPqBCFIpZxlz_Lv1tk_g][Protesilaos Stavrou]] por
 seus ótimos tutoriais introdutórios para certos pacotes considerados "nicho".
 
+
 * Tangling
 
 Por ser um arquivo primariamente escrito e feito para o =org-mode=, este deve ser "exportado" para um =init.el= apropriado através da função ~org-babel-tangle~ a qual "escreve" todos os blocos de código (menos alguns escritos em /bash/) nele. Uma forma fácil de se realizar isso (durante uma primeira instalação, por exemplo) pode ser através da execução do /script/ presente no diretório raiz do projeto
@@ -762,31 +763,30 @@ Simples e eficaz. O melhor /front-end/ (porcelana?) para =git=.
   ("C-x g" . magit-status))
 #+end_src
 
-** Company
+** Corfu
 
-Providencia uma lista de possíveis resultados para completar uma
-palavra/lexema. 
+Interessante melhoria ao já presente metodo de *completion-at-point* do Emacs ao oferecer um popup semelhante ao que o ~company~ faz, porém utilizando-se de /child-frames/. 
 
 #+begin_src emacs-lisp
-(use-package company
+(use-package corfu
   :custom
-  (company-idle-delay 0.5)
-  (company-minimum-prefix-length 2)
-  (company-selection-wrap-around t)
-  :hook
-  (after-init . global-company-mode))
+  (corfu-auto t)
+  :init 
+  (corfu-global-mode))
 #+end_src
 
-*** Company quickhelp
+*** Corfu-doc
 
-/Pop-up/ com a documentação de um símbolo.
+Irmão do ~company-quickhelp~.
 
 #+begin_src emacs-lisp
-(use-package company-quickhelp
-  :custom
-  (company-quickhelp-delay 1.5)
+(use-package corfu-doc
+  :bind
+  (:map corfu-map
+	("M-p" . corfu-doc-scroll-down)
+	("M-n" . corfu-doc-scroll-up))
   :hook
-  (prog-mode . company-quickhelp-mode))
+  (corfu-mode . corfu-doc-mode))
 #+end_src
 
 ** transpose-frame
