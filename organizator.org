@@ -857,87 +857,6 @@ Substitui =other-window= ao permitir mais de uma troca. Também mais dinâmico q
   ([remap other-window] .  switch-window))
 #+end_src
 
-** notmuch
-
-~notmuch.el~ é um pacote destinado apenas para gerenciamento e, principalmente, /tagging/ de e-mails, dependendo de programas externos (como o próprio notmuch) para realização da busca e download em si destes. ~notmuch~ se provou mais rápido e menos complexo que o ~gnus~ para a utilização diária. 
-
-#+begin_src emacs-lisp
-(use-package notmuch
-  :custom
-  (notmuch-search-oldest-first nil))
-#+end_src
-
-*** Mbsync
-
-Como dito anteriormente, o pacote *depende* de um programa que realize a busca das mensagens por meio de protocolos como IMAP ou POP3. No caso, o programa escolhido foi o ~mbsync~ com a seguinte configuração (tirada da [[https://wiki.archlinux.org/title/Isync][arch wiki]]).
-
-#+begin_src sh :tangle no :comments no
-IMAPAccount Outlook
-Host outlook.office365.com
-User leon_bellini@outlook.com
-PassCmd "pass mail/Outlook" # I manage my passwords with pass
-# security
-AuthMech LOGIN
-SSLType IMAPS
-CertificateFile /etc/ssl/certs/ca-certificates.crt
-
-# remote
-IMAPStore Outlook-remote
-Account Outlook
-
-# local 
-MaildirStore Outlook-local
-Subfolders Verbatim
-Path ~/.local/share/Mail/Outlook/
-Inbox ~/.local/share/Mail/Outlook/INBOX/
-
-# channels
-Channel Outlook-inbox
-Far :Outlook-remote:
-Near :Outlook-local:
-Patterns "INBOX"
-CopyArrivalDate yes
-
-Channel Outlook-sent
-Far :Outlook-remote:"Sent"
-Near :Outlook-local:enviadas
-Create Near
-CopyArrivalDate yes 
-
-Group Outlook-group
-Channel Outlook-inbox
-Channel Outlook-sent
-#+end_src
-
-*** Systemd unit e systemd timer
-
-Para que haja um /fetching/ automático, é necessária a criação de uma unidade de usuário com os detalhes quanto ao serviço a ser executado periodicamente.
-
-#+begin_src sh :tangle no :comments no
-[Unit]
-Description=Email fetching through  mbsync
-
-[Service]
-Type=oneshot
-ExecStart=/usr/bin/mbsync -c %h/.config/isync/mbsyncrc -Va
-ExecStartPost=/usr/bin/notmuch new 
-#+end_src
-
-E o /timer/ o qual será ativado pelo ~systemd~, definindo o tempo entre as atualizações (a cada 5 minutos, 1 minuto após /boot/).
-
-#+begin_src sh :tangle no
-[Unit]
-Description=Timer that sets the intervals between updates
-
-[Timer]
-OnBootSec=1m
-OnUnitActiveSec=5m
-Unit=mbsync.service
-
-[Install]
-WantedBy=timers.target
-#+end_src
-
 * Configurações visuais
 
 Estilo, fontes e cores.
@@ -1201,37 +1120,6 @@ guile (presente na maioria das distros) + geiser (integração com scheme extern
 (use-package geiser-guile
   :custom
   (geiser-default-implementation 'guile))
-#+end_src
-
-** Paredit
-
-Utiliza-se de /keybindings/ mais fáceis de lembrar que /lispy/, ao menos para um usuário de emacs.
-
-#+begin_src emacs-lisp
-(use-package paredit
-  :hook
-  ((lisp-mode scheme-mode emacs-lisp-mode) . paredit-mode))
-#+end_src
-
-** Pacotinhos pra mobile/web
-
-Eu ouvi *sites*?
-
-*** web-mode
-
-#+begin_src emacs-lisp
-(use-package web-mode
-  :defer t
-  :mode "\\.html?\\'")
-#+end_src
-
-*** impatient mode
-
-Interpretador de forms de html/css/js, também tem um REPL.
-
-#+begin_src emacs-lisp
-(use-package impatient-mode
-  :defer t)
 #+end_src
 
 ** LaTeX
