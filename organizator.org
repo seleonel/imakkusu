@@ -113,8 +113,6 @@ Algumas das combinações de teclas modificadas neste arquivo. Note que algumas 
   - =C-c o= consult-outline
   - =C-c x= consult-complex command
   - =M-y= consult-yank-from-kill-ring (alternativa ao antigo =browse-kill-ring=)
-- company
-  - =M-<TAB>= company-complete    
 - eglot (enquanto modo ativo)
   - =C-c r= eglot-rename
   - =C-c a= eglot-code-actions
@@ -316,7 +314,7 @@ HTML, criação de tabelas e devo ter esquecido de algo. *Pretty neat*
   (org-image-actual-width 600)
   ;; by default babel tries to eval src_blocks with slime,
   ;; but since sly is our main way to interact with CL
-  ;; we mustchange that eval function
+  ;; we must change that eval function
   (org-babel-lisp-eval-fn 'sly-eval)
   ;; levels 1 through 4 are targets for refiling
   (org-refile-targets '((nil :maxlevel . 4)
@@ -755,7 +753,7 @@ projeto. Também dependência do dashboard.
   ("C-c p" . projectile-command-map))
 #+end_src
 
-** *Which key*
+** Which key
 
 Realiza a função do =C-h= quando este é utilizado após um prefixo. Demonstra os
 possíveis comandos a partir de uma combinação. 
