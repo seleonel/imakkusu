@@ -280,6 +280,7 @@ HTML, criação de tabelas e devo ter esquecido de algo. *Pretty neat*
    '((python . t)
      (lisp . t)
      (C . t)
+     (clojure . t)
      (scheme . t)
      (shell . t)))
   ;; configure the latex previews default size
@@ -338,6 +339,8 @@ HTML, criação de tabelas e devo ter esquecido de algo. *Pretty neat*
 			   ("a" "Agenda entry" entry
 			    (file+headline "agenda.org" "Events")
 			    "* TODO %^{What kind of event?} %^G\n%^{Select|SCHEDULED|DEADLINE|Regular stamp}: %^T\nDescription: %?" :empty-lines 1)))
+  ;; so I can work with clojure in org
+  (org-babel-clojure-backend 'cider)
   :hook
   (org-mode . variable-pitch-mode)
   (org-mode . visual-line-mode)
@@ -1150,6 +1153,14 @@ CL, estarei utilizando =sly= para CL, entretanto.
   :defer t
   :custom
   (inferior-lisp-program "sbcl"))
+#+end_src
+
+** Clojure
+
+~Cider~ oferece uma boa forma de interagir com o REPL por meio de um servidor. 
+
+#+begin_src emacs-lisp
+(use-package cider)
 #+end_src
 
 ** Scheme
