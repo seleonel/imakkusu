@@ -800,6 +800,14 @@ Irmão do ~company-quickhelp~.
   (corfu-mode . corfu-doc-mode))
 #+end_src
 
+** transmission
+
+Frontend para o servidor de torrent, transmission
+
+#+begin_src emacs-lisp
+(use-package transmission)
+#+end_src
+
 ** transpose-frame
 
 Troca as janelas de lugar. Também oferece =flop-frame= para inverter as janelas
